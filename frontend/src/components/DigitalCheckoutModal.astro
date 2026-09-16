@@ -457,7 +457,8 @@ const whatsappNumber = settings?.whatsappNumber || "986951425";
       if (payBtnText) payBtnText.textContent = 'Conectando con pasarela de pago...';
 
       try {
-        const res = await fetch('/api/digital/orders/create', {
+        const apiEndpoint = (window.PUBLIC_API_URL || '') + '/api/digital/orders/create';
+        const res = await fetch(apiEndpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

@@ -62,6 +62,10 @@ const bgColor = themeColors.background || '#FAF7FC';
         color: var(--theme-ink) !important;
       }
     </style>
+
+    <script is:inline define:vars={{ publicApiUrl: import.meta.env.PUBLIC_API_URL || '' }}>
+      window.PUBLIC_API_URL = publicApiUrl;
+    </script>
   </head>
   <body class="paper-texture text-ink min-h-screen flex flex-col antialiased selection:bg-secondary-pastel selection:text-ink">
     <slot />
