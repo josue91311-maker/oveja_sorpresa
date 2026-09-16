@@ -1,0 +1,153 @@
+---
+import '../styles/global.css';
+import CartDrawer from '../components/CartDrawer.astro';
+import DigitalCheckoutModal from '../components/DigitalCheckoutModal.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  settings?: any;
+}
+
+const {
+  title = "Ovejita Sorpresas · Tienda de Regalos & Papelería con Propósito",
+  description = "Libretas artesanales, sets con espejos flor y papelería consciente diseñada para regalar o atesorar tus oraciones y reflexiones.",
+  settings = {},
+} = Astro.props;
+
+const favicon = settings?.faviconUrl || settings?.logoUrl || '/images/LOGO.jpg';
+const themeColors = settings?.generalTexts?.themeColors || {
+  primary: '#9A80BD',
+  primaryDark: '#7D60A6',
+  secondary: '#F472B6',
+  ink: '#2D2235',
+  background: '#FAF7FC',
+};
+
+const primaryColor = themeColors.primary || '#9A80BD';
+const primaryDarkColor = themeColors.primaryDark || primaryColor;
+const secondaryColor = themeColors.secondary || '#F472B6';
+const inkColor = themeColors.ink || '#2D2235';
+const bgColor = themeColors.background || '#FAF7FC';
+---
+
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/jpeg" href={favicon} />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Quicksand:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Dynamic Theme Color Variables injected from Admin Settings -->
+    <style define:vars={{ primaryColor, primaryDarkColor, secondaryColor, inkColor, bgColor }}>
+      :root {
+        --theme-primary: var(--primaryColor);
+        --theme-primary-dark: var(--primaryDarkColor);
+        --theme-secondary: var(--secondaryColor);
+        --theme-ink: var(--inkColor);
+        --theme-bg: var(--bgColor);
+      }
+      body {
+        background-color: var(--theme-bg) !important;
+        color: var(--theme-ink) !important;
+      }
+    </style>
+  </head>
+  <body class="paper-texture text-ink min-h-screen flex flex-col antialiased selection:bg-secondary-pastel selection:text-ink">
+    <slot />
+    <CartDrawer settings={settings} />
+    <DigitalCheckoutModal settings={settings} />
+
+    <!-- Global Interactive Carousel Engine for Product Cards -->
+    <script is:inline>
+      function initAllCarousels() {
+        document.querySelectorAll('[data-has-multiple="true"]').forEach((carousel) => {
+          if (carousel.dataset.carouselInit === 'true') return;
+          carousel.dataset.carouselInit = 'true';
+
+          const track = carousel.querySelector('.carousel-track');
+          const dots = carousel.querySelectorAll('.carousel-dot');
+          const counter = carousel.querySelector('.current-indicator');
+          const prevBtn = carousel.querySelector('.carousel-prev');
+          const nextBtn = carousel.querySelector('.carousel-next');
+          const total = parseInt(carousel.getAttribute('data-total-slides') || '1', 10);
+          let current = 0;
+
+          function goTo(index) {
+            if (index < 0) current = total - 1;
+            else if (index >= total) current = 0;
+            else current = index;
+
+            if (track) {
+              track.style.transform = `translateX(-${current * 100}%)`;
+            }
+            dots.forEach((d, i) => {
+              if (i === current) {
+                d.classList.remove('w-1.5', 'bg-white/60');
+                d.classList.add('w-5', 'bg-white', 'shadow-xs');
+              } else {
+                d.classList.remove('w-5', 'bg-white', 'shadow-xs');
+                d.classList.add('w-1.5', 'bg-white/60');
+              }
+            });
+            if (counter) counter.textContent = String(current + 1);
+          }
+
+          prevBtn?.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            goTo(current - 1);
+          });
+
+          nextBtn?.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            goTo(current + 1);
+          });
+
+          dots.forEach((dot, idx) => {
+            dot.addEventListener('click', (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              goTo(idx);
+            });
+            dot.addEventListener('mouseenter', () => {
+              goTo(idx);
+            });
+          });
+
+          // Mobile Touch Swipe support
+          let startX = 0;
+          carousel.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+          }, { passive: true });
+
+          carousel.addEventListener('touchend', (e) => {
+            const endX = e.changedTouches[0].clientX;
+            const diff = startX - endX;
+            if (Math.abs(diff) > 35) {
+              if (diff > 0) goTo(current + 1);
+              else goTo(current - 1);
+            }
+          }, { passive: true });
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAllCarousels);
+      } else {
+        initAllCarousels();
+      }
+    </script>
+  </body>
+</html>

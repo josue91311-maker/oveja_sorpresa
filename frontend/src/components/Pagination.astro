@@ -1,0 +1,48 @@
+---
+interface Props {
+  id?: string;
+}
+
+const { id = "catalogPagination" } = Astro.props;
+---
+
+<nav
+  id={id}
+  aria-label="Navegación por páginas del catálogo"
+  class="mt-12 pt-8 border-t border-border/80 flex flex-col sm:flex-row items-center justify-between gap-4 select-none"
+>
+  <!-- Items info counter -->
+  <div class="text-xs sm:text-sm text-slate-500 font-medium order-2 sm:order-1 text-center sm:text-left">
+    Mostrando <span id="paginationInfoStart" class="font-bold text-plum">1</span> – <span id="paginationInfoEnd" class="font-bold text-plum">9</span> de <span id="paginationInfoTotal" class="font-bold text-plum">0</span> productos
+  </div>
+
+  <!-- Page navigation buttons -->
+  <div class="flex items-center gap-1.5 sm:gap-2 order-1 sm:order-2">
+    <!-- Prev button -->
+    <button
+      id="paginationPrevBtn"
+      type="button"
+      class="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-2xl bg-white border border-border text-plum hover:border-primary hover:text-primary hover:bg-primary-soft/40 text-xs font-bold transition-all shadow-2xs disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+      aria-label="Página anterior"
+    >
+      <span>←</span>
+      <span class="hidden xs:inline">Anterior</span>
+    </button>
+
+    <!-- Page numbers container -->
+    <div id="paginationNumbers" class="flex items-center gap-1 sm:gap-1.5">
+      <!-- Dynamic page bubbles -->
+    </div>
+
+    <!-- Next button -->
+    <button
+      id="paginationNextBtn"
+      type="button"
+      class="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-2xl bg-white border border-border text-plum hover:border-primary hover:text-primary hover:bg-primary-soft/40 text-xs font-bold transition-all shadow-2xs disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+      aria-label="Página siguiente"
+    >
+      <span class="hidden xs:inline">Siguiente</span>
+      <span>→</span>
+    </button>
+  </div>
+</nav>

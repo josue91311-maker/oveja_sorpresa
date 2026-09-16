@@ -1,0 +1,355 @@
+---
+interface Props {
+  settings?: any;
+}
+
+const { settings = {} } = Astro.props;
+const whatsappNumber = settings?.whatsappNumber || "986951425";
+---
+
+<!-- Cart Drawer Backdrop Overlay -->
+<div
+  id="cartOverlay"
+  class="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 transition-opacity duration-300 opacity-0 pointer-events-none"
+  aria-hidden="true"
+></div>
+
+<!-- Cart Drawer Slide-over Panel -->
+<aside
+  id="cartDrawer"
+  class="fixed top-0 right-0 bottom-0 w-full sm:w-[420px] max-w-full bg-[#FFFDFE] shadow-2xl z-50 flex flex-col transition-transform duration-300 ease-out translate-x-full border-l border-border"
+  aria-label="Bolsa de compras"
+  data-whatsapp={whatsappNumber}
+>
+  <!-- Drawer Header -->
+  <div class="p-5 border-b border-border/80 flex items-center justify-between bg-primary-soft/30">
+    <div class="flex items-center gap-2.5">
+      <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-primary shadow-2xs">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+        </svg>
+      </div>
+      <div>
+        <h3 class="font-serif font-bold text-base text-ink">Bolsa de Sorpresas</h3>
+        <span id="cartItemCount" class="text-[11px] text-slate-500 font-medium">0 artículos</span>
+      </div>
+    </div>
+
+    <button
+      id="closeCartBtn"
+      type="button"
+      class="w-8 h-8 rounded-full bg-white hover:bg-slate-100 text-slate-500 hover:text-ink flex items-center justify-center transition-colors border border-border shadow-2xs cursor-pointer"
+      aria-label="Cerrar bolsa de compras"
+    >
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Cart Items List (Scrollable) -->
+  <div id="cartItemsContainer" class="flex-1 overflow-y-auto p-4 space-y-3">
+    <!-- Empty State (Shown when cart is empty) -->
+    <div id="cartEmptyState" class="py-16 text-center space-y-3">
+      <div class="w-16 h-16 mx-auto rounded-full bg-purple-50 border border-purple-100 flex items-center justify-center text-primary shadow-inner">
+        <svg class="w-7 h-7 stroke-[1.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z" />
+        </svg>
+      </div>
+      <h4 class="font-serif font-bold text-base text-ink">Tu bolsa está vacía</h4>
+      <p class="text-xs text-slate-500 max-w-xs mx-auto font-light leading-relaxed">
+        Descubre nuestras libretas artesanales, planners y kits de regalo diseñados para inspirar.
+      </p>
+      <div class="pt-2">
+        <button
+          id="cartExploreBtn"
+          type="button"
+          class="px-6 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-full text-xs font-bold shadow-soft transition-all"
+        >
+          Explorar Catálogo
+        </button>
+      </div>
+    </div>
+
+    <!-- Items List rendered dynamically by JavaScript -->
+    <div id="cartItemsList" class="space-y-3"></div>
+  </div>
+
+  <!-- Drawer Footer (Summary & Ir a comprar) -->
+  <div id="cartFooter" class="p-5 border-t border-border/80 bg-white space-y-3 shadow-lg hidden">
+    <div class="space-y-1.5 text-xs">
+      <div class="flex justify-between text-slate-500">
+        <span>Subtotal</span>
+        <span id="cartSubtotal" class="font-semibold text-slate-700">S/ 0.00</span>
+      </div>
+      <div class="flex justify-between items-baseline pt-2 border-t border-slate-100 text-sm font-bold text-ink">
+        <span>Total a pagar</span>
+        <span id="cartTotal" class="text-lg text-primary">S/ 0.00</span>
+      </div>
+    </div>
+
+    <!-- Main CTA: Ir a comprar por WhatsApp (User requirement 3) -->
+    <button
+      id="checkoutWhatsAppBtn"
+      type="button"
+      class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-2xl transition-all shadow-md hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2 cursor-pointer font-brand"
+    >
+      <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24">
+        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"></path>
+      </svg>
+      <span>Ir a comprar por WhatsApp</span>
+    </button>
+
+    <div class="flex justify-between items-center text-[10.5px] text-slate-400 pt-1">
+      <span>Coordinamos pago por Yape / Plin / Transferencia</span>
+      <button
+        id="clearCartBtn"
+        type="button"
+        class="text-rose-400 hover:text-rose-600 hover:underline cursor-pointer"
+      >
+        Vaciar bolsa
+      </button>
+    </div>
+  </div>
+</aside>
+
+<!-- Client-side Cart Drawer Script -->
+<script is:inline>
+  (function () {
+    const drawer = document.getElementById('cartDrawer');
+    const overlay = document.getElementById('cartOverlay');
+    const closeBtn = document.getElementById('closeCartBtn');
+    const exploreBtn = document.getElementById('cartExploreBtn');
+    const emptyState = document.getElementById('cartEmptyState');
+    const listEl = document.getElementById('cartItemsList');
+    const footerEl = document.getElementById('cartFooter');
+    const subtotalEl = document.getElementById('cartSubtotal');
+    const totalEl = document.getElementById('cartTotal');
+    const itemCountEl = document.getElementById('cartItemCount');
+    const checkoutBtn = document.getElementById('checkoutWhatsAppBtn');
+    const clearBtn = document.getElementById('clearCartBtn');
+
+    const whatsappNumber = drawer?.getAttribute('data-whatsapp') || '986951425';
+
+    function getCart() {
+      try {
+        const raw = localStorage.getItem('ovejita_cart');
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveCart(cart) {
+      localStorage.setItem('ovejita_cart', JSON.stringify(cart));
+      updateGlobalCounters();
+      renderCart();
+    }
+
+    function updateGlobalCounters() {
+      const cart = getCart();
+      const count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+      const bagCounterEl = document.getElementById('bagCounter');
+      if (bagCounterEl) {
+        bagCounterEl.textContent = String(count);
+        if (count > 0) {
+          bagCounterEl.classList.add('scale-125');
+          setTimeout(() => bagCounterEl.classList.remove('scale-125'), 200);
+        }
+      }
+      if (itemCountEl) {
+        itemCountEl.textContent = `${count} ${count === 1 ? 'artículo' : 'artículos'}`;
+      }
+    }
+
+    function openCart() {
+      if (!drawer || !overlay) return;
+      renderCart();
+      overlay.classList.remove('opacity-0', 'pointer-events-none');
+      overlay.classList.add('opacity-100');
+      drawer.classList.remove('translate-x-full');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeCart() {
+      if (!drawer || !overlay) return;
+      overlay.classList.remove('opacity-100');
+      overlay.classList.add('opacity-0', 'pointer-events-none');
+      drawer.classList.add('translate-x-full');
+      document.body.style.overflow = '';
+    }
+
+    function renderCart() {
+      const cart = getCart();
+      if (!listEl) return;
+
+      listEl.innerHTML = '';
+
+      if (cart.length === 0) {
+        emptyState?.classList.remove('hidden');
+        footerEl?.classList.add('hidden');
+        return;
+      }
+
+      emptyState?.classList.add('hidden');
+      footerEl?.classList.remove('hidden');
+
+      let grandTotal = 0;
+
+      cart.forEach((item, index) => {
+        const qty = item.quantity || 1;
+        const price = Number(item.price) || 0;
+        const subtotal = price * qty;
+        grandTotal += subtotal;
+
+        const row = document.createElement('div');
+        row.className = 'flex items-center gap-3 p-3 bg-white rounded-2xl border border-border/80 shadow-2xs hover:border-primary/40 transition-colors';
+        row.innerHTML = `
+          <img src="${item.img || '/images/LOGO.jpg'}" alt="${item.name}" class="w-14 h-16 rounded-xl object-cover border border-slate-100 shrink-0" />
+          <div class="flex-1 min-w-0">
+            <h5 class="font-serif font-bold text-xs text-ink truncate">${item.name}</h5>
+            <span class="text-xs font-bold text-primary block mt-0.5">S/ ${price.toFixed(2)}</span>
+            <div class="flex items-center gap-2 mt-2">
+              <div class="inline-flex items-center border border-border rounded-lg bg-slate-50">
+                <button type="button" class="btn-qty-minus px-2 py-0.5 text-xs text-slate-600 hover:bg-slate-200 rounded-l-lg" data-index="${index}">-</button>
+                <span class="px-2 text-xs font-semibold text-slate-800">${qty}</span>
+                <button type="button" class="btn-qty-plus px-2 py-0.5 text-xs text-slate-600 hover:bg-slate-200 rounded-r-lg" data-index="${index}">+</button>
+              </div>
+              <span class="text-[11px] font-bold text-slate-600 ml-auto">S/ ${subtotal.toFixed(2)}</span>
+            </div>
+          </div>
+          <button type="button" class="btn-remove-item p-1.5 text-slate-300 hover:text-rose-500 rounded-lg hover:bg-rose-50 transition-colors" data-index="${index}" title="Eliminar">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+          </button>
+        `;
+        listEl.appendChild(row);
+      });
+
+      if (subtotalEl) subtotalEl.textContent = `S/ ${grandTotal.toFixed(2)}`;
+      if (totalEl) totalEl.textContent = `S/ ${grandTotal.toFixed(2)}`;
+
+      // Attach item events
+      listEl.querySelectorAll('.btn-qty-minus').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const idx = parseInt(btn.getAttribute('data-index') || '0', 10);
+          const cart = getCart();
+          if (cart[idx]) {
+            if ((cart[idx].quantity || 1) > 1) {
+              cart[idx].quantity -= 1;
+            } else {
+              cart.splice(idx, 1);
+            }
+            saveCart(cart);
+          }
+        });
+      });
+
+      listEl.querySelectorAll('.btn-qty-plus').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const idx = parseInt(btn.getAttribute('data-index') || '0', 10);
+          const cart = getCart();
+          if (cart[idx]) {
+            cart[idx].quantity = (cart[idx].quantity || 1) + 1;
+            saveCart(cart);
+          }
+        });
+      });
+
+      listEl.querySelectorAll('.btn-remove-item').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const idx = parseInt(btn.getAttribute('data-index') || '0', 10);
+          const cart = getCart();
+          cart.splice(idx, 1);
+          saveCart(cart);
+        });
+      });
+    }
+
+    // Checkout: Send order via WhatsApp (User Requirement 3)
+    checkoutBtn?.addEventListener('click', () => {
+      const cart = getCart();
+      if (cart.length === 0) {
+        alert('Tu bolsa de compras está vacía.');
+        return;
+      }
+
+      let grandTotal = 0;
+      let itemsText = '';
+
+      cart.forEach((item, idx) => {
+        const qty = item.quantity || 1;
+        const price = Number(item.price) || 0;
+        const subtotal = price * qty;
+        grandTotal += subtotal;
+        itemsText += `• ${qty}x ${item.name} (S/ ${price.toFixed(2)} c/u) — Subtotal: S/ ${subtotal.toFixed(2)}\n`;
+      });
+
+      const message = `¡Hola Ovejita Sorpresas! Deseo realizar la compra de los siguientes productos de su catálogo:\n\n${itemsText}\n🧾 Total a pagar: S/ ${grandTotal.toFixed(2)}\n\n¿Me podrían brindar los datos de pago (Yape/Plin/Transferencia) y coordinar el envío? Muchas gracias ✨`;
+
+      const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+      window.open(waUrl, '_blank');
+
+      // Reset cart each time the user clicks "Ir a comprar por WhatsApp"
+      saveCart([]);
+      closeCart();
+
+      if (window.showToast) {
+        window.showToast('¡Pedido enviado a WhatsApp! Se vació tu bolsa de compras.');
+      }
+    });
+
+    // Clear cart
+    clearBtn?.addEventListener('click', () => {
+      if (confirm('¿Deseas vaciar tu bolsa de compras?')) {
+        saveCart([]);
+      }
+    });
+
+    // Triggers
+    closeBtn?.addEventListener('click', closeCart);
+    overlay?.addEventListener('click', closeCart);
+    exploreBtn?.addEventListener('click', () => {
+      closeCart();
+      const catalogEl = document.getElementById('catalogo');
+      catalogEl?.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // Attach to bag trigger icon in header
+    document.getElementById('bagTrigger')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      openCart();
+    });
+
+    // Global listener for Add to Bag buttons on product cards
+    document.addEventListener('click', (e) => {
+      const target = e.target;
+      const btn = target.closest ? target.closest('.add-to-bag-btn') : null;
+      if (!btn) return;
+
+      e.preventDefault();
+      const name = btn.getAttribute('data-product-name') || 'Detalle Ovejita';
+      const price = parseFloat(btn.getAttribute('data-product-price') || '0');
+      const img = btn.getAttribute('data-product-img') || '/images/LOGO.jpg';
+      const id = btn.getAttribute('data-product-id') || name;
+
+      const cart = getCart();
+      const existingIdx = cart.findIndex((item) => item.name === name);
+
+      if (existingIdx >= 0) {
+        cart[existingIdx].quantity = (cart[existingIdx].quantity || 1) + 1;
+      } else {
+        cart.push({ id, name, price, img, quantity: 1, date: new Date().toISOString() });
+      }
+
+      saveCart(cart);
+
+      // Slide open the cart drawer to show the user their updated cart and "Ir a comprar" button!
+      openCart();
+    });
+
+    // Initial setup
+    updateGlobalCounters();
+  })();
+</script>

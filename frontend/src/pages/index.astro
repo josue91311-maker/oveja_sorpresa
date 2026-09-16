@@ -1,0 +1,191 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import AnnouncementBar from '../components/AnnouncementBar.astro';
+import Header from '../components/Header.astro';
+import HeroSection from '../components/HeroSection.astro';
+import ProductCard from '../components/ProductCard.astro';
+import QualityPillars from '../components/QualityPillars.astro';
+import CorporateEvents from '../components/CorporateEvents.astro';
+import CampaignBanner from '../components/CampaignBanner.astro';
+import PromotionalBanner from '../components/PromotionalBanner.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
+import Toast from '../components/Toast.astro';
+
+import { getSettings, getCategories, getProducts, getCampaigns, getBanners } from '../lib/api';
+
+const [settings, categories, products, campaigns, banners] = await Promise.all([
+  getSettings(),
+  getCategories(),
+  getProducts(),
+  getCampaigns(),
+  getBanners(),
+]);
+
+// Requirement: Any product from any category can be featured and appears at the front
+const featuredProducts = products.filter((p) => p.featured);
+const heroFeaturedProduct = featuredProducts[0] || products[0];
+
+const heroBanner = banners.find((b) => b.type === 'hero' && b.active);
+const announcementBanner = banners.find((b) => b.type === 'announcement' && b.active);
+const promotionalBanner = banners.find((b) => b.type === 'promotional' && b.active);
+const corporateBanner = banners.find((b) => (b.position === 'bottom' || b.type === 'promotional') && b.active);
+
+const announcementText = announcementBanner?.title ||
+  settings?.generalTexts?.announcementText ||
+  "Ediciones con propósito · Dedicatoria & personalización";
+const whatsappNumber = settings?.whatsappNumber || "986951425";
+---
+
+<MainLayout settings={settings}>
+  {announcementBanner && <AnnouncementBar text={announcementBanner.title || announcementText} />}
+  <Header settings={settings} />
+
+  <main>
+    {heroBanner && <HeroSection featuredProduct={heroFeaturedProduct} settings={settings} heroBanner={heroBanner} />}
+    <CampaignBanner campaigns={campaigns} />
+    <PromotionalBanner banner={promotionalBanner} />
+
+    <!-- 1. DESTACADOS AL FRENTE (Requirement: Any featured product from any catalog appears front and center) -->
+    {featuredProducts.length > 0 && (
+      <section class="py-12 sm:py-16 bg-gradient-to-b from-[#FAF8FB] to-[#FFFDFE] border-t border-border/60" id="destacados">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4">
+            <div>
+              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-pink-100/90 text-secondary text-[11px] font-bold uppercase tracking-wider mb-2">
+                <span>⭐ Selección Especial Destacada</span>
+              </div>
+              <h2 class="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-ink">
+                Lo más amado de Ovejita
+              </h2>
+              <p class="text-xs sm:text-sm text-slate-500 font-light mt-1">
+                Nuestros modelos favoritos con tapas duras, detalles dorados y empaque de regalo aromático.
+              </p>
+            </div>
+            <a
+              href="/catalogo"
+              class="text-xs font-bold text-primary hover:text-primary-dark transition-colors flex items-center gap-1 shrink-0"
+            >
+              <span>Ver todos los catálogos</span>
+              <span>→</span>
+            </a>
+          </div>
+
+          <!-- Featured Products Grid with Multi-Image Carousels and Soles Currency -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
+            {featuredProducts.map((p) => (
+              <ProductCard product={p} whatsappNumber={whatsappNumber} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- 2. EXPLORA NUESTRAS COLECCIONES & CATÁLOGOS -->
+    <section class="py-14 bg-[#FFFDFE] border-t border-border/60" id="catalogo">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+        <div class="text-center max-w-3xl mx-auto space-y-2.5">
+          <p class="text-xs font-bold uppercase tracking-[0.25em] text-primary">
+            🌸 Nuestras Líneas & Colecciones
+          </p>
+          <h2 class="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-ink">
+            Explora por Catálogo Especial
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500 font-light max-w-xl mx-auto">
+            Cada línea reúne piezas creadas a mano con tapas duras, detalles en foil y mensajes de fe listos para obsequiar.
+          </p>
+        </div>
+
+        <!-- Catalog Cards Grid with preview images and counts -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {categories.map((cat) => {
+            const catProducts = products.filter(p => p.categoryId === cat.id || p.category?.slug === cat.slug);
+            const count = catProducts.length;
+            const previewImg = catProducts[0]?.primaryImage?.url || catProducts[0]?.images?.[0]?.url || '/images/LOGO.jpg';
+            return (
+              <div class="bg-[#FAF8FB] rounded-3xl p-5 border border-border flex flex-col justify-between hover:border-primary/50 hover:shadow-soft transition-all group/catcard">
+                <div class="space-y-3">
+                  <!-- Thumbnail preview -->
+                  <div class="aspect-[4/3] rounded-2xl overflow-hidden bg-white border border-border shadow-2xs relative">
+                    <img
+                      src={previewImg}
+                      alt={cat.name}
+                      class="w-full h-full object-cover group-hover/catcard:scale-105 transition-transform duration-500"
+                    />
+                    <span class="absolute top-2.5 right-2.5 text-[10px] px-2.5 py-1 rounded-full bg-white/95 backdrop-blur-xs font-bold text-plum border border-border shadow-2xs">
+                      {count} {count === 1 ? 'modelo' : 'modelos'}
+                    </span>
+                  </div>
+
+                  <div class="space-y-1 pt-1">
+                    <span class="text-[10px] uppercase font-bold text-primary tracking-wider">Catálogo</span>
+                    <h3 class="font-serif font-bold text-base text-ink group-hover/catcard:text-primary transition-colors">
+                      {cat.name}
+                    </h3>
+                    <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed font-light">
+                      {cat.description || 'Modelos exclusivos disponibles con empaque de regalo y dedicatoria gratis.'}
+                    </p>
+                  </div>
+                </div>
+
+                <div class="pt-4 mt-3 border-t border-border/70">
+                  <a
+                    href={`/catalogo/${cat.slug}`}
+                    class="w-full py-2.5 px-4 bg-white hover:bg-primary hover:text-white border border-border hover:border-primary text-plum text-xs font-bold rounded-xl transition-all flex items-center justify-between shadow-2xs"
+                  >
+                    <span>Ver catálogo</span>
+                    <span>→</span>
+                  </a>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <!-- Dedicated Catalog CTA Banner -->
+        <div class="p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-primary-soft/80 via-[#FAF8FB] to-pink-50/60 border border-primary/20 shadow-soft text-center space-y-4">
+          <div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white border border-primary/20 text-primary text-xs font-bold uppercase tracking-wider shadow-2xs">
+            <span>🌸 Colecciones Artesanales</span>
+          </div>
+          <h3 class="text-2xl sm:text-3xl font-serif font-bold text-ink">
+            ¿Buscas una colección en especial?
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto font-light leading-relaxed">
+            Cada una de nuestras líneas cuenta con su propio catálogo especializado. Elige el catálogo de tu interés para ver todos los modelos disponibles, anillados dorados y versículos inspiradores.
+          </p>
+          <div class="pt-2">
+            <a
+              href="/catalogo"
+              class="inline-flex items-center gap-2.5 px-8 py-4 bg-primary hover:bg-primary-dark text-white text-xs font-bold uppercase tracking-wider rounded-full shadow-floating hover:scale-105 active:scale-95 transition-all duration-300"
+            >
+              <span>Ver Catálogos Disponibles ({categories.length} colecciones)</span>
+              <span class="text-sm">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Craft Quality Pillars / Empaque & Calidad -->
+    <QualityPillars settings={settings} />
+
+    <!-- Corporate Events -->
+    <CorporateEvents whatsappNumber={whatsappNumber} settings={settings} corporateBanner={corporateBanner} />
+  </main>
+
+  <Footer settings={settings} />
+  <WhatsAppButton whatsappNumber={whatsappNumber} />
+  <Toast />
+
+  <!-- Client-side Interactive Logic -->
+  <script is:inline>
+    // Bag trigger opens quick summary
+    document.getElementById('bagTrigger')?.addEventListener('click', () => {
+      if (typeof cart !== 'undefined' && cart.length > 0) {
+        showToast(`Tienes ${cart.length} sorpresas seleccionadas en tu bolsa`);
+      } else {
+        showToast('Tu bolsa de sorpresas está vacía');
+      }
+    });
+  </script>
+</MainLayout>

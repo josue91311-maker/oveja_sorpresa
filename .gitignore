@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+.pnp.*
+
+# Database
+database/dev.db
+database/dev.db-journal
+database/migrations/
+
+# Environment
+.env
+.env.local
+.env.production
+
+# Build outputs
+dist/
+.output/
+.astro/
+
+# Storage
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Stitch originals (zips) - reference copies kept in stitch-reference/
+*.zip
+libreta*.txt

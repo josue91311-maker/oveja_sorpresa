@@ -1,0 +1,134 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import AnnouncementBar from '../../components/AnnouncementBar.astro';
+import Header from '../../components/Header.astro';
+import ProductGrid from '../../components/ProductGrid.astro';
+import QualityPillars from '../../components/QualityPillars.astro';
+import Footer from '../../components/Footer.astro';
+import WhatsAppButton from '../../components/WhatsAppButton.astro';
+import Toast from '../../components/Toast.astro';
+
+import { getCampaigns, getCampaignBySlug, getSettings } from '../../lib/api';
+
+export async function getStaticPaths() {
+  const campaigns = await getCampaigns();
+  return campaigns.map((c) => ({
+    params: { slug: c.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const [campaign, settings] = await Promise.all([
+  getCampaignBySlug(slug as string),
+  getSettings(),
+]);
+
+if (!campaign) {
+  return Astro.redirect('/');
+}
+
+const cfg = campaign.themeConfig || {};
+
+// Merge global store settings with campaign's unique theme colors and branding
+const campaignSettings = {
+  ...settings,
+  generalTexts: {
+    ...settings?.generalTexts,
+    themeColors: {
+      primary: cfg.primaryColor || settings?.generalTexts?.themeColors?.primary || '#9A80BD',
+      primaryDark: cfg.primaryColor || settings?.generalTexts?.themeColors?.primaryDark || '#7D60A6',
+      secondary: cfg.secondaryColor || settings?.generalTexts?.themeColors?.secondary || '#F472B6',
+      background: cfg.backgroundColor || settings?.generalTexts?.themeColors?.background || '#FAF7FC',
+      ink: cfg.textColor || settings?.generalTexts?.themeColors?.ink || '#2D2235',
+    },
+  },
+};
+
+const announcementText = cfg.announcementText || `✨ ${campaign.name} · Edición Exclusiva para Regalar`;
+const whatsappNumber = settings?.whatsappNumber || "986951425";
+const campaignWaMessage = cfg.whatsappMessage || `Hola Ovejita Sorpresas 🌸, vi el catálogo especial de "${campaign.name}" y quisiera hacer un pedido.`;
+const bannerImg = campaign.bannerUrl || campaign.imageUrl;
+---
+
+<MainLayout title={`${campaign.name} | Catálogo Exclusivo Ovejita`} settings={campaignSettings}>
+  <AnnouncementBar text={announcementText} />
+  <Header settings={campaignSettings} />
+
+  <main>
+    <!-- Dedicated Thematic Campaign Hero with Custom Colors and Banner -->
+    <section class="py-10 sm:py-16 border-b border-border/70 relative overflow-hidden" style={{ backgroundColor: cfg.backgroundColor || '#FAF7FC' }}>
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center space-y-5 relative z-10">
+        <div class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold tracking-wider uppercase border border-secondary/40 shadow-xs" style={{ backgroundColor: 'var(--theme-bg, #FAF7FC)', color: 'var(--theme-secondary, #F472B6)' }}>
+          <span class="w-2 h-2 rounded-full inline-block animate-ping" style={{ backgroundColor: 'var(--theme-secondary, #F472B6)' }}></span>
+          <span>{cfg.badgeText || "Catálogo de Temporada Especial"}</span>
+        </div>
+
+        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-serif font-bold text-ink leading-tight">
+          {campaign.name}
+        </h1>
+
+        <p class="text-sm sm:text-base text-slate-600 max-w-xl mx-auto font-light leading-relaxed">
+          {campaign.description || "Selección exclusiva de libretas y sets de regalo diseñados especialmente para esta ocasión."}
+        </p>
+
+        <!-- Custom Campaign Banner Image if provided -->
+        {bannerImg && (
+          <div class="pt-2 max-w-2xl mx-auto">
+            <div class="rounded-3xl overflow-hidden shadow-card border border-border/80 aspect-[16/7] bg-white">
+              <img src={bannerImg} alt={campaign.name} class="w-full h-full object-cover" />
+            </div>
+          </div>
+        )}
+
+        <!-- Share / Quick Action button for WhatsApp -->
+        <div class="pt-2 flex flex-wrap justify-center gap-3">
+          <button
+            onclick="navigator.clipboard.writeText(window.location.href); alert('¡Enlace del catálogo copiado! Ya puedes compartirlo por WhatsApp o Instagram.');"
+            class="inline-flex items-center gap-2 px-6 py-3 bg-white border border-border hover:border-primary text-plum text-xs font-bold rounded-full shadow-xs transition-all hover:scale-105 active:scale-95 cursor-pointer"
+          >
+            <svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"></path>
+            </svg>
+            <span>Copiar link para WhatsApp</span>
+          </button>
+
+          <a
+            href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(campaignWaMessage)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 px-6 py-3 bg-primary hover:bg-primary-dark text-white text-xs font-bold rounded-full shadow-soft transition-all hover:scale-105 active:scale-95"
+          >
+            <span>Pedir por WhatsApp →</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Associated Catalogs / Categories included in this campaign -->
+    {campaign.categories && campaign.categories.length > 0 && (
+      <div class="py-4 bg-white/80 border-b border-border/60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center gap-2 flex-wrap text-xs">
+          <span class="text-slate-400 font-medium">Catálogos incluidos en esta campaña:</span>
+          {campaign.categories.map((cat: any) => (
+            <a
+              href={`/catalogo/${cat.slug}`}
+              class="px-3.5 py-1.5 rounded-full bg-white border border-secondary/40 text-primary font-bold shadow-2xs hover:bg-secondary hover:text-white transition-all"
+            >
+              📚 {cat.name}
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <!-- Products in this specific Campaign -->
+    <ProductGrid products={campaign.products || []} whatsappNumber={whatsappNumber} />
+
+    <!-- Craft Quality Pillars -->
+    <QualityPillars />
+  </main>
+
+  <Footer settings={campaignSettings} />
+  <WhatsAppButton whatsappNumber={whatsappNumber} defaultMessage={campaignWaMessage} />
+  <Toast />
+</MainLayout>

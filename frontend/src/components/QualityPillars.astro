@@ -1,0 +1,74 @@
+---
+interface Props {
+  settings?: any;
+}
+
+const { settings = {} } = Astro.props;
+const generalTexts = settings?.generalTexts || {};
+const pillarsData = generalTexts.qualityPillars || {};
+
+const sectionTag = pillarsData.tag || "Excelencia en el Detalle";
+const sectionTitle = pillarsData.title || "Empaque & Calidad Artesanal";
+const sectionSubtitle = pillarsData.subtitle || "Cada pieza es armada y empaquetada a mano con cariño especial.";
+
+const defaultCards = [
+  {
+    num: "01",
+    title: "Hojas Bond 90 Gramos",
+    desc: "Gramaje superior resistente a tintas de gel, plumones y resaltadores sin traspasar la página.",
+  },
+  {
+    num: "02",
+    title: "Tapas Resistentes",
+    desc: "Laminado mate aterciopelado que protege de polvo y humedad con elegancia perdurable.",
+  },
+  {
+    num: "03",
+    title: "Wire-o Dorado",
+    desc: "Anillado metálico doble para apertura rotatoria 360° y durabilidad en tu escritorio.",
+  },
+  {
+    num: "04",
+    title: "Regalo Completo",
+    desc: "Dijes metálicos, espejos flor y envoltura con dedicatoria personalizada lista para entregar.",
+  },
+];
+
+const cards = pillarsData.cards && pillarsData.cards.length === 4 ? pillarsData.cards : defaultCards;
+---
+
+<section class="py-16 sm:py-20 bg-[#FFFDFE] scroll-mt-20 relative" id="empaque-calidad">
+  <!-- Anchor alias for legacy #experiencia -->
+  <div id="experiencia" class="absolute -top-24 pointer-events-none"></div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center max-w-2xl mx-auto mb-12 space-y-2">
+      <p class="text-xs font-brand font-bold uppercase tracking-widest text-primary">
+        {sectionTag}
+      </p>
+      <h2 class="text-2xl sm:text-4xl font-serif font-bold text-ink">
+        {sectionTitle}
+      </h2>
+      <p class="text-xs sm:text-sm text-slate-500 font-light max-w-lg mx-auto leading-relaxed">
+        {sectionSubtitle}
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-left">
+      {cards.map((card: any, idx: number) => (
+        <div class="p-5 rounded-2xl bg-white border border-border hover:border-primary/40 shadow-soft hover:shadow-floating transition-all duration-300 space-y-2 group">
+          <div class="w-8 h-8 rounded-full bg-primary-soft text-primary font-bold flex items-center justify-center text-xs font-brand group-hover:scale-110 transition-transform">
+            {card.num || `0${idx + 1}`}
+          </div>
+          <h3 class="font-brand font-bold text-sm sm:text-base text-ink group-hover:text-primary transition-colors">
+            {card.title}
+          </h3>
+          <p class="text-xs text-slate-500 leading-relaxed font-light">
+            {card.desc}
+          </p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+

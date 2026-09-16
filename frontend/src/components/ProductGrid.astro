@@ -1,0 +1,43 @@
+---
+import ProductCard from './ProductCard.astro';
+
+interface Props {
+  products: any[];
+  whatsappNumber?: string;
+}
+
+const { products = [], whatsappNumber } = Astro.props;
+---
+
+<section class="py-12 bg-[#FFFDFE] border-t border-border/60" id="catalogo">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="text-center max-w-3xl mx-auto mb-10 space-y-2.5">
+      <p class="text-xs font-bold uppercase tracking-[0.25em] text-primary">
+        Catálogo de Edición Especial
+      </p>
+      <h2 class="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-ink">
+        Detalles creados para acompañar tu fe
+      </h2>
+      <p class="text-xs sm:text-sm text-slate-500 font-light max-w-xl mx-auto">
+        Libretas planificadoras, devocionales y kits completos con espejos de cartera diseñados para iluminar cada jornada.
+      </p>
+    </div>
+
+    <!-- 3-Column Responsive Grid matching Stitch Desktop & Mobile -->
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10"
+      id="productsGrid"
+    >
+      {products.map((p) => (
+        <ProductCard product={p} whatsappNumber={whatsappNumber} />
+      ))}
+    </div>
+
+    {products.length === 0 && (
+      <div class="text-center py-16 text-slate-400 text-sm">
+        No hay productos disponibles en esta categoría actualmente.
+      </div>
+    )}
+  </div>
+</section>

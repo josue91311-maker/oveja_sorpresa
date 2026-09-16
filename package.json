@@ -1,0 +1,28 @@
+{
+  "name": "ovejita-sorpresas",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Ovejita Sorpresas — Tienda de Regalos & Papelería con Propósito",
+  "workspaces": [
+    "shared",
+    "backend",
+    "frontend",
+    "admin"
+  ],
+  "scripts": {
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "dev:admin": "npm run dev --workspace=admin",
+    "db:push:local": "npx prisma db push --schema=database/schema.prisma",
+    "db:push:prod": "npx prisma db push --schema=database/schema.postgres.prisma",
+    "db:generate:local": "npx prisma generate --schema=database/schema.prisma",
+    "db:generate:prod": "npx prisma generate --schema=database/schema.postgres.prisma",
+    "db:migrate": "npx prisma migrate dev --schema=database/schema.prisma",
+    "db:seed": "npx tsx database/seed.ts",
+    "db:reset": "npx prisma migrate reset --schema=database/schema.prisma --force",
+    "db:studio": "npx prisma studio --schema=database/schema.prisma",
+    "db:studio:prod": "npx prisma studio --schema=database/schema.postgres.prisma",
+    "build": "npm run build --workspaces",
+    "lint": "npm run lint --workspaces --if-present"
+  }
+}

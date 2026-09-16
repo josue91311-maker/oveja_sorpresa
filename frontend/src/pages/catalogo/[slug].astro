@@ -1,0 +1,278 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import AnnouncementBar from '../../components/AnnouncementBar.astro';
+import Header from '../../components/Header.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import Pagination from '../../components/Pagination.astro';
+import QualityPillars from '../../components/QualityPillars.astro';
+import Footer from '../../components/Footer.astro';
+import WhatsAppButton from '../../components/WhatsAppButton.astro';
+import Toast from '../../components/Toast.astro';
+
+import { getCategories, getProducts, getSettings } from '../../lib/api';
+
+export async function getStaticPaths() {
+  const categories = await getCategories();
+  return categories.map((cat) => ({
+    params: { slug: cat.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const [categories, allProducts, settings] = await Promise.all([
+  getCategories(),
+  getProducts(),
+  getSettings(),
+]);
+
+const currentCategory = categories.find((c) => c.slug === slug);
+
+if (!currentCategory) {
+  return Astro.redirect('/');
+}
+
+// Filter all products belonging to this category
+const categoryProducts = allProducts.filter(
+  (p) => p.categoryId === currentCategory.id || p.category?.slug === slug
+);
+
+const whatsappNumber = settings?.whatsappNumber || "986951425";
+const announcementText = `🌸 Catálogo Exclusivo: ${currentCategory.name} · Envíos con amor a todo el Perú`;
+const shareMessage = `Hola Ovejita Sorpresas 🌸, vi el catálogo de "${currentCategory.name}" y deseo consultar por un pedido:`;
+---
+
+<MainLayout title={`Catálogo: ${currentCategory.name} | Ovejita Sorpresas`} settings={settings}>
+  <AnnouncementBar text={announcementText} />
+  <Header settings={settings} />
+
+  <main>
+    <!-- Catalog Editorial Header -->
+    <section class="py-12 sm:py-16 bg-gradient-to-b from-primary-soft/40 via-[#FAF8FB] to-[#FFFDFE] border-b border-border/70 relative overflow-hidden">
+      <!-- Background subtle floating bubbles -->
+      <div class="absolute -top-10 -right-10 w-72 h-72 bg-pink-200/30 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-10 -left-10 w-72 h-72 bg-purple-200/30 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center space-y-4 relative z-10">
+        <!-- Breadcrumb -->
+        <nav class="flex justify-center items-center gap-2 text-xs text-slate-400 font-medium mb-2">
+          <a href="/" class="hover:text-primary transition-colors">Inicio</a>
+          <span>/</span>
+          <a href="/catalogo" class="hover:text-primary transition-colors">Catálogos</a>
+          <span>/</span>
+          <span class="text-plum font-bold">{currentCategory.name}</span>
+        </nav>
+
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-secondary/30 text-primary text-xs font-bold uppercase tracking-wider shadow-xs">
+          <span>🌸 Catálogo Especial</span>
+          <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+          <span>{categoryProducts.length} {categoryProducts.length === 1 ? 'modelo' : 'modelos'}</span>
+        </div>
+
+        <h1 class="text-3xl sm:text-5xl font-serif font-bold text-ink leading-tight">
+          {currentCategory.name}
+        </h1>
+
+        <p class="text-sm sm:text-base text-slate-600 max-w-xl mx-auto font-light leading-relaxed">
+          {currentCategory.description || "Explora toda nuestra variedad de cuadernos, libretas y detalles artesanales hechos para inspirar y acompañar tu camino."}
+        </p>
+
+        <!-- WhatsApp Quick Share Actions (Requirement: Shareable Catalog Link) -->
+        <div class="pt-4 flex flex-wrap justify-center gap-3">
+          <button
+            type="button"
+            id="copyCatalogLinkBtn"
+            class="inline-flex items-center gap-2 px-6 py-3 bg-white border border-border hover:border-primary text-plum text-xs font-bold rounded-full shadow-xs transition-all hover:scale-105 active:scale-95 cursor-pointer"
+          >
+            <svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"></path>
+            </svg>
+            <span>Copiar link de este catálogo</span>
+          </button>
+
+          <a
+            href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(shareMessage)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 px-6 py-3 bg-primary hover:bg-primary-dark text-white text-xs font-bold rounded-full shadow-soft transition-all hover:scale-105 active:scale-95 cursor-pointer"
+          >
+            <span>Consultar disponibilidad por WhatsApp →</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Products Grid of this specific category -->
+    <section class="py-12 bg-[#FFFDFE]" id="categoryGridContainer">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Quick Switcher to Other Catalogs -->
+        <div class="mb-8 flex items-center justify-between flex-wrap gap-4 border-b border-border/80 pb-4">
+          <div class="flex items-center gap-2 overflow-x-auto no-scrollbar text-xs">
+            <span class="text-slate-400 font-medium whitespace-nowrap">Ver otros catálogos:</span>
+            <a
+              href="/catalogo"
+              class="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition-colors whitespace-nowrap"
+            >
+              ← Todos ({allProducts.length})
+            </a>
+            {categories.map((c) => (
+              <a
+                href={`/catalogo/${c.slug}`}
+                class={`px-3.5 py-1.5 rounded-full font-semibold transition-all whitespace-nowrap ${
+                  c.slug === slug
+                    ? 'bg-primary text-white shadow-xs'
+                    : 'bg-white border border-border text-plum hover:border-primary'
+                }`}
+              >
+                {c.name}
+              </a>
+            ))}
+          </div>
+
+          <div class="text-xs text-slate-400 font-medium">
+            Mostrando {categoryProducts.length} {categoryProducts.length === 1 ? 'modelo' : 'modelos'}
+          </div>
+        </div>
+
+        <!-- 3-Column Responsive Grid with Multi-Image Carousels -->
+        <div
+          id="categoryProductsGrid"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10"
+        >
+          {categoryProducts.map((p) => (
+            <ProductCard product={p} whatsappNumber={whatsappNumber} />
+          ))}
+        </div>
+
+        {categoryProducts.length === 0 && (
+          <div class="text-center py-20 max-w-md mx-auto space-y-4">
+            <div class="text-4xl">🌸</div>
+            <h3 class="font-serif font-bold text-xl text-ink">Catálogo en preparación</h3>
+            <p class="text-xs text-slate-500">
+              Estamos agregando nuevos diseños hechos a mano a esta categoría. ¡Consúltanos por WhatsApp para encargos personalizados!
+            </p>
+            <a
+              href="/catalogo"
+              class="inline-block px-6 py-2.5 bg-primary text-white rounded-full text-xs font-bold shadow-soft"
+            >
+              Ver todos los catálogos
+            </a>
+          </div>
+        )}
+
+        <!-- Aesthetic Pagination for category catalog -->
+        <Pagination id="categoryPagination" />
+      </div>
+    </section>
+
+    <!-- Quality Guarantees -->
+    <QualityPillars settings={settings} />
+  </main>
+
+  <Footer settings={settings} />
+  <WhatsAppButton whatsappNumber={whatsappNumber} defaultMessage={shareMessage} />
+  <Toast />
+
+  <script is:inline>
+    // Copy link handler
+    document.getElementById('copyCatalogLinkBtn')?.addEventListener('click', () => {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+          showToast('¡Enlace del catálogo copiado! Listo para compartir por WhatsApp 🌸');
+        }).catch(() => {
+          showToast('¡Enlace copiado al portapapeles!');
+        });
+      }
+    });
+
+    // Client-side pagination for this category
+    (function () {
+      const ITEMS_PER_PAGE = 9;
+      let currentPage = 1;
+
+      const grid = document.getElementById('categoryProductsGrid');
+      const cards = Array.from(document.querySelectorAll('#categoryProductsGrid .product-item'));
+      const paginationContainer = document.getElementById('categoryPagination');
+      const prevBtn = document.getElementById('paginationPrevBtn');
+      const nextBtn = document.getElementById('paginationNextBtn');
+      const numbersContainer = document.getElementById('paginationNumbers');
+      const infoStart = document.getElementById('paginationInfoStart');
+      const infoEnd = document.getElementById('paginationInfoEnd');
+      const infoTotal = document.getElementById('paginationInfoTotal');
+
+      const totalItems = cards.length;
+      const totalPages = Math.max(1, Math.ceil(totalItems / ITEMS_PER_PAGE));
+
+      if (totalItems <= ITEMS_PER_PAGE) {
+        if (paginationContainer) paginationContainer.style.display = 'none';
+        return;
+      }
+
+      function render(smoothScroll = false) {
+        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+        const endIndex = startIndex + ITEMS_PER_PAGE;
+
+        cards.forEach((card, idx) => {
+          if (idx >= startIndex && idx < endIndex) {
+            card.style.display = 'flex';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        if (infoStart) infoStart.textContent = (startIndex + 1).toString();
+        if (infoEnd) infoEnd.textContent = Math.min(endIndex, totalItems).toString();
+        if (infoTotal) infoTotal.textContent = totalItems.toString();
+
+        if (prevBtn) prevBtn.disabled = currentPage <= 1;
+        if (nextBtn) nextBtn.disabled = currentPage >= totalPages;
+
+        if (numbersContainer) {
+          numbersContainer.innerHTML = '';
+          for (let p = 1; p <= totalPages; p++) {
+            const pageBtn = document.createElement('button');
+            pageBtn.type = 'button';
+            pageBtn.className = p === currentPage
+              ? 'w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-primary text-white font-bold text-xs shadow-soft scale-105 flex items-center justify-center ring-2 ring-primary/20 transition-transform cursor-default'
+              : 'w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-white border border-border text-plum hover:border-primary hover:text-primary hover:bg-primary-soft/40 font-bold text-xs transition-all flex items-center justify-center shadow-2xs cursor-pointer';
+            pageBtn.textContent = p.toString();
+            pageBtn.setAttribute('aria-label', `Ir a página ${p}`);
+
+            if (p !== currentPage) {
+              pageBtn.addEventListener('click', () => {
+                currentPage = p;
+                render(true);
+              });
+            }
+
+            numbersContainer.appendChild(pageBtn);
+          }
+        }
+
+        if (smoothScroll) {
+          const container = document.getElementById('categoryGridContainer');
+          if (container) {
+            const rect = container.getBoundingClientRect();
+            const offset = window.pageYOffset + rect.top - 80;
+            window.scrollTo({ top: offset, behavior: 'smooth' });
+          }
+        }
+      }
+
+      prevBtn?.addEventListener('click', () => {
+        if (currentPage > 1) {
+          currentPage--;
+          render(true);
+        }
+      });
+
+      nextBtn?.addEventListener('click', () => {
+        if (currentPage < totalPages) {
+          currentPage++;
+          render(true);
+        }
+      });
+
+      render(false);
+    })();
+  </script>
+</MainLayout>

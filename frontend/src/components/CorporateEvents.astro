@@ -1,0 +1,14 @@
+---
+import SocialShowcase from './SocialShowcase.astro';
+
+interface Props {
+  whatsappNumber?: string;
+  settings?: any;
+  corporateBanner?: any;
+}
+
+const { settings = {} } = Astro.props;
+---
+
+<SocialShowcase settings={settings} />
+

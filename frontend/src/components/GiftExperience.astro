@@ -1,0 +1,101 @@
+---
+interface Props {
+  whatsappNumber?: string;
+}
+
+const { whatsappNumber = "986951425" } = Astro.props;
+---
+
+<section class="py-16 sm:py-20 bg-[#FAF8FB] relative" id="experiencia">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="bg-white rounded-[2.5rem] p-6 sm:p-12 lg:p-16 border border-border shadow-card">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        <!-- Left Column: Storytelling -->
+        <div class="lg:col-span-7 space-y-6">
+          <div class="inline-flex items-center space-x-2 text-primary text-xs font-bold uppercase tracking-widest">
+            <span class="h-px w-6 bg-primary"></span>
+            <span>Un regalo listo para hacer sonreír</span>
+          </div>
+
+          <h2 class="text-3xl sm:text-4xl font-serif font-bold text-ink leading-tight">
+            Diseñado como un obsequio, <br />
+            <span class="font-script text-4xl sm:text-5xl text-primary">desde el primer lazo.</span>
+          </h2>
+
+          <p class="text-slate-600 text-sm sm:text-base leading-relaxed font-light">
+            En <strong>Ovejita Sorpresas</strong> creemos que recibir un paquete debe sentirse como un abrazo genuino. Por eso no cobramos empaques adicionales: tu orden siempre viaja envuelta en papel de seda perfumado, cerrada con cinta de raso y acompañada de tu mensaje caligrafiado a mano.
+          </p>
+
+          <!-- Features Breakdown -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-2">
+            <div class="p-4 rounded-2xl bg-primary-soft/50 border border-border">
+              <span class="text-primary text-xl block mb-1">🌸</span>
+              <p class="font-bold text-xs text-ink">Papel Seda Perfumado</p>
+              <p class="text-[11px] text-slate-500 mt-1">Fragancia sutil con notas florales y de vainilla.</p>
+            </div>
+            <div class="p-4 rounded-2xl bg-primary-soft/50 border border-border">
+              <span class="text-primary text-xl block mb-1">🎀</span>
+              <p class="font-bold text-xs text-ink">Lazo de Raso Satinado</p>
+              <p class="text-[11px] text-slate-500 mt-1">Atado artesanalmente en nuestro taller.</p>
+            </div>
+            <div class="p-4 rounded-2xl bg-primary-soft/50 border border-border">
+              <span class="text-primary text-xl block mb-1">✍️</span>
+              <p class="font-bold text-xs text-ink">Caligrafía Manual</p>
+              <p class="text-[11px] text-slate-500 mt-1">Escribimos las palabras que le quieres decir.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Interactive Dedication Simulator -->
+        <div class="lg:col-span-5 bg-purple-50/70 p-6 sm:p-8 rounded-3xl border border-border">
+          <h3 class="font-serif font-bold text-lg text-ink mb-1.5">Simulador de Dedicatoria</h3>
+          <p class="text-xs text-slate-500 mb-4">
+            Ingresa el mensaje que caligrafiaremos en la tarjeta para tu persona favorita:
+          </p>
+
+          <form class="space-y-3.5" id="dedicationForm" onsubmit="event.preventDefault();">
+            <div>
+              <label class="block text-[11px] font-bold uppercase tracking-wider text-plum mb-1" for="recipient-name">
+                ¿Para quién es?
+              </label>
+              <input
+                class="w-full text-xs bg-white border border-border rounded-xl px-3.5 py-2.5 focus:ring-2 focus:ring-primary/30 focus:outline-none"
+                id="recipient-name"
+                placeholder="Ej. Para mi mamá Andrea"
+                type="text"
+              />
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold uppercase tracking-wider text-plum mb-1" for="gift-note-text">
+                Mensaje en la tarjeta
+              </label>
+              <textarea
+                class="w-full text-xs bg-white border border-border rounded-xl px-3.5 py-2 focus:ring-2 focus:ring-primary/30 focus:outline-none"
+                id="gift-note-text"
+                placeholder="Ej. Que Dios guíe tus pasos cada mañana. ¡Te amo!"
+                rows="3"
+              ></textarea>
+            </div>
+
+            <!-- Preview Card Live -->
+            <div class="p-3 bg-white/90 rounded-xl border border-border text-[11.5px] italic text-slate-600 hidden" id="liveCardPreview">
+              <span class="not-italic font-bold block text-primary text-[10px] uppercase mb-0.5">Vista previa tarjeta:</span>
+              <span id="previewText"></span>
+            </div>
+
+            <div class="pt-1">
+              <button
+                class="w-full py-3 bg-primary text-white text-xs font-bold rounded-xl hover:bg-primary-dark transition-colors shadow-xs flex items-center justify-center gap-1.5"
+                id="saveDedicationBtn"
+                type="button"
+              >
+                <span>Guardar Dedicatoria para mi Pedido</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

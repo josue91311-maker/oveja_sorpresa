@@ -1,0 +1,42 @@
+---
+interface Props {
+  whatsappNumber?: string;
+  defaultMessage?: string;
+}
+
+const {
+  whatsappNumber = "986951425",
+  defaultMessage = "Hola Ovejita Sorpresas 🌸, deseo asesoría personalizada y realizar un pedido.",
+} = Astro.props;
+
+const waLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(defaultMessage)}`;
+---
+
+
+
+<aside aria-label="Contacto por WhatsApp">
+  <a
+    href={waLink}
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Chatear ahora por WhatsApp con Ovejita Sorpresas"
+    class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-3.5 py-2.5 sm:px-5 sm:py-3.5 rounded-full shadow-floating hover:shadow-xl flex items-center gap-2 sm:gap-2.5 transition-all duration-300 hover:scale-105 group"
+  >
+    <!-- WhatsApp Icon with Live Online Pulse Indicator -->
+    <div class="relative flex items-center justify-center shrink-0">
+      <svg class="w-5 h-5 sm:w-6 sm:h-6 fill-current" viewBox="0 0 24 24">
+        <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.54 1.772.84 2.79.84 3.18 0 5.767-2.587 5.768-5.766.001-3.181-2.586-5.766-5.767-5.766zm6.839 5.765c-.002 3.766-3.074 6.836-6.84 6.836-.88 0-1.748-.172-2.553-.497l-3.597.944.96-3.504c-.39-.773-.596-1.636-.596-2.518.002-3.766 3.074-6.836 6.841-6.836 3.766 0 6.838 3.07 6.84 6.836z"></path>
+      </svg>
+      <span class="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-white"></span>
+      </span>
+    </div>
+
+    <!-- Text: Solo "Chatear ahora" -->
+    <span class="text-xs sm:text-sm font-bold whitespace-nowrap tracking-wide leading-none">
+      Chatear ahora
+    </span>
+  </a>
+</aside>
+

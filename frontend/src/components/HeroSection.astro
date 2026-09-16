@@ -1,0 +1,272 @@
+---
+interface Props {
+  featuredProduct?: any;
+  settings?: any;
+  heroBanner?: any;
+}
+
+const { featuredProduct, settings = {}, heroBanner } = Astro.props;
+
+const generalTexts = settings?.generalTexts || {};
+const heroTag = generalTexts.heroTag || "Edición Coleccionable • Primavera con Propósito";
+const heroTitle = heroBanner?.title || generalTexts.heroTitle || "Papelería hecha a mano para atesorar momentos y regalar sonrisas.";
+const heroSubtitle = heroBanner?.subtitle || generalTexts.heroSubtitle || "Cada cuaderno y set de obsequio nace con una promesa: inspirar tu cotidianidad a través de versículos grabados en el alma, anillados artesanales y empaques fragantes listos para entregar.";
+const heroLinkText = heroBanner?.linkText || "Explorar el Catálogo Floral";
+const heroLinkUrl = heroBanner?.linkUrl || "#catalogo";
+
+const isEventMode = heroBanner?.bannerStyle === 'event';
+const product = heroBanner?.product || featuredProduct || {
+  name: "Cuaderno Floral 'Deléitate'",
+  price: 36.00,
+  finalPrice: 36.00,
+  shortDescription: "Tapa dura laminada mate con stamping floral, elástico ajustable y flor esmaltada protectora. Salmo 37:4.",
+  primaryImage: { url: heroBanner?.imageUrl || "/images/libreta3.png" },
+};
+
+const images = product?.images && product.images.length > 0
+  ? product.images
+  : [{ url: heroBanner?.imageUrl || product?.primaryImage?.url || "/images/libreta3.png" }];
+
+const hasMultipleImages = images.length > 1;
+---
+
+<section class="relative overflow-hidden pt-3 sm:pt-5 lg:pt-6 pb-8 sm:pb-12 bg-gradient-to-b from-[#FAF8FB]/60 to-[#FFFDFE]" id="hero">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+      <!-- Left Column: Editorial Headline -->
+      <div class="lg:col-span-7 flex flex-col justify-center text-left space-y-6">
+        <div class="inline-flex items-center space-x-2 bg-pink-100/60 border border-pink-200/80 px-4 py-1.5 rounded-full w-max text-primary font-medium text-xs tracking-wide">
+          <span class="inline-block w-2 h-2 rounded-full bg-secondary"></span>
+          <span>{heroTag}</span>
+        </div>
+
+        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-serif font-bold text-ink leading-[1.18] tracking-tight">
+          {heroTitle}
+        </h1>
+
+        <p class="text-sm sm:text-base lg:text-lg text-slate-600 max-w-xl font-light leading-relaxed">
+          {heroSubtitle}
+        </p>
+
+        <!-- Craft Badges Container -->
+        <div class="pt-1 flex flex-wrap gap-2 sm:gap-2.5">
+          <span class="inline-flex items-center text-xs font-semibold bg-white border border-border px-3.5 py-1.5 rounded-full text-plum shadow-xs">
+            ✦ Wire-o Oro Brillante
+          </span>
+          <span class="inline-flex items-center text-xs font-semibold bg-white border border-border px-3.5 py-1.5 rounded-full text-plum shadow-xs">
+            ✦ Hojas Bond 90g Antitransparencia
+          </span>
+          <span class="inline-flex items-center text-xs font-semibold bg-white border border-border px-3.5 py-1.5 rounded-full text-plum shadow-xs">
+            ✦ Lazo & Dedicatoria a Mano
+          </span>
+        </div>
+
+        <!-- Call to Actions -->
+        <div class="pt-3 flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
+          <a
+            class="inline-flex justify-center items-center px-8 py-4 rounded-full bg-primary text-white font-semibold text-sm shadow-soft hover:bg-primary-dark hover:scale-105 active:scale-95 transition-all duration-300"
+            href={heroLinkUrl}
+          >
+            {heroLinkText}
+          </a>
+          <a
+            class="inline-flex justify-center items-center px-6 py-4 rounded-full border border-border text-ink hover:bg-primary-soft/50 font-medium text-sm transition-colors"
+            href="#catalogo"
+          >
+            Ver Productos Destacados
+          </a>
+        </div>
+
+        <!-- Reassurance Note -->
+        <div class="pt-2 flex items-center space-x-2 text-xs text-slate-500">
+          <svg class="w-4 h-4 text-emerald-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              clip-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+              fill-rule="evenodd"
+            ></path>
+          </svg>
+          <span>Elaborado y despachado con amor desde nuestros talleres</span>
+        </div>
+      </div>
+
+      <!-- Right Column: Hero Product / Event Showcase Card -->
+      <div class="lg:col-span-5 relative">
+        <div class="relative mx-auto max-w-sm sm:max-w-md lg:max-w-none">
+          <!-- Artistic backplate aura -->
+          <div class="absolute -inset-4 bg-gradient-to-tr from-secondary-soft via-primary-soft to-pink-50 rounded-[2.5rem] filter blur-xl opacity-80 -z-10"></div>
+
+          {isEventMode ? (
+            <!-- Mode 1: Evento / Anuncio Especial Card -->
+            <div class="relative bg-white p-4 sm:p-5 rounded-3xl shadow-card border border-border/80 card-hover-tactile">
+              <div class="relative overflow-hidden rounded-2xl aspect-[4/5] bg-slate-50 mb-4 group">
+                <img
+                  alt={heroBanner?.title || "Evento Ovejita"}
+                  class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+                  src={heroBanner?.imageUrl || "/images/libreta3.png"}
+                />
+                <div class="absolute top-3 right-3 bg-white/95 backdrop-blur px-3 py-1 rounded-full text-[11px] font-semibold text-secondary shadow-xs animate-badge-pulse">
+                  📢 Evento Especial
+                </div>
+              </div>
+
+              <!-- Event Details -->
+              <div class="space-y-2">
+                <span class="text-xs uppercase tracking-widest text-primary font-bold">
+                  Edición Especial
+                </span>
+                <h3 class="text-xl font-serif font-bold text-ink">
+                  {heroBanner?.title || "Talleres & Eventos Ovejita"}
+                </h3>
+                <p class="text-xs text-slate-500 line-clamp-2">
+                  {heroBanner?.subtitle || "Participa en nuestras experiencias presenciales, talleres de lettering y eventos corporativos."}
+                </p>
+                <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+                  <span class="text-[11px] text-plum/80 font-medium">Cupos limitados</span>
+                  <a
+                    class="text-xs font-bold text-primary hover:underline"
+                    href={heroBanner?.linkUrl || "#catalogo"}
+                  >
+                    {heroBanner?.linkText || "Más información →"}
+                  </a>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <!-- Mode 2: Producto Destacado con Carrusel Interactivo de Fotos -->
+            <div class="relative bg-white p-4 sm:p-5 rounded-3xl shadow-card border border-border/80 card-hover-tactile">
+              <!-- Carousel Frame -->
+              <div
+                class="relative overflow-hidden rounded-2xl aspect-[4/5] bg-slate-50 mb-4 group/carousel select-none"
+                id="heroProductCarousel"
+                data-has-multiple={hasMultipleImages ? "true" : "false"}
+                data-total-slides={images.length}
+              >
+                <!-- Carousel Track -->
+                <div
+                  class="carousel-track flex w-full h-full transition-transform duration-500 ease-out"
+                  style="transform: translateX(0%);"
+                >
+                  {images.map((img: any, idx: number) => (
+                    <a
+                      href={product.slug ? `/producto/${product.slug}` : "#catalogo"}
+                      class="w-full h-full flex-shrink-0 block relative"
+                      title={`Ver detalle de ${product.name}`}
+                    >
+                      <img
+                        alt={img.altText || product.name}
+                        class="w-full h-full object-cover object-center group-hover/carousel:scale-105 transition-transform duration-700 ease-out cursor-pointer"
+                        src={img.url}
+                        loading={idx === 0 ? "eager" : "lazy"}
+                      />
+                    </a>
+                  ))}
+                </div>
+
+                <!-- Top Badge -->
+                <div class="absolute top-3 right-3 bg-white/95 backdrop-blur px-3 py-1 rounded-full text-[11px] font-semibold text-plum shadow-xs animate-badge-pulse pointer-events-none z-10">
+                  ⭐ Edición Destacada
+                </div>
+
+                {product.category && (
+                  <div class="absolute bottom-3 left-3 bg-[#2D2235]/80 backdrop-blur-sm text-white px-2.5 py-1 rounded-lg text-[10px] font-medium flex items-center gap-1 pointer-events-none z-10">
+                    <span>{product.category.name}</span>
+                  </div>
+                )}
+
+                <!-- Multi-image Dynamic Navigation Controls -->
+                {hasMultipleImages && (
+                  <>
+                    <!-- Prev Button -->
+                    <button
+                      type="button"
+                      class="carousel-prev absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/90 hover:bg-white text-plum shadow-md backdrop-blur-sm flex items-center justify-center opacity-0 group-hover/carousel:opacity-100 transition-all hover:scale-110 active:scale-95 z-20 cursor-pointer"
+                      aria-label="Foto anterior"
+                    >
+                      <svg class="w-4 h-4 text-plum" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </button>
+
+                    <!-- Next Button -->
+                    <button
+                      type="button"
+                      class="carousel-next absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/90 hover:bg-white text-plum shadow-md backdrop-blur-sm flex items-center justify-center opacity-0 group-hover/carousel:opacity-100 transition-all hover:scale-110 active:scale-95 z-20 cursor-pointer"
+                      aria-label="Foto siguiente"
+                    >
+                      <svg class="w-4 h-4 text-plum" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+
+                    <!-- Dots -->
+                    <div class="carousel-dots absolute bottom-3 left-0 right-0 flex justify-center items-center gap-1.5 z-20 pointer-events-auto">
+                      {images.map((_: any, idx: number) => (
+                        <button
+                          type="button"
+                          data-slide-index={idx}
+                          class={`carousel-dot h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                            idx === 0 ? "w-5 bg-white shadow-xs" : "w-1.5 bg-white/60 hover:bg-white/90"
+                          }`}
+                          aria-label={`Ver foto ${idx + 1}`}
+                        />
+                      ))}
+                    </div>
+
+                    <!-- Slide Counter Badge -->
+                    <div class="absolute bottom-3 right-3 bg-black/50 backdrop-blur-sm text-white text-[9px] font-bold px-2 py-0.5 rounded-md opacity-0 group-hover/carousel:opacity-100 transition-opacity pointer-events-none z-10">
+                      <span class="current-indicator">1</span>/{images.length}
+                    </div>
+                  </>
+                )}
+              </div>
+
+              <!-- Product Details -->
+              <div class="space-y-2">
+                <div class="flex items-baseline justify-between">
+                  <span class="text-xs uppercase tracking-widest text-primary font-bold">
+                    {product.category?.name || "Colección Especial"}
+                  </span>
+                  <span class="text-lg font-bold text-ink">
+                    S/ {Number(product.finalPrice || product.price || 0).toFixed(2)}
+                  </span>
+                </div>
+                <h3 class="text-xl font-serif font-bold text-ink">
+                  <a href={product.slug ? `/producto/${product.slug}` : "#catalogo"} class="hover:text-primary transition-colors">
+                    {product.name}
+                  </a>
+                </h3>
+                {product.shortDescription && (
+                  <p class="text-xs text-slate-500 line-clamp-2">
+                    {product.shortDescription}
+                  </p>
+                )}
+                <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                  <button
+                    type="button"
+                    class="add-to-bag-btn px-4 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-xl text-xs font-bold shadow-xs transition-all flex items-center gap-1.5 active:scale-95 cursor-pointer"
+                    data-product-id={product.id}
+                    data-product-name={product.name}
+                    data-product-price={product.finalPrice || product.price}
+                    data-product-img={images[0]?.url || "/images/libreta3.png"}
+                  >
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 4.5v15m7.5-7.5h-15" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+                    </svg>
+                    <span>Añadir a mi pedido</span>
+                  </button>
+                  <a
+                    class="text-xs font-bold text-primary hover:underline whitespace-nowrap"
+                    href={product.slug ? `/producto/${product.slug}` : "#catalogo"}
+                  >
+                    Ver detalles →
+                  </a>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

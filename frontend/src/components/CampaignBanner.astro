@@ -1,0 +1,60 @@
+---
+interface Props {
+  campaigns?: any[];
+}
+
+const { campaigns = [] } = Astro.props;
+const activeCampaigns = campaigns.filter((c) => c.products && c.products.length > 0);
+---
+
+{activeCampaigns.length > 0 && (
+  <section class="py-8 bg-gradient-to-b from-[#FFFDFE] to-[#FAF8FB] border-b border-border/70" data-purpose="active-campaigns-showcase">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {activeCampaigns.map((camp) => (
+        <div class="relative overflow-hidden bg-gradient-to-r from-primary-soft via-secondary-soft to-white rounded-[2rem] border border-primary/20 p-6 sm:p-8 shadow-soft flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="space-y-2.5 text-center md:text-left max-w-2xl">
+            <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/90 backdrop-blur-sm border border-secondary/30 rounded-full text-[11px] font-bold text-primary tracking-wider uppercase shadow-2xs">
+              <span class="w-2 h-2 rounded-full bg-secondary inline-block animate-ping"></span>
+              <span>Campaña Especial de Temporada</span>
+            </div>
+            
+            <h3 class="text-2xl sm:text-3xl font-serif font-bold text-ink">
+              {camp.name}
+            </h3>
+            
+            <p class="text-xs sm:text-sm text-slate-600 font-light leading-relaxed">
+              {camp.description || "Descubre los detalles exclusivos seleccionados para esta fecha especial."}
+            </p>
+
+            <div class="flex items-center gap-2 text-xs text-plum/80 font-medium justify-center md:justify-start">
+              <span>Incluye {camp.products.length} productos exclusivos</span>
+              <span>•</span>
+              <span class="text-secondary font-bold">Empaque y dedicatoria gratis</span>
+            </div>
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-center gap-3 shrink-0">
+            <a
+              href={`/campana/${camp.slug}`}
+              class="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-primary hover:bg-primary-dark text-white text-xs font-bold rounded-xl shadow-xs hover:scale-105 active:scale-95 transition-all"
+            >
+              <span>Ver Catálogo de Esta Campaña →</span>
+            </a>
+            
+            <button
+              type="button"
+              onclick={`navigator.clipboard.writeText(window.location.origin + '/campana/${camp.slug}'); alert('¡Enlace del catálogo copiado para WhatsApp!');`}
+              class="px-4 py-3.5 bg-white border border-border hover:border-primary text-plum text-xs font-bold rounded-xl shadow-2xs hover:bg-purple-50 transition-colors flex items-center gap-1.5"
+              title="Copiar link para WhatsApp"
+            >
+              <svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"></path>
+              </svg>
+              <span>Copiar Link</span>
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+)}

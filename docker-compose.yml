@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - DATABASE_URL=file:./database/dev.db
+      - JWT_SECRET=ovejita-dev-secret-cambiar-en-produccion-32chars
+      - FRONTEND_URL=http://localhost:4321
+      - ADMIN_URL=http://localhost:5173
+      - STORAGE_PROVIDER=local
+    volumes:
+      - ./database:/app/database
+      - ./backend/uploads:/app/backend/uploads

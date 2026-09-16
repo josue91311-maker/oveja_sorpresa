@@ -1,0 +1,273 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ═══════════════════════════════════════════
+// USUARIOS Y AUTENTICACIÓN
+// ═══════════════════════════════════════════
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("admin")
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ═══════════════════════════════════════════
+// CATEGORÍAS
+// ═══════════════════════════════════════════
+
+model Category {
+  id          String     @id @default(cuid())
+  name        String
+  slug        String     @unique
+  description String?
+  imageUrl    String?
+  parentId    String?
+  parent      Category?  @relation("CategoryTree", fields: [parentId], references: [id])
+  children    Category[] @relation("CategoryTree")
+  order       Int        @default(0)
+  active      Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  products           Product[]
+  campaignCategories CampaignCategory[]
+
+  @@index([slug])
+  @@index([parentId])
+}
+
+// ═══════════════════════════════════════════
+// COLECCIONES
+// ═══════════════════════════════════════════
+
+model Collection {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  imageUrl    String?
+  active      Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  products     Product[]
+  publications Publication[]
+
+  @@index([slug])
+}
+
+// ═══════════════════════════════════════════
+// PRODUCTOS
+// ═══════════════════════════════════════════
+
+model Product {
+  id               String      @id @default(cuid())
+  sku              String      @unique
+  name             String
+  slug             String      @unique
+  shortDescription String?
+  description      String?
+  categoryId       String?
+  category         Category?   @relation(fields: [categoryId], references: [id])
+  collectionId     String?
+  collection       Collection? @relation(fields: [collectionId], references: [id])
+  price            Float
+  previousPrice    Float?
+  status           String      @default("draft")
+  published        Boolean     @default(false)
+  featured         Boolean     @default(false)
+  isNew            Boolean     @default(false)
+  stock            Int         @default(0)
+  productType      String      @default("PHYSICAL")
+  digitalFileUrl   String?
+  digitalFileName  String?
+  digitalFileSize  Int?
+  createdBy        String?
+  updatedBy        String?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  images           ProductImage[]
+  discounts        Discount[]
+  publications     Publication[]
+  campaignProducts CampaignProduct[]
+  banners          Banner[]
+
+  @@index([slug])
+  @@index([categoryId])
+  @@index([collectionId])
+  @@index([status, published])
+}
+
+// ═══════════════════════════════════════════
+// IMÁGENES DE PRODUCTO
+// ═══════════════════════════════════════════
+
+model ProductImage {
+  id           String   @id @default(cuid())
+  productId    String
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url          String
+  provider     String   @default("local")
+  path         String
+  originalName String
+  mimeType     String
+  size         Int
+  order        Int      @default(0)
+  isPrimary    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  @@index([productId])
+}
+
+// ═══════════════════════════════════════════
+// DESCUENTOS
+// ═══════════════════════════════════════════
+
+model Discount {
+  id        String    @id @default(cuid())
+  productId String
+  product   Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  type      String
+  value     Float
+  startDate DateTime?
+  endDate   DateTime?
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([productId])
+  @@index([active, startDate, endDate])
+}
+
+// ═══════════════════════════════════════════
+// CAMPAÑAS
+// ═══════════════════════════════════════════
+
+model Campaign {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  imageUrl    String?
+  bannerUrl   String?
+  startDate   DateTime?
+  endDate     DateTime?
+  status      String    @default("draft")
+  priority    Int       @default(0)
+  themeConfig String?                         // JSON for custom colors, background, banner, and WhatsApp message
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+
+  products   CampaignProduct[]
+  categories CampaignCategory[]
+
+  @@index([slug])
+  @@index([status, startDate, endDate])
+}
+
+model CampaignProduct {
+  id         String   @id @default(cuid())
+  campaignId String
+  campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([campaignId, productId])
+}
+
+model CampaignCategory {
+  id         String   @id @default(cuid())
+  campaignId String
+  campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([campaignId, categoryId])
+}
+
+// ═══════════════════════════════════════════
+// PUBLICACIONES
+// ═══════════════════════════════════════════
+
+model Publication {
+  id                String      @id @default(cuid())
+  productId         String
+  product           Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  collectionId      String?
+  collection        Collection? @relation(fields: [collectionId], references: [id])
+  visible           Boolean     @default(true)
+  featured          Boolean     @default(false)
+  position          Int         @default(0)
+  publicTitle       String?
+  publicDescription String?
+  primaryImageUrl   String?
+  order             Int         @default(0)
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  @@index([productId])
+  @@index([visible, featured])
+}
+
+// ═══════════════════════════════════════════
+// BANNERS
+// ═══════════════════════════════════════════
+
+model Banner {
+  id          String    @id @default(cuid())
+  title       String?
+  subtitle    String?
+  imageUrl    String?
+  linkUrl     String?
+  linkText    String?
+  type        String    @default("hero")
+  position    String    @default("top")
+  order       Int       @default(0)
+  active      Boolean   @default(true)
+  bannerStyle String    @default("product")   // "product" or "event"
+  productId   String?
+  product     Product?  @relation(fields: [productId], references: [id], onDelete: SetNull)
+  startDate   DateTime?
+  endDate     DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([type, active])
+  @@index([productId])
+}
+
+// ═══════════════════════════════════════════
+// CONFIGURACIÓN DEL NEGOCIO
+// ═══════════════════════════════════════════
+
+model BusinessSettings {
+  id              String   @id @default("main")
+  businessName    String   @default("Ovejita Sorpresas")
+  description     String?
+  whatsappNumber  String?  @default("986951425")
+  contactNumber   String?
+  whatsappMessage String?
+  email           String?
+  instagram       String?
+  facebook        String?
+  tiktok          String?
+  logoUrl         String?
+  faviconUrl      String?
+  generalTexts    String?
+  schedules       String?
+  updatedAt       DateTime @updatedAt
+}

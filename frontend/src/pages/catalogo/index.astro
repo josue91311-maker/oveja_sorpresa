@@ -1,0 +1,169 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import AnnouncementBar from '../../components/AnnouncementBar.astro';
+import Header from '../../components/Header.astro';
+import QualityPillars from '../../components/QualityPillars.astro';
+import Footer from '../../components/Footer.astro';
+import WhatsAppButton from '../../components/WhatsAppButton.astro';
+import Toast from '../../components/Toast.astro';
+
+import { getCategories, getProducts, getSettings } from '../../lib/api';
+
+const [categories, products, settings] = await Promise.all([
+  getCategories(),
+  getProducts(),
+  getSettings(),
+]);
+
+const whatsappNumber = settings?.whatsappNumber || "986951425";
+const announcementText = "Nuestros Catálogos · Selecciona tu colección favorita con dedicatoria gratis";
+---
+
+<MainLayout
+  title="Nuestros Catálogos | Ovejita Sorpresas"
+  description="Selecciona y explora los catálogos especializados de Ovejita Sorpresas: libretas artesanales, kits con espejo, cuadernos de journaling y sets de regalo."
+  settings={settings}
+>
+  <AnnouncementBar text={announcementText} />
+  <Header settings={settings} />
+
+  <main class="bg-[#FFFDFE] min-h-screen">
+    <!-- Header Section -->
+    <section class="py-12 sm:py-16 bg-gradient-to-b from-primary-soft/50 via-[#FAF8FB] to-[#FFFDFE] border-b border-border/70 relative overflow-hidden">
+      <div class="absolute -top-12 -right-12 w-80 h-80 bg-pink-200/25 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-12 -left-12 w-80 h-80 bg-purple-200/25 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4 relative z-10">
+        <span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white border border-primary/20 text-primary text-xs font-bold uppercase tracking-wider shadow-2xs font-brand">
+          <svg class="w-3.5 h-3.5 text-secondary shrink-0 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+          </svg>
+          <span>Colecciones & Catálogos</span>
+        </span>
+
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-ink">
+          Explora Nuestros Catálogos
+        </h1>
+
+        <p class="text-xs sm:text-base text-slate-600 max-w-2xl mx-auto font-light leading-relaxed">
+          Cada una de nuestras colecciones cuenta con su propio catálogo especializado. Selecciona el catálogo que deseas descubrir para ver todos sus modelos, versículos y dedicatorias hechas a mano:
+        </p>
+      </div>
+    </section>
+
+    <!-- Catalogs Grid Section -->
+    <section class="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-5xl mx-auto">
+        {categories.map((cat, idx) => {
+          const catProducts = products.filter(
+            (p) => p.categoryId === cat.id || p.category?.slug === cat.slug
+          );
+          const coverImg = catProducts[0]?.primaryImage?.url || catProducts[0]?.images?.[0]?.url || `/images/libreta${(idx % 3) + 1}.png`;
+
+          return (
+            <div class="group bg-white rounded-3xl border border-border hover:border-primary/50 shadow-soft hover:shadow-floating transition-all duration-300 overflow-hidden flex flex-col justify-between">
+              <!-- Cover image & category badge -->
+              <div class="relative aspect-video sm:aspect-[16/9] overflow-hidden bg-purple-50/50">
+                <img
+                  src={coverImg}
+                  alt={cat.name}
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                
+                <div class="absolute top-4 left-4 flex items-center gap-2">
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/95 backdrop-blur-sm text-ink text-xs font-bold shadow-xs font-brand">
+                    {cat.slug === 'disenos-digitales' ? (
+                      <svg class="w-3.5 h-3.5 text-emerald-600 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                      </svg>
+                    ) : (
+                      <svg class="w-3.5 h-3.5 text-primary stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                      </svg>
+                    )}
+                    <span>Catálogo Oficial</span>
+                  </span>
+                </div>
+
+                <div class="absolute bottom-4 left-4 right-4 text-white">
+                  <span class="text-[11px] font-bold uppercase tracking-wider text-pink-200 block">
+                    {catProducts.length > 0 ? `${catProducts.length} ${catProducts.length === 1 ? 'modelo disponible' : 'modelos disponibles'}` : 'Nueva colección'}
+                  </span>
+                  <h2 class="font-serif font-bold text-xl sm:text-2xl text-white drop-shadow-xs">
+                    {cat.name}
+                  </h2>
+                </div>
+              </div>
+
+              <!-- Card Body -->
+              <div class="p-6 sm:p-7 space-y-5 flex-1 flex flex-col justify-between">
+                <div class="space-y-3">
+                  <p class="text-xs sm:text-sm text-slate-600 font-light leading-relaxed">
+                    {cat.description || "Descubre los modelos de esta colección, encuadernados a mano con versículos inspiradores, anillado dorado y empaques perfumados."}
+                  </p>
+
+                  <div class="pt-2 flex flex-wrap gap-2 text-[11px]">
+                    {cat.slug === 'disenos-digitales' ? (
+                      <>
+                        <span class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 font-bold">✦ Descarga Inmediata (PDF)</span>
+                        <span class="px-2.5 py-1 rounded-lg bg-purple-50 text-plum font-medium">✦ 300 DPI Alta Resolución</span>
+                        <span class="px-2.5 py-1 rounded-lg bg-pink-50 text-secondary font-medium">✦ Listo para Imprimir A4/A5</span>
+                      </>
+                    ) : (
+                      <>
+                        <span class="px-2.5 py-1 rounded-lg bg-purple-50 text-plum font-medium">✦ Papel bond 90g</span>
+                        <span class="px-2.5 py-1 rounded-lg bg-purple-50 text-plum font-medium">✦ Anillado dorado</span>
+                        <span class="px-2.5 py-1 rounded-lg bg-pink-50 text-secondary font-medium">✦ Dedicatoria gratis</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                <div class="pt-4 border-t border-border/70">
+                  <a
+                    href={`/catalogo/${cat.slug}`}
+                    class="w-full py-3.5 px-6 bg-primary hover:bg-primary-dark text-white text-xs font-bold uppercase tracking-wider rounded-2xl transition-all flex items-center justify-between shadow-soft hover:scale-[1.02] active:scale-[0.98]"
+                  >
+                    <span>Abrir Catálogo de {cat.name}</span>
+                    <span class="text-sm">→</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <!-- Quick Consultation Card -->
+      <div class="mt-12 max-w-3xl mx-auto p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-purple-50/80 to-pink-50/60 border border-border text-center space-y-3">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-border text-xs font-bold text-primary shadow-2xs">
+          <span>💬 ¿Tienes dudas sobre qué catálogo elegir?</span>
+        </div>
+        <h3 class="text-lg sm:text-xl font-serif font-bold text-ink">
+          Te asesoramos con cariño para armar tu regalo ideal
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-600 font-light max-w-md mx-auto">
+          Escríbenos por WhatsApp para mostrarte fotos adicionales, opciones de personalización con nombres y tiempos de entrega.
+        </p>
+        <div class="pt-2">
+          <a
+            href={`https://wa.me/${whatsappNumber}?text=Hola%20Ovejita%20Sorpresas%20🌸,%20deseo%20asesoría%20sobre%20los%20catálogos.`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-full shadow-xs transition-all hover:scale-105 active:scale-95"
+          >
+            <span>Chatear ahora</span>
+            <span>→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <QualityPillars settings={settings} />
+  </main>
+
+  <Footer settings={settings} />
+  <WhatsAppButton whatsappNumber={whatsappNumber} />
+  <Toast />
+</MainLayout>

@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Ovejita Sorpresas · Tienda de Regalos &amp; Papelería con Propósito</title>
+<!-- Google Fonts: Quicksand (Brand), Playfair Display (Editorial) & Plus Jakarta Sans (Body) -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600;700&amp;family=Quicksand:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Custom Configuration adhering to brand JSON -->
+<script data-purpose="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              DEFAULT: '#9A80BD',
+              dark: '#7D60A6',
+              light: '#BFA8DC',
+              soft: '#F5F0FB'
+            },
+            secondary: {
+              DEFAULT: '#F472B6',
+              soft: '#FDF2F8',
+              pastel: '#FCE7F3'
+            },
+            ink: '#2D2235',
+            plum: '#4A3E56',
+            muted: '#7C7087',
+            surface: '#FFFDFE',
+            'surface-warm': '#FAF7FC',
+            border: '#EFE7F5'
+          },
+          fontFamily: {
+            brand: ['"Quicksand"', 'sans-serif'],
+            display: ['"Playfair Display"', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif']
+          },
+          boxShadow: {
+            'cute': '0 8px 24px -4px rgba(154, 128, 189, 0.12)',
+            'card': '0 4px 20px -2px rgba(45, 34, 53, 0.04)',
+            'floating': '0 12px 32px -4px rgba(125, 96, 166, 0.28)'
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom Typography & Layout Styles -->
+<style data-purpose="custom-styling">
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #FAF7FC;
+      color: #2D2235;
+      -webkit-font-smoothing: antialiased;
+    }
+    .brand-title {
+      font-family: 'Quicksand', sans-serif;
+    }
+    .paper-texture {
+      background-color: #FFFDFE;
+      background-image: radial-gradient(#9A80BD14 0.8px, transparent 0.8px);
+      background-size: 18px 18px;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    @keyframes subtlePulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.04); opacity: 0.95; }
+    }
+    .animate-badge-pulse {
+      animation: subtlePulse 3s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="paper-texture text-ink min-h-screen flex flex-col antialiased selection:bg-secondary-pastel selection:text-ink max-w-[430px] mx-auto border-x border-border shadow-2xl relative pb-28">
+<!-- BEGIN: TopAnnouncementBar -->
+<aside aria-label="Aviso especial" class="bg-gradient-to-r from-primary-soft via-secondary-pastel/60 to-primary-soft border-b border-border text-[11px] py-2 px-4 text-center font-medium text-plum flex items-center justify-center gap-1.5" data-purpose="announcement-bar">
+<span class="inline-block animate-bounce text-xs">✨</span>
+<span>Ediciones con propósito · Dedicatoria &amp; envoltura de regalo gratis</span>
+</aside>
+<!-- END: TopAnnouncementBar -->
+<!-- BEGIN: MainHeader -->
+<header class="sticky top-0 z-40 bg-[#FFFDFE]/95 backdrop-blur-md border-b border-border/80 px-4 py-2.5 transition-all shadow-xs" data-purpose="brand-header">
+<div class="flex items-center justify-between">
+<!-- Menu Navigation trigger -->
+<button aria-label="Abrir catálogo" class="p-2 text-plum hover:text-primary transition-colors flex items-center gap-1.5 focus:outline-none rounded-full hover:bg-primary-soft/80" id="menuToggle" type="button">
+<svg class="w-5 h-5 stroke-[1.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M3.75 8.25h16.5M3.75 15.75h16.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-[11px] tracking-wider uppercase font-semibold text-plum font-brand hidden xs:inline">Colección</span>
+</button>
+<!-- Brand Identity: Official intact logo from document specifications -->
+<a aria-label="Ovejita Sorpresas Tienda de Regalos" class="flex items-center group py-0.5" href="#">
+<div class="h-12 w-auto overflow-hidden flex items-center justify-center rounded-xl bg-[#c5b5e3]/20 p-0.5 ring-1 ring-border shadow-xs group-hover:scale-[1.02] transition-transform duration-300">
+<img alt="Ovejita Sorpresas - Tienda de Regalos" class="h-11 w-11 object-cover rounded-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPkLCu0CPpkh7ZNpPgKAT04KdgXQ4ULHVI2sFKYlG2Zyl3SIJXK-gDB14t_BJXNh6pUzc9j3QnvZOd-ULcDE3f3rAEVDsHLkZW0BEfa0vf3zX-qhLko5OtarvTMcAaUfrsVhScFSqa7RbH5yzrReQMk-MCL7OpzE-xkoHGgKCqrF7hUWKb50u0Zc1S9fhLaqBMlfYIQOcHzA_5er75PcR47qYGjWMkY-sNIFNTAqG8PKPdUFQGdRnJbQbahyWRjrqqd4Q"/>
+</div>
+<div class="ml-2 flex flex-col text-left">
+<span class="font-brand font-bold text-[14px] leading-tight text-[#6D498C] tracking-wide">Ovejita Sorpresas</span>
+<span class="text-[9.5px] uppercase font-semibold text-muted tracking-[0.16em]">Tienda de Regalos</span>
+</div>
+</a>
+<!-- Shopping Cart Trigger -->
+<button aria-label="Ver bolsa de sorpresas" class="relative p-2 text-plum hover:text-primary transition-colors focus:outline-none rounded-full hover:bg-primary-soft/80" id="bagTrigger" type="button">
+<svg class="w-5 h-5 stroke-[1.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="absolute 0 top-0.5 right-0.5 bg-secondary text-[10px] text-white font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-xs" id="bagCounter">2</span>
+</button>
+</div>
+</header>
+<!-- END: MainHeader -->
+<!-- BEGIN: BrandHero -->
+<section class="px-5 pt-6 pb-6" data-purpose="hero-section">
+<div class="space-y-2.5 mb-5 text-left">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 bg-primary-soft rounded-full border border-primary/20">
+<span class="w-2 h-2 rounded-full bg-primary inline-block"></span>
+<span class="text-[11px] font-brand font-bold tracking-wider text-primary-dark uppercase">Papelería con propósito &amp; amor</span>
+</div>
+<h1 class="font-display text-[1.95rem] leading-[1.22] font-normal text-ink">
+      Detalles que inspiran fe, abrazan el <em class="font-normal italic text-primary-dark">corazón</em> y alegran cada día.
+    </h1>
+<p class="text-[13px] text-muted leading-relaxed">
+      Libretas artesanales, sets con espejos flor y papelería consciente diseñada para regalar o atesorar tus oraciones y reflexiones.
+    </p>
+</div>
+<!-- Hero Product Spotlight: Cuaderno Floral 'Deléitate' -->
+<div class="relative bg-white p-3.5 rounded-3xl border border-border shadow-cute group">
+<div class="relative overflow-hidden rounded-2xl aspect-[4/4.7] bg-primary-soft/40 shadow-card">
+<img alt="Cuaderno Floral Deléitate en el Señor con elástico rosado y dije flor" class="w-full h-full object-cover object-center group-hover:scale-[1.03] transition-transform duration-700 ease-out cursor-pointer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlBmtnnMF03v-xj8o8igKVPwjghu8rBI5FWqONLlAdoWK-SMnl2QMCBK3wCezP5FwXKL4dJVGekDxpk7qdBMkiNWsfcR-zHIfKj1GwMJ0GLbCrUg_E3tCE-7XYQ1TDgTUSOVWwBOy4cE5xZlM6Tn0WSCY_TpRsxCWFM65fOdEXZ_f9dMdG3zOOY6kDJvOd_gmgkrXZaHEZo7vRh9QkYreBHOpWxssFSVbP0EhsWuSh07cl31uu8hiTyTqMplcWeEHpBG4"/>
+<div class="absolute top-3 right-3 bg-white/95 backdrop-blur-sm px-3 py-1 rounded-full text-[10.5px] font-brand font-bold uppercase tracking-wider text-primary-dark border border-primary/20 shadow-xs animate-badge-pulse">
+        ⭐ Edición Destacada
+      </div>
+<div class="absolute bottom-3 left-3 bg-[#2D2235]/80 backdrop-blur-sm text-white px-2.5 py-1 rounded-lg text-[10px] font-medium flex items-center gap-1">
+<span>Salmos 37:4</span>
+</div>
+</div>
+<div class="pt-3.5 px-1 space-y-1.5">
+<div class="flex justify-between items-baseline">
+<h2 class="font-brand font-bold text-base text-ink">Cuaderno Floral A5 'Deléitate'</h2>
+<span class="font-bold text-sm text-[#7D60A6]">$ 36.000 COP</span>
+</div>
+<p class="text-[12px] text-muted leading-snug">
+        Cierre con elástico rosa y broche de flor metálica esmaltada. Anillado doble dorado, hojas suaves de 90g con versículos inspiradores.
+      </p>
+<!-- Quick Action & Stock -->
+<div class="pt-2 flex items-center justify-between border-t border-border/70 mt-2">
+<span class="text-[11px] font-medium text-[#10B981] flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-[#10B981]"></span>
+        Disponible para entrega inmediata
+      </span>
+<button class="text-[12px] font-brand font-bold text-primary-dark hover:text-secondary transition-colors underline underline-offset-4" onclick="addToBag('Cuaderno Floral A5 Deléitate')">
+        Añadir +
+      </button>
+</div>
+</div>
+</div>
+</section>
+<!-- END: BrandHero -->
+<!-- BEGIN: InteractiveCategoryTabs -->
+<section class="px-5 py-1.5" data-purpose="catalog-filters">
+<div class="flex items-center space-x-2 overflow-x-auto no-scrollbar pb-2 text-[12px]">
+<button class="filter-btn active px-4 py-2 rounded-full font-brand font-bold bg-primary text-white shadow-xs transition-all flex items-center gap-1.5 whitespace-nowrap" data-filter="all">
+<span>🌸 Todo el Catálogo</span>
+</button>
+<button class="filter-btn px-4 py-2 rounded-full font-brand font-bold bg-white text-plum border border-border hover:border-primary transition-all whitespace-nowrap" data-filter="kits">
+<span>✨ Kits con Espejo</span>
+</button>
+<button class="filter-btn px-4 py-2 rounded-full font-brand font-bold bg-white text-plum border border-border hover:border-primary transition-all whitespace-nowrap" data-filter="florales">
+<span>📖 Libretas &amp; Cuadernos</span>
+</button>
+</div>
+</section>
+<!-- END: InteractiveCategoryTabs -->
+<!-- BEGIN: ProductCatalog -->
+<main class="px-5 space-y-6 pt-3" data-purpose="product-list">
+<!-- PRODUCT 1: Set Serenidad Floral Salmo 46:10 -->
+<article class="product-item group flex flex-col bg-white rounded-3xl p-4 border border-border shadow-cute transition-all duration-300 hover:shadow-floating" data-category="kits florales" data-purpose="product-card-1">
+<!-- Product Real Image Frame -->
+<div class="relative overflow-hidden rounded-2xl aspect-[4/4.8] bg-primary-soft/30">
+<img alt="Set Serenidad Floral Salmo 46:10 libreta con llavero espejo y bolígrafo" class="w-full h-full object-cover object-center group-hover:scale-[1.03] transition-transform duration-500 ease-out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhlqqbvrEHBFh5zJ_GhEtHAvDOQou6udalU4tB1tExRHRxVZkkBLtfy8KpSuoNFstjWvHQlz2oxh2KTJthAZcaOEYuPbyMCIj4SG-rr-pzeWnk4V9-bMpf4KvETuBMLcXA_PMs1KO92cgEOn7GtfTW8Zhr_wWs0Js7UiPaOWyiTlH4lEa23RCgtC39e8nSDrjEi47yho-zp2iqz835d3peJb945o4qImP5lU4BAlHhq0OAcG6RPibk70Rr1iNQW4U9Dss"/>
+<div class="absolute top-3 left-3 bg-secondary-pastel/95 border border-secondary/30 backdrop-blur-sm text-[#9D174D] text-[10px] font-brand font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-xs">
+      Kit Favorito Ovejita
+    </div>
+</div>
+<!-- Product Details -->
+<div class="pt-4 space-y-2.5">
+<div class="flex justify-between items-start">
+<div>
+<span class="text-[10.5px] uppercase font-bold tracking-wider text-primary block">Colección Salmos de Paz</span>
+<h3 class="font-brand font-bold text-lg text-ink leading-tight">Set Serenidad Floral — Salmo 46:10</h3>
+</div>
+<div class="text-right pl-2">
+<span class="font-bold text-base text-primary-dark block whitespace-nowrap">$ 38.500 COP</span>
+<span class="text-[10px] text-muted">Aprox. € 22.00</span>
+</div>
+</div>
+<p class="text-[12.5px] text-plum/90 font-light leading-relaxed">
+      Libreta alargada de bolsillo con mensaje <em>"Estad quietos, y conoced que yo soy Dios"</em>, acompañada de llavero con espejo forma flor rosa, borla artesanal, bolígrafo pastel y tarjetita 'Dios es amor'.
+    </p>
+<!-- Interactive Accordion: Manufactura & Dedicatoria -->
+<details class="group/spec text-[12px] bg-primary-soft/50 rounded-xl p-3 border border-border cursor-pointer transition-all">
+<summary class="flex justify-between items-center list-none font-brand font-bold text-plum select-none">
+<span class="flex items-center gap-1.5">🎀 ¿Qué incluye &amp; Personalización?</span>
+<span class="text-xs transition-transform group-open/spec:rotate-180 text-primary">▼</span>
+</summary>
+<div class="mt-2.5 pt-2 border-t border-border/80 space-y-1.5 text-muted">
+<p class="flex items-center gap-1.5">• <span>Wire-o dorado superior reforzado apertura 360°.</span></p>
+<p class="flex items-center gap-1.5">• <span>Llavero espejo flor con dije 'Eres una mujer virtuosa'.</span></p>
+<p class="flex items-center gap-1.5">• <span>Hojas de 90 gr/m² resistentes a tinta y resaltador.</span></p>
+<p class="text-[11.5px] text-primary-dark font-medium pt-1">
+        💌 <strong>Incluye dedicatoria:</strong> Indícanos el nombre y mensaje especial al pedir por WhatsApp.
+      </p>
+</div>
+</details>
+<!-- CTAs -->
+<div class="pt-1 flex gap-2">
+<button class="flex-1 bg-primary text-white hover:bg-primary-dark transition-all py-3 rounded-2xl text-[12.5px] font-brand font-bold tracking-wide shadow-xs flex items-center justify-center gap-1.5 active:scale-95" onclick="addToBag('Set Serenidad Floral')">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 4.5v15m7.5-7.5h-15" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Añadir a mi pedido</span>
+</button>
+<a class="px-3.5 py-3 border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center transition-colors shadow-xs" href="https://wa.me/?text=Hola%20Ovejita%20Sorpresas%2C%20quisiera%20pedir%20el%20Set%20Serenidad%20Floral%20(Salmo%2046:10)" rel="noopener" target="_blank" title="Pedir este set directo a WhatsApp">
+<svg class="w-4 h-4 fill-current" viewbox="0 0 24 24">
+<path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"></path>
+</svg>
+</a>
+</div>
+</div>
+</article>
+<!-- PRODUCT 2: Set Arcoíris & Esperanza Salmo 84:6 -->
+<article class="product-item group flex flex-col bg-white rounded-3xl p-4 border border-border shadow-cute transition-all duration-300 hover:shadow-floating" data-category="kits" data-purpose="product-card-2">
+<div class="relative overflow-hidden rounded-2xl aspect-[4/4.8] bg-amber-50/50">
+<img alt="Set Arcoíris y Esperanza Salmo 84:6 libreta con espejo mostaza y bolígrafo" class="w-full h-full object-cover object-center group-hover:scale-[1.03] transition-transform duration-500 ease-out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByYZxVPTjAOa3A0A5vpPfS1Eg-R2Pt5beUr2EW0o8I6NZB3aoeuD0BWHMv97oAsgAbnSv1K3D4_LDp7D5a-PE0Fh5iOsPSQo8W-_O2cSnnp-od_h68cjb-QSrzfqN0VNiJdW7m86uHVVCtjA_2PMqUmeYf8JAlQaNKPt83bcLEvC6EtWwNDRzHVP6ZQrzKiUIP1jAasKTLzzt4udQ4mfxVSZV4lq2jHHGYNjbuNz-RKOmS4-3QSK8PetloJdA3z_7j2Ho"/>
+<div class="absolute top-3 left-3 bg-amber-100/90 border border-amber-300/60 backdrop-blur-sm text-amber-900 text-[10px] font-brand font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-xs">
+      Edición Cálida
+    </div>
+</div>
+<div class="pt-4 space-y-2.5">
+<div class="flex justify-between items-start">
+<div>
+<span class="text-[10.5px] uppercase font-bold tracking-wider text-amber-700 block">Colección Esperanza</span>
+<h3 class="font-brand font-bold text-lg text-ink leading-tight">Set Arcoíris &amp; Esperanza — Salmo 84:6</h3>
+</div>
+<div class="text-right pl-2">
+<span class="font-bold text-base text-primary-dark block whitespace-nowrap">$ 38.500 COP</span>
+<span class="text-[10px] text-muted">Aprox. € 22.00</span>
+</div>
+</div>
+<p class="text-[12.5px] text-plum/90 font-light leading-relaxed">
+      Ilustración bohemia con la promesa: <em>"Cuando anden por el Valle del llanto, se convertirá en un lugar de manantiales refrescantes"</em>. Set con espejo flor amarillo sol, bolígrafo suave y miniprint 'Dios es bueno'.
+    </p>
+<!-- Accordion Details -->
+<details class="group/spec2 text-[12px] bg-amber-50/50 rounded-xl p-3 border border-amber-200/60 cursor-pointer">
+<summary class="flex justify-between items-center list-none font-brand font-bold text-amber-900 select-none">
+<span>☀️ Presentación para obsequio</span>
+<span class="text-xs transition-transform group-open/spec2:rotate-180 text-amber-700">▼</span>
+</summary>
+<div class="mt-2.5 pt-2 border-t border-amber-200/50 space-y-1.5 text-muted">
+<p>• Empaque en bolsa de regalo Ovejita Sorpresas listo para entregar.</p>
+<p>• Llavero con espejo ideal para llevar en la cartera o mochila diaria.</p>
+</div>
+</details>
+<div class="pt-1 flex gap-2">
+<button class="flex-1 bg-primary text-white hover:bg-primary-dark transition-all py-3 rounded-2xl text-[12.5px] font-brand font-bold tracking-wide shadow-xs flex items-center justify-center gap-1.5 active:scale-95" onclick="addToBag('Set Arcoíris y Esperanza')">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 4.5v15m7.5-7.5h-15" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Añadir a mi pedido</span>
+</button>
+<a class="px-3.5 py-3 border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center transition-colors shadow-xs" href="https://wa.me/?text=Hola%20Ovejita%20Sorpresas%2C%20quisiera%20pedir%20el%20Set%20Arcoiris%20Esperanza%20(Salmo%2084:6)" rel="noopener" target="_blank" title="Pedir este set directo a WhatsApp">
+<svg class="w-4 h-4 fill-current" viewbox="0 0 24 24">
+<path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"></path>
+</svg>
+</a>
+</div>
+</div>
+</article>
+<!-- PRODUCT 3: Cuaderno Floral A5 'Deléitate' -->
+<article class="product-item group flex flex-col bg-white rounded-3xl p-4 border border-border shadow-cute transition-all duration-300 hover:shadow-floating" data-category="florales" data-purpose="product-card-3">
+<div class="relative overflow-hidden rounded-2xl aspect-[4/4.8] bg-secondary-soft">
+<img alt="Cuaderno Floral A5 Deléitate en el Señor" class="w-full h-full object-cover object-center group-hover:scale-[1.03] transition-transform duration-500 ease-out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuALueQVhI6VUQ-aC2j3EsHP3F5VT5KLYMGI91YBtbnEBqEmQrbDsJ7fdzCg0qja4XbL3Dsp_Hdk_cJG3BFATI_AQFbZkhE94g2dMHYM9ak4WkPuLPkw0eN-mDhw9EjI3hx4oguJZHmz8umjTHE0ECZ0V3vbzMwTP-rwgbRzvbEwZg7Bv623XYEv3etZUzttm-9Cgh23QUyghclRCNwxm1g3w87uJT0d865C1qiAsSEAYQKyCXLEZyX33UChiXO2V4AmaAI"/>
+<div class="absolute top-3 left-3 bg-secondary-pastel border border-secondary/40 backdrop-blur-sm text-[#9D174D] text-[10px] font-brand font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-xs">
+      Cuaderno A5 Journaling
+    </div>
+</div>
+<div class="pt-4 space-y-2.5">
+<div class="flex justify-between items-start">
+<div>
+<span class="text-[10.5px] uppercase font-bold tracking-wider text-primary block">Tapa Dura Soft-Touch</span>
+<h3 class="font-brand font-bold text-lg text-ink leading-tight">Cuaderno Floral 'Deléitate' A5</h3>
+</div>
+<div class="text-right pl-2">
+<span class="font-bold text-base text-primary-dark block whitespace-nowrap">$ 36.000 COP</span>
+<span class="text-[10px] text-muted">Aprox. € 20.00</span>
+</div>
+</div>
+<p class="text-[12.5px] text-plum/90 font-light leading-relaxed">
+      Diseñado para journaling, oraciones matutinas o notas de estudio. Cuenta con anillado segmentado dorado, banda elástica rosada y dije flor.
+    </p>
+<div class="pt-1 flex gap-2">
+<button class="flex-1 bg-primary text-white hover:bg-primary-dark transition-all py-3 rounded-2xl text-[12.5px] font-brand font-bold tracking-wide shadow-xs flex items-center justify-center gap-1.5 active:scale-95" onclick="addToBag('Cuaderno Floral A5')">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 4.5v15m7.5-7.5h-15" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Añadir a mi pedido</span>
+</button>
+<a class="px-3.5 py-3 border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center transition-colors shadow-xs" href="https://wa.me/?text=Hola%20Ovejita%20Sorpresas%2C%20quisiera%20adquirir%20el%20Cuaderno%20Floral%20Deleitaste%20A5" rel="noopener" target="_blank" title="Pedir este cuaderno por WhatsApp">
+<svg class="w-4 h-4 fill-current" viewbox="0 0 24 24">
+<path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"></path>
+</svg>
+</a>
+</div>
+</div>
+</article>
+</main>
+<!-- END: ProductCatalog -->
+<!-- BEGIN: QualityCraftPillars -->
+<section class="mt-10 px-5 py-7 bg-white border-y border-border" data-purpose="craft-pillars">
+<div class="text-center space-y-1 mb-6">
+<span class="text-[11px] font-brand font-bold uppercase tracking-[0.2em] text-primary-dark">Elaborado con amor</span>
+<h3 class="font-brand font-bold text-xl text-ink">Calidad en cada detalle</h3>
+<p class="text-[12px] text-muted">Cada pieza es armada y empaquetada a mano con cariño especial.</p>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<!-- Card 1 -->
+<div class="p-3.5 bg-primary-soft/40 rounded-2xl border border-border space-y-1">
+<div class="w-7 h-7 rounded-full bg-primary/20 text-primary-dark flex items-center justify-center text-xs font-brand font-bold mb-1">
+      01
+    </div>
+<h4 class="font-brand font-bold text-[13.5px] text-ink">Hojas Premium 90g</h4>
+<p class="text-[11px] text-muted leading-relaxed">No traslucen plumas ni tintas húmedas. Escritura suave.</p>
+</div>
+<!-- Card 2 -->
+<div class="p-3.5 bg-secondary-soft/50 rounded-2xl border border-secondary/20 space-y-1">
+<div class="w-7 h-7 rounded-full bg-secondary/20 text-[#BE185D] flex items-center justify-center text-xs font-brand font-bold mb-1">
+      02
+    </div>
+<h4 class="font-brand font-bold text-[13.5px] text-ink">Tapas Resistentes</h4>
+<p class="text-[11px] text-muted leading-relaxed">Laminado mate aterciopelado que protege de polvo y humedad.</p>
+</div>
+<!-- Card 3 -->
+<div class="p-3.5 bg-secondary-soft/50 rounded-2xl border border-secondary/20 space-y-1">
+<div class="w-7 h-7 rounded-full bg-secondary/20 text-[#BE185D] flex items-center justify-center text-xs font-brand font-bold mb-1">
+      03
+    </div>
+<h4 class="font-brand font-bold text-[13.5px] text-ink">Wire-o Dorado</h4>
+<p class="text-[11px] text-muted leading-relaxed">Anillado metálico doble para apertura total y durabilidad.</p>
+</div>
+<!-- Card 4 -->
+<div class="p-3.5 bg-primary-soft/40 rounded-2xl border border-border space-y-1">
+<div class="w-7 h-7 rounded-full bg-primary/20 text-primary-dark flex items-center justify-center text-xs font-brand font-bold mb-1">
+      04
+    </div>
+<h4 class="font-brand font-bold text-[13.5px] text-ink">Regalo Completo</h4>
+<p class="text-[11px] text-muted leading-relaxed">Dijes, espejos y envoltura con dedicatoria personalizada gratis.</p>
+</div>
+</div>
+</section>
+<!-- END: QualityCraftPillars -->
+<!-- BEGIN: CustomOrdersSection -->
+<section class="px-5 my-8" data-purpose="custom-orders">
+<div class="bg-gradient-to-br from-primary-soft via-white to-secondary-pastel/40 border border-primary/20 p-5 rounded-3xl text-center space-y-3 shadow-cute">
+<div class="inline-block p-1 bg-white rounded-full shadow-xs">
+<div class="h-14 w-14 rounded-full overflow-hidden flex items-center justify-center bg-[#c5b5e3]/30 p-0.5">
+<img alt="Ovejita Sorpresas Identidad" class="w-full h-full object-cover rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxqognML3ac_g1XwFzCEBisyji4FMisMEz0_JpU2vPgjfK_t2IJkL-UKUXe67nQHanHlzNRJMVMeIYKTcTxwqVucOwNeGqGv5gUIXRdrNGDH1_uMj2twRZ79f3eZ727xJPE7lvO2miKnRMCRn-4bd1pH_QRzck5gv8AaQkCvtYFjEKqq3flkqLpqibwvKQTC9qxewtIl92jHgPgZ60NpstZ3C7jZiuh1XBtUayjNMHUnrBRuAzlPvlU3QlYjJBjnle0M8"/>
+</div>
+</div>
+<span class="text-[10.5px] font-brand font-bold tracking-widest uppercase text-primary-dark block">Pedidos Corporativos &amp; Eventos</span>
+<h4 class="font-brand font-bold text-xl text-ink leading-tight">¿Retiros de damas, congresos o fechas especiales?</h4>
+<p class="text-[12px] text-plum/80 leading-relaxed max-w-xs mx-auto">
+    Personalizamos portadas con tu versículo favorito, fecha o nombre de la agasajada a partir de 10 unidades.
+  </p>
+<div class="pt-1">
+<a class="inline-flex items-center gap-2 bg-primary hover:bg-primary-dark text-white px-5 py-2.5 rounded-full text-[12px] font-brand font-bold shadow-xs transition-colors" href="https://wa.me/?text=Hola%20Ovejita%20Sorpresas%2C%20quisiera%20cotizar%20un%20pedido%20personalizado%20para%20un%20evento" rel="noopener" target="_blank">
+<span>Cotizar con el Atelier</span>
+<span>→</span>
+</a>
+</div>
+</div>
+</section>
+<!-- END: CustomOrdersSection -->
+<!-- BEGIN: OfficialFooter -->
+<footer class="mt-4 pt-6 pb-6 px-6 border-t border-border bg-white text-center space-y-5" data-purpose="editorial-footer">
+<!-- Brand Logo Component: Official Intact Image as source of truth -->
+<div class="flex flex-col items-center space-y-2">
+<div class="h-20 w-20 overflow-hidden rounded-2xl bg-[#c5b5e3]/20 p-1 ring-1 ring-border shadow-xs">
+<img alt="Ovejita Sorpresas - Tienda de Regalos Oficial" class="w-full h-full object-cover rounded-xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOuKZnL259jCQboBKd4l5utttfHmUfY3FjKLAGFMtPxFcKaTbcaoIGe-2jsGyP3VhG934qrIveEVoc7pwB0-OWB-oaHTtJmhheYKUsIbe7iyJ4O-k9Jlfrvywx1Idw6ZF7Ml6smgbDWhvCR-r8ATe1Iv1OpyDhwdNuq7ioaM2fTnw_eP7P2zSVqgumaMPsbhIjQmEpIA5l9i0UQ8-KNJz4Ajo6SWxHLqV1PDqlnmFVCMAbf-UB96_COZhQQGZKwVyBExs"/>
+</div>
+<div>
+<h4 class="font-brand font-bold text-lg text-[#6D498C] leading-none">Ovejita Sorpresas</h4>
+<p class="text-[10px] uppercase font-bold tracking-[0.2em] text-plum/70 mt-1">Tienda de Regalos</p>
+</div>
+<p class="text-[12px] text-muted max-w-xs font-light">
+    Papelería consciente, reflexiones de fe y detalles diseñados para tocar el alma.
+  </p>
+</div>
+<!-- Footer links -->
+<nav class="flex flex-wrap justify-center gap-x-4 gap-y-1.5 text-[11px] font-brand font-bold text-plum/80">
+<a class="hover:text-primary transition-colors" href="#">Nuestra Historia</a>
+<a class="hover:text-primary transition-colors" href="#">Cuidados del Papel</a>
+<a class="hover:text-primary transition-colors" href="#">Envíos a todo el país</a>
+<a class="hover:text-primary transition-colors" href="https://instagram.com" rel="noopener" target="_blank">Instagram</a>
+</nav>
+<div class="w-12 h-[1px] bg-border mx-auto"></div>
+<p class="text-[10px] text-muted tracking-wide">
+  © 2025 Ovejita Sorpresas ® · Hecho con amor y bendición.<br/>
+  Todas las fotografías corresponden a productos reales de taller.
+</p>
+</footer>
+<!-- END: OfficialFooter -->
+<!-- BEGIN: StickyWhatsAppConcierge -->
+<!-- Floating Concierge Bar on mobile as required -->
+<div class="fixed bottom-3 inset-x-0 z-50 px-4 max-w-[430px] mx-auto pointer-events-auto" data-purpose="sticky-cta">
+<div class="bg-ink/95 backdrop-blur-md text-white p-2.5 rounded-2xl shadow-floating border border-white/10 flex items-center justify-between gap-2">
+<div class="flex items-center gap-2 pl-1.5">
+<div class="relative">
+<span class="w-2.5 h-2.5 rounded-full bg-emerald-400 absolute -top-0.5 -right-0.5 animate-ping"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-emerald-500 block"></span>
+</div>
+<div class="flex flex-col text-left">
+<span class="text-[11px] font-brand font-bold text-white leading-tight">Asesoría &amp; Pedidos</span>
+<span class="text-[9.5px] text-secondary-pastel leading-none">Dedicatoria personalizada gratis</span>
+</div>
+</div>
+<a class="inline-flex items-center gap-1.5 bg-emerald-500 hover:bg-emerald-600 text-white text-[12px] font-brand font-bold px-3.5 py-2 rounded-xl transition-transform active:scale-95 shadow-sm" href="https://wa.me/?text=Hola%20Ovejita%20Sorpresas%2C%20quiero%20hacer%20un%20pedido%20con%20dedicatoria%20gratis" rel="noopener" target="_blank">
+<svg class="w-4 h-4 fill-current" viewbox="0 0 24 24">
+<path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"></path>
+</svg>
+<span>Pedir por WhatsApp</span>
+</a>
+</div>
+</div>
+<!-- END: StickyWhatsAppConcierge -->
+<!-- BEGIN: ToastNotification -->
+<div aria-live="polite" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-[#2D2235]/95 text-white text-xs font-brand font-semibold py-2.5 px-4 rounded-full shadow-lg border border-primary/40 flex items-center space-x-2 pointer-events-none opacity-0 transition-opacity duration-300" id="toastNotification" role="status">
+<span class="w-2 h-2 rounded-full bg-secondary inline-block"></span>
+<span id="toastMessage">Añadido a tu pedido</span>
+</div>
+<!-- END: ToastNotification -->
+<!-- BEGIN: InteractiveScripts -->
+<script data-purpose="app-logic">
+  let bagCount = 2;
+  const bagCounterEl = document.getElementById('bagCounter');
+  const toastEl = document.getElementById('toastNotification');
+  const toastMsgEl = document.getElementById('toastMessage');
+
+  function addToBag(productName) {
+    bagCount++;
+    bagCounterEl.textContent = bagCount;
+    bagCounterEl.classList.add('scale-125');
+    setTimeout(() => bagCounterEl.classList.remove('scale-125'), 200);
+
+    toastMsgEl.textContent = `Añadido: ${productName}`;
+    toastEl.classList.remove('opacity-0');
+    toastEl.classList.add('opacity-100');
+
+    setTimeout(() => {
+      toastEl.classList.remove('opacity-100');
+      toastEl.classList.add('opacity-0');
+    }, 2200);
+  }
+
+  // Filter Buttons Interaction
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  const productItems = document.querySelectorAll('.product-item');
+
+  filterButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterButtons.forEach(b => {
+        b.classList.remove('bg-primary', 'text-white');
+        b.classList.add('bg-white', 'text-plum', 'border', 'border-border');
+      });
+      btn.classList.remove('bg-white', 'text-plum', 'border', 'border-border');
+      btn.classList.add('bg-primary', 'text-white');
+
+      const filter = btn.getAttribute('data-filter');
+
+      productItems.forEach(item => {
+        if (filter === 'all') {
+          item.style.display = 'flex';
+        } else {
+          const categories = item.getAttribute('data-category') || '';
+          if (categories.includes(filter)) {
+            item.style.display = 'flex';
+          } else {
+            item.style.display = 'none';
+          }
+        }
+      });
+    });
+  });
+
+  // Header quick triggers
+  document.getElementById('menuToggle').addEventListener('click', () => {
+    toastMsgEl.textContent = "Catálogo Ovejita: Salmos 2025 cargado";
+    toastEl.classList.remove('opacity-0');
+    toastEl.classList.add('opacity-100');
+    setTimeout(() => toastEl.classList.remove('opacity-100'), 1800);
+  });
+
+  document.getElementById('bagTrigger').addEventListener('click', () => {
+    toastMsgEl.textContent = `Tienes ${bagCount} sorpresas seleccionadas`;
+    toastEl.classList.remove('opacity-0');
+    toastEl.classList.add('opacity-100');
+    setTimeout(() => toastEl.classList.remove('opacity-100'), 2000);
+  });
+</script>
+<!-- END: InteractiveScripts -->
+</body></html>

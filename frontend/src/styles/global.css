@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Quicksand:wght@500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: #FAF7FC;
+  color: #2D2235;
+  -webkit-font-smoothing: antialiased;
+}
+
+.brand-title {
+  font-family: 'Quicksand', sans-serif;
+}
+
+.font-script {
+  font-family: 'Alex Brush', cursive;
+}
+
+.paper-texture {
+  background-color: #FFFDFE;
+  background-image: radial-gradient(#9A80BD14 0.8px, transparent 0.8px);
+  background-size: 18px 18px;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes subtlePulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.04); opacity: 0.95; }
+}
+
+.animate-badge-pulse {
+  animation: subtlePulse 3s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .card-hover-tactile {
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .card-hover-tactile:hover {
+    transform: translateY(-6px);
+  }
+  .badge-glow {
+    box-shadow: 0 0 15px rgba(244, 114, 182, 0.25);
+  }
+}

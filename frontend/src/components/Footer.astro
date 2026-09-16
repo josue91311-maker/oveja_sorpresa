@@ -1,0 +1,134 @@
+---
+interface Props {
+  settings?: any;
+}
+
+const { settings = {} } = Astro.props;
+
+const logoUrl = settings?.logoUrl || '/images/LOGO.jpg';
+const businessName = settings?.businessName || 'Ovejita Sorpresas';
+const instagram = settings?.instagram || 'https://instagram.com/ovejitasorpresas';
+
+const footer = settings?.generalTexts?.footer || {};
+
+const footerDescription = footer.description ||
+  'Creamos papelería y regalos con intención y devoción. Cada detalle es empacado con amor para edificar y alegrar el corazón de quien lo recibe.';
+
+const locationText = footer.locationText ||
+  '✦ Sedes de taller creativo en Lima con despachos con amor a todo el Perú.';
+
+const collectionsTitle = footer.collectionsTitle || 'Colecciones';
+const collectionsLinks = footer.collectionsLinks && footer.collectionsLinks.length > 0
+  ? footer.collectionsLinks
+  : [
+      { label: 'Cuadernos Salmos & Promesas', url: '/catalogo' },
+      { label: 'Sets con Espejo y Llavero', url: '/catalogo' },
+      { label: 'Devocionales Diarios', url: '/catalogo' },
+      { label: 'Bolígrafos y Papelería Pastel', url: '/catalogo' },
+    ];
+
+const customerServiceTitle = footer.customerServiceTitle || 'Servicio al Cliente';
+const customerServiceLinks = footer.customerServiceLinks && footer.customerServiceLinks.length > 0
+  ? footer.customerServiceLinks
+  : [
+      { label: 'Tiempos de Despacho & Tarifas', url: '/#empaque-calidad' },
+      { label: 'Guía de Cuidado de Papelería', url: '/#empaque-calidad' },
+      { label: 'Garantía de Satisfacción Taller', url: '/#empaque-calidad' },
+      { label: 'Ventas Corporativas & Eventos', url: '/#corporativo' },
+    ];
+
+const clubTitle = footer.clubTitle || 'Club Ovejita';
+const clubSubtitle = footer.clubSubtitle || 'Recibe versículos semanales y acceso previo a nuevas colecciones.';
+const clubButtonText = footer.clubButtonText || 'Unirme al Club';
+const copyrightText = footer.copyrightText || 'Hecho con amor y bendición.';
+---
+
+<footer class="bg-white border-t border-border pt-16 pb-24 sm:pb-12 text-slate-600">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
+      <!-- Brand & Logo (Col 1-2) -->
+      <div class="lg:col-span-2 space-y-4">
+        <div class="flex items-center space-x-3">
+          <div class="h-12 w-12 rounded-full overflow-hidden border border-border p-0.5 bg-primary-soft/40 shadow-xs">
+            <img alt={businessName} class="h-full w-full object-cover rounded-full" src={logoUrl} />
+          </div>
+          <div>
+            <p class="font-brand font-bold text-xl text-ink leading-none">{businessName}</p>
+            <p class="font-brand text-[9.5px] uppercase tracking-[0.24em] text-primary/90 mt-1 font-bold">
+              Tienda de Regalos
+            </p>
+          </div>
+        </div>
+        <p class="text-xs text-slate-500 max-w-sm leading-relaxed font-light">
+          {footerDescription}
+        </p>
+        <p class="text-xs text-primary font-medium">
+          {locationText}
+        </p>
+      </div>
+
+      <!-- Links: Colecciones -->
+      <div class="space-y-3">
+        <h4 class="text-xs font-bold uppercase tracking-wider text-ink">{collectionsTitle}</h4>
+        <ul class="space-y-2 text-xs">
+          {collectionsLinks.map((item: any) => (
+            <li>
+              <a class="hover:text-primary transition-colors" href={item.url || '/catalogo'}>
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Links: Servicio al Cliente -->
+      <div class="space-y-3">
+        <h4 class="text-xs font-bold uppercase tracking-wider text-ink">{customerServiceTitle}</h4>
+        <ul class="space-y-2 text-xs">
+          {customerServiceLinks.map((item: any) => (
+            <li>
+              <a class="hover:text-primary transition-colors" href={item.url || '/#empaque-calidad'}>
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Newsletter & Club Ovejita -->
+      <div class="space-y-3">
+        <h4 class="text-xs font-bold uppercase tracking-wider text-ink">{clubTitle}</h4>
+        <p class="text-xs text-slate-500">{clubSubtitle}</p>
+        <form
+          class="space-y-2"
+          id="newsletterForm"
+          onsubmit="event.preventDefault(); alert('¡Gracias por unirte al Club Ovejita! Te escribiremos con amor.');"
+        >
+          <input
+            class="w-full text-xs px-3.5 py-2.5 bg-purple-50/50 border border-border rounded-xl focus:outline-none focus:ring-1 focus:ring-primary"
+            placeholder="tu@correo.com"
+            type="email"
+            required
+          />
+          <button
+            class="w-full py-2.5 bg-primary text-white text-xs font-bold rounded-xl hover:bg-primary-dark transition-colors shadow-xs cursor-pointer"
+            type="submit"
+          >
+            {clubButtonText}
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Copyright & Legal -->
+    <div class="pt-8 border-t border-border flex flex-col sm:flex-row justify-between items-center text-[11px] text-slate-400 space-y-3 sm:space-y-0">
+      <p>© 2025 {businessName}®. {copyrightText}</p>
+      <div class="flex space-x-6">
+        <a class="hover:underline" href={instagram} target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a class="hover:underline" href="/#empaque-calidad">Políticas de Envío</a>
+        <a class="hover:underline" href="/#corporativo">Contacto</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
