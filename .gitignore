@@ -38,3 +38,9 @@ npm-debug.log*
 # Stitch originals (zips) - reference copies kept in stitch-reference/
 *.zip
 libreta*.txt
+
+# Loose reference images in root (actual web images are in frontend/public/images)
+/*.jpg
+/*.png
+/*.jpeg
+
