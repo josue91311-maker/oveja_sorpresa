@@ -243,10 +243,10 @@ export const BannerList: React.FC<BannerListProps> = ({ onNavigate }) => {
           </div>
           <div>
             <h4 className="text-xs font-bold text-slate-800">
-              ¿Deseas gestionar los Catálogos Virtuales (Modo Canva)?
+              Banners y Avisos en Modo Canva
             </h4>
             <p className="text-[11px] text-slate-500 leading-tight">
-              Los banners de esta sección corresponden a la tienda web tradicional. Para añadir nuevos catálogos Canva, subir fotos o cambiar enlaces, entra a la sección Catálogos Canva.
+              Los avisos superiores (Top Bar) y banners promocionales creados aquí también se muestran activamente en el Modo Canva. Puedes administrarlos aquí o desde la sección Catálogos Canva.
             </p>
           </div>
         </div>

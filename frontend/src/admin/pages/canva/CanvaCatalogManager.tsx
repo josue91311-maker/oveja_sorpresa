@@ -16,6 +16,10 @@ import {
   MessageCircle,
   Palette,
   AlertCircle,
+  Megaphone,
+  PanelBottom,
+  Layers,
+  Mail,
 } from 'lucide-react';
 
 export interface CanvaCatalogItem {
@@ -89,6 +93,11 @@ export const CanvaCatalogManager: React.FC = () => {
   const [isCanvaMode, setIsCanvaMode] = useState(true);
   const [catalogs, setCatalogs] = useState<CanvaCatalogItem[]>(DEFAULT_CATALOGS);
 
+  // Top Announcement bar state
+  const [announcementText, setAnnouncementText] = useState(
+    'Ediciones con propósito · Dedicatoria & personalización'
+  );
+
   // Hero banner state
   const [heroTag, setHeroTag] = useState('✦ Regalos que inspiran ✦');
   const [heroTitle, setHeroTitle] = useState('Explora Nuestras Colecciones');
@@ -101,6 +110,34 @@ export const CanvaCatalogManager: React.FC = () => {
   // Image uploading indicators
   const [uploadingHero, setUploadingHero] = useState(false);
   const [uploadingCatalogId, setUploadingCatalogId] = useState<string | null>(null);
+
+  // Footer & Brand Words State (from user's screenshot)
+  const [footerDescription, setFooterDescription] = useState(
+    'Creamos papelería y regalos con intención y devoción. Cada detalle es empacado con amor para edificar y alegrar el corazón de quien lo recibe.'
+  );
+  const [locationText, setLocationText] = useState(
+    '✦ Sedes de taller creativo en Lima con despachos con amor a todo el Perú.'
+  );
+  const [collectionsTitle, setCollectionsTitle] = useState('Colecciones');
+  const [collectionsLinks, setCollectionsLinks] = useState<any[]>([
+    { label: 'Cuadernos Salmos & Promesas', url: '/catalogo' },
+    { label: 'Sets con Espejo y Llavero', url: '/catalogo' },
+    { label: 'Devocionales Diarios', url: '/catalogo' },
+    { label: 'Bolígrafos y Papelería Pastel', url: '/catalogo' },
+  ]);
+  const [customerServiceTitle, setCustomerServiceTitle] = useState('Servicio al Cliente');
+  const [customerServiceLinks, setCustomerServiceLinks] = useState<any[]>([
+    { label: 'Tiempos de Despacho & Tarifas', url: '/#empaque-calidad' },
+    { label: 'Guía de Cuidado de Papelería', url: '/#empaque-calidad' },
+    { label: 'Garantía de Satisfacción Taller', url: '/#empaque-calidad' },
+    { label: 'Ventas Corporativas & Eventos', url: '/#corporativo' },
+  ]);
+  const [clubTitle, setClubTitle] = useState('Club Ovejita');
+  const [clubSubtitle, setClubSubtitle] = useState(
+    'Recibe versículos semanales y acceso previo a nuevas colecciones.'
+  );
+  const [clubButtonText, setClubButtonText] = useState('Unirme al Club');
+  const [copyrightText, setCopyrightText] = useState('Hecho con amor y bendición.');
 
   // Raw full settings to preserve when saving
   const [rawSettings, setRawSettings] = useState<any>({});
@@ -120,6 +157,9 @@ export const CanvaCatalogManager: React.FC = () => {
         const gt = d.generalTexts || {};
 
         setIsCanvaMode(gt.isCanvaCatalogsMode !== false);
+        setAnnouncementText(
+          gt.announcementText || 'Ediciones con propósito · Dedicatoria & personalización'
+        );
         setHeroTag(gt.canvaHeroTag || '✦ Regalos que inspiran ✦');
         setHeroTitle(gt.canvaHeroTitle || 'Explora Nuestras Colecciones');
         setHeroSubtitle(
@@ -147,6 +187,22 @@ export const CanvaCatalogManager: React.FC = () => {
         } else {
           setCatalogs(DEFAULT_CATALOGS);
         }
+
+        const ft = gt.footer || {};
+        if (ft.description) setFooterDescription(ft.description);
+        if (ft.locationText) setLocationText(ft.locationText);
+        if (ft.collectionsTitle) setCollectionsTitle(ft.collectionsTitle);
+        if (Array.isArray(ft.collectionsLinks) && ft.collectionsLinks.length > 0) {
+          setCollectionsLinks(ft.collectionsLinks);
+        }
+        if (ft.customerServiceTitle) setCustomerServiceTitle(ft.customerServiceTitle);
+        if (Array.isArray(ft.customerServiceLinks) && ft.customerServiceLinks.length > 0) {
+          setCustomerServiceLinks(ft.customerServiceLinks);
+        }
+        if (ft.clubTitle) setClubTitle(ft.clubTitle);
+        if (ft.clubSubtitle) setClubSubtitle(ft.clubSubtitle);
+        if (ft.clubButtonText) setClubButtonText(ft.clubButtonText);
+        if (ft.copyrightText) setCopyrightText(ft.copyrightText);
       }
     } catch (err: any) {
       console.error('Error cargando ajustes:', err);
@@ -165,11 +221,25 @@ export const CanvaCatalogManager: React.FC = () => {
       const updatedGeneralTexts = {
         ...(rawSettings.generalTexts || {}),
         isCanvaCatalogsMode: isCanvaMode,
-        canvaHeroTag: heroTag,
-        canvaHeroTitle: heroTitle,
-        canvaHeroSubtitle: heroSubtitle,
-        canvaHeroImageUrl: heroImageUrl,
+        announcementText: announcementText.trim(),
+        canvaHeroTag: heroTag.trim(),
+        canvaHeroTitle: heroTitle.trim(),
+        canvaHeroSubtitle: heroSubtitle.trim(),
+        canvaHeroImageUrl: heroImageUrl.trim(),
         hideCanvaHeroOnMobile: hideHeroOnMobile,
+        footer: {
+          ...(rawSettings.generalTexts?.footer || {}),
+          description: footerDescription.trim(),
+          locationText: locationText.trim(),
+          collectionsTitle: collectionsTitle.trim(),
+          collectionsLinks,
+          customerServiceTitle: customerServiceTitle.trim(),
+          customerServiceLinks,
+          clubTitle: clubTitle.trim(),
+          clubSubtitle: clubSubtitle.trim(),
+          clubButtonText: clubButtonText.trim(),
+          copyrightText: copyrightText.trim(),
+        },
         canvaCatalogs: catalogs.map((cat, idx) => ({
           id: cat.id || `cat_${idx + 1}`,
           title: (cat.title || '').trim(),
@@ -250,7 +320,7 @@ export const CanvaCatalogManager: React.FC = () => {
     setUploadingCatalogId(id);
     const body = new FormData();
     body.append('image', file);
-    body.append('purpose', 'logo'); // Keeps optimal bounds & transparency
+    body.append('purpose', 'logo');
 
     try {
       const res = await apiFetch('/admin/images/upload', {
@@ -303,13 +373,13 @@ export const CanvaCatalogManager: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6 max-w-6xl pb-16">
+    <div className="space-y-6 max-w-6xl pb-24">
       {/* Header with Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-xl font-bold text-slate-800 font-['Quicksand',sans-serif]">
-              Catálogos Virtuales (Modo Canva)
+              Catálogos Virtuales & Contenido Canva
             </h1>
             <span
               className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider ${
@@ -322,7 +392,7 @@ export const CanvaCatalogManager: React.FC = () => {
             </span>
           </div>
           <p className="text-xs text-slate-500 mt-0.5">
-            Añade, edita fotos y enlaces de tus catálogos interactivos. Puedes tener la cantidad de catálogos que desees.
+            Administra tus catálogos, fotos, aviso superior (top), banner y las palabras del pie de página (footer).
           </p>
         </div>
 
@@ -357,7 +427,7 @@ export const CanvaCatalogManager: React.FC = () => {
         <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-2xl flex items-center gap-2.5 shadow-2xs">
           <Check className="w-4 h-4 text-emerald-600 shrink-0" />
           <span className="font-medium">
-            ¡Catálogos guardados correctamente! Ya están actualizados en la web pública.
+            ¡Configuración guardada correctamente! Todos los textos, banners y catálogos están actualizados en la web pública.
           </span>
         </div>
       )}
@@ -405,13 +475,39 @@ export const CanvaCatalogManager: React.FC = () => {
         </div>
       </div>
 
-      {/* Hero Header Customizer Card (Foldable / Compact) */}
+      {/* SECTION 1: Top Bar (Aviso Superior) */}
+      <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs space-y-3">
+        <div className="flex items-center gap-2 pb-2 border-b border-slate-100">
+          <Megaphone className="w-4 h-4 text-[#9A80BD]" />
+          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-800">
+            Aviso Superior (Top Bar de la Web)
+          </h3>
+          <span className="text-[10px] text-slate-400">
+            Aparece arriba del todo sobre el logo en Modo Canva y Tienda
+          </span>
+        </div>
+
+        <div>
+          <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+            Texto del Aviso Superior (Promoción / Envíos / Dedicatorias):
+          </label>
+          <input
+            type="text"
+            value={announcementText}
+            onChange={(e) => setAnnouncementText(e.target.value)}
+            placeholder="Ediciones con propósito · Dedicatoria & personalización gratis"
+            className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#9A80BD] focus:outline-none font-medium text-slate-800"
+          />
+        </div>
+      </div>
+
+      {/* SECTION 2: Hero Header Customizer Card */}
       <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs space-y-4">
         <div className="flex items-center justify-between pb-3 border-b border-slate-100">
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-[#9A80BD]" />
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-800">
-              Banner Superior del Catálogo (Portada)
+              Banner de Portada del Catálogo (Hero Header)
             </h3>
           </div>
           <label className="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 cursor-pointer">
@@ -506,7 +602,7 @@ export const CanvaCatalogManager: React.FC = () => {
         </div>
       </div>
 
-      {/* Canva Catalogs Section */}
+      {/* SECTION 3: Canva Catalogs Grid */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -514,7 +610,7 @@ export const CanvaCatalogManager: React.FC = () => {
               Tus Catálogos de Canva ({catalogs.length})
             </h2>
             <span className="text-[11px] text-slate-400">
-              Personaliza el título, la foto, el enlace y el WhatsApp de cada catálogo
+              Edita el título, la foto, el enlace y el mensaje de WhatsApp de cada uno
             </span>
           </div>
 
@@ -532,7 +628,7 @@ export const CanvaCatalogManager: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {catalogs.map((cat, idx) => {
             const isUploadingThis = uploadingCatalogId === cat.id;
-            const currentImg = cat.imageUrl || `/images/catalogos/catalogo_${idx + 1}.png`;
+            const currentImg = cat.imageUrl || `/images/catalogos/catalogo_${(idx % 4) + 1}.png`;
             const activeColor = cat.color || COLOR_PRESETS[idx % COLOR_PRESETS.length].hex;
 
             return (
@@ -554,7 +650,7 @@ export const CanvaCatalogManager: React.FC = () => {
                     </span>
                   </div>
 
-                  {/* Move Up, Move Down, Delete */}
+                  {/* Move Up, Move Down, Test Link, Delete */}
                   <div className="flex items-center gap-1">
                     <button
                       type="button"
@@ -757,11 +853,225 @@ export const CanvaCatalogManager: React.FC = () => {
         </button>
       </div>
 
+      {/* SECTION 4: Promotional Banners Info */}
+      <div className="p-5 rounded-2xl bg-gradient-to-r from-purple-50/60 to-pink-50/40 border border-purple-200/80 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-white text-[#9A80BD] border border-purple-200 flex items-center justify-center shrink-0 shadow-2xs">
+            <ImageIcon className="w-5 h-5" />
+          </div>
+          <div>
+            <h3 className="text-xs font-bold text-slate-800">
+              Banners Promocionales en Modo Canva
+            </h3>
+            <p className="text-[11px] text-slate-500">
+              Los banners promocionales activos creados en la sección de banners ahora también se muestran elegantemente debajo de tus catálogos.
+            </p>
+          </div>
+        </div>
+        <a
+          href="/banners"
+          className="inline-flex items-center gap-1.5 px-4 py-2 bg-white hover:bg-purple-50 text-[#9A80BD] border border-purple-200 rounded-xl text-xs font-bold transition-all shadow-2xs shrink-0"
+        >
+          <span>Gestionar Banners Promocionales →</span>
+        </a>
+      </div>
+
+      {/* SECTION 5: Footer & Brand Words Customizer (Matches User Screenshot Exactly) */}
+      <div className="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-2xs space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100">
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#9A80BD]">
+            <PanelBottom className="w-4 h-4" />
+            <span>Textos del Pie de Página (Footer) & Club Ovejita</span>
+          </div>
+          <span className="text-[11px] bg-purple-50 text-[#9A80BD] font-bold px-2.5 py-0.5 rounded-full border border-purple-100 w-fit">
+            100% Personalizable
+          </span>
+        </div>
+
+        <p className="text-xs text-slate-500 font-light">
+          Edita las palabras que aparecen al pie de tu tienda: descripción, sedes de taller, títulos y enlaces de Colecciones, Servicio al Cliente, Club Ovejita y derechos.
+        </p>
+
+        {/* Bloque 1: Marca y Sedes */}
+        <div className="p-4 bg-slate-50/80 rounded-2xl border border-slate-200/70 space-y-3.5">
+          <span className="text-xs font-bold text-slate-800 uppercase tracking-wider block">
+            1. Marca & Sedes de Taller (Columna Izquierda)
+          </span>
+
+          <div>
+            <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+              Lema o Descripción de Marca:
+            </label>
+            <textarea
+              rows={2}
+              value={footerDescription}
+              onChange={(e) => setFooterDescription(e.target.value)}
+              placeholder="Creamos papelería y regalos con intención y devoción..."
+              className="w-full text-xs p-2.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#9A80BD] focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+              Texto de Sedes / Envíos a todo el Perú:
+            </label>
+            <input
+              type="text"
+              value={locationText}
+              onChange={(e) => setLocationText(e.target.value)}
+              placeholder="✦ Sedes de taller creativo en Lima con despachos con amor a todo el Perú."
+              className="w-full text-xs p-2.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#9A80BD] focus:outline-none font-medium text-primary"
+            />
+          </div>
+        </div>
+
+        {/* Bloque 2: Colecciones y Servicio al Cliente (2 Columnas) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Columna Colecciones */}
+          <div className="p-4 bg-purple-50/30 rounded-2xl border border-purple-100 space-y-3">
+            <span className="text-xs font-bold text-slate-800 uppercase tracking-wider block">
+              2. Columna Colecciones
+            </span>
+
+            <div>
+              <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                Título de la Columna:
+              </label>
+              <input
+                type="text"
+                value={collectionsTitle}
+                onChange={(e) => setCollectionsTitle(e.target.value)}
+                className="w-full text-xs p-2 bg-white border border-slate-200 rounded-xl font-bold text-slate-800"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-[11px] font-semibold text-slate-600">
+                Enlaces o Nombres de Colección:
+              </label>
+              {collectionsLinks.map((link, idx) => (
+                <div key={idx} className="flex gap-2">
+                  <input
+                    type="text"
+                    value={link.label || ''}
+                    onChange={(e) => {
+                      const updated = [...collectionsLinks];
+                      updated[idx] = { ...updated[idx], label: e.target.value };
+                      setCollectionsLinks(updated);
+                    }}
+                    placeholder={`Colección ${idx + 1}`}
+                    className="flex-1 text-xs p-2 bg-white border border-slate-200 rounded-xl"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Columna Servicio al Cliente */}
+          <div className="p-4 bg-purple-50/30 rounded-2xl border border-purple-100 space-y-3">
+            <span className="text-xs font-bold text-slate-800 uppercase tracking-wider block">
+              3. Columna Servicio al Cliente
+            </span>
+
+            <div>
+              <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                Título de la Columna:
+              </label>
+              <input
+                type="text"
+                value={customerServiceTitle}
+                onChange={(e) => setCustomerServiceTitle(e.target.value)}
+                className="w-full text-xs p-2 bg-white border border-slate-200 rounded-xl font-bold text-slate-800"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-[11px] font-semibold text-slate-600">
+                Enlaces o Opciones de Servicio:
+              </label>
+              {customerServiceLinks.map((link, idx) => (
+                <div key={idx} className="flex gap-2">
+                  <input
+                    type="text"
+                    value={link.label || ''}
+                    onChange={(e) => {
+                      const updated = [...customerServiceLinks];
+                      updated[idx] = { ...updated[idx], label: e.target.value };
+                      setCustomerServiceLinks(updated);
+                    }}
+                    placeholder={`Servicio ${idx + 1}`}
+                    className="flex-1 text-xs p-2 bg-white border border-slate-200 rounded-xl"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Bloque 3: Club Ovejita & Derechos */}
+        <div className="p-4 bg-slate-50/80 rounded-2xl border border-slate-200/70 space-y-4">
+          <span className="text-xs font-bold text-slate-800 uppercase tracking-wider block">
+            4. Formulario Club Ovejita & Derechos de Autor
+          </span>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                Título del Club:
+              </label>
+              <input
+                type="text"
+                value={clubTitle}
+                onChange={(e) => setClubTitle(e.target.value)}
+                className="w-full text-xs p-2 bg-white border border-slate-200 rounded-xl font-bold"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                Subtítulo / Invitación:
+              </label>
+              <input
+                type="text"
+                value={clubSubtitle}
+                onChange={(e) => setClubSubtitle(e.target.value)}
+                className="w-full text-xs p-2 bg-white border border-slate-200 rounded-xl"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                Texto del Botón:
+              </label>
+              <input
+                type="text"
+                value={clubButtonText}
+                onChange={(e) => setClubButtonText(e.target.value)}
+                className="w-full text-xs p-2 bg-white border border-slate-200 rounded-xl font-bold text-[#9A80BD]"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+              Texto de Derechos de Autor / Pie de Firma:
+            </label>
+            <input
+              type="text"
+              value={copyrightText}
+              onChange={(e) => setCopyrightText(e.target.value)}
+              placeholder="Hecho con amor y bendición."
+              className="w-full text-xs p-2 bg-white border border-slate-200 rounded-xl font-medium"
+            />
+          </div>
+        </div>
+      </div>
+
       {/* Floating / Bottom Save Bar */}
       <div className="sticky bottom-4 z-20 flex justify-end">
-        <div className="bg-white/95 backdrop-blur-md p-2 rounded-2xl border border-purple-200 shadow-lg flex items-center gap-3">
-          <span className="text-xs text-slate-500 pl-2">
-            {catalogs.length} catálogo(s) configurado(s)
+        <div className="bg-white/95 backdrop-blur-md p-2.5 rounded-2xl border border-purple-200 shadow-lg flex items-center gap-3">
+          <span className="text-xs text-slate-500 pl-2 font-medium">
+            {catalogs.length} catálogo(s) · Aviso Top · Footer
           </span>
           <button
             type="button"

@@ -42,13 +42,14 @@ const whatsappNumber = settings?.whatsappNumber || "986951425";
 ---
 
 <MainLayout settings={settings}>
-  {announcementBanner && <AnnouncementBar text={announcementBanner.title || announcementText} />}
+  {announcementText && <AnnouncementBar text={announcementBanner?.title || announcementText} />}
   <Header settings={settings} />
 
   <main id="storeMainContainer">
     <!-- MODO CATÁLOGO LINK (CANVA / VIRTUAL INTERACTIVO) -->
     <div id="canvaModeSection" class={isCanvaMode ? "block" : "hidden"}>
       <CanvaCatalogsSection settings={settings} />
+      {promotionalBanner && <PromotionalBanner banner={promotionalBanner} />}
     </div>
 
     <!-- MODO TIENDA COMPLETA / E-COMMERCE CON PRODUCTOS Y CARRITO -->
