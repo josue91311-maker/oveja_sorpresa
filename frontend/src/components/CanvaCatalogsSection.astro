@@ -15,6 +15,7 @@ const defaultCanvaCatalogs = [
     title: "Catálogo de Papelería Bonita",
     desc: "Cuadernos artesanales de pasta dura, planificadores, devocionales y stickers listos para obsequiar con dedicatoria caligrafiada.",
     url: "https://ovejitasorpresas.my.canva.site/ovejitasorpresaspapeleria",
+    imageUrl: "/images/catalogos/catalogo_1.png",
     badge: "Más Solicitado",
     accentColor: "#9A80BD",
     accentLight: "bg-purple-50 text-purple-700 border-purple-100",
@@ -27,6 +28,7 @@ const defaultCanvaCatalogs = [
     title: "Catálogo de Regalos para Él",
     desc: "Libretas sobrias en tonos neutros, tomatodos térmicos, bolígrafos de firma y sets creados para inspirar su jornada diaria.",
     url: "https://ovejitasorpresas.my.canva.site/paraellos",
+    imageUrl: "/images/catalogos/catalogo_2.png",
     badge: "Edición Especial",
     accentColor: "#475569",
     accentLight: "bg-slate-100 text-slate-700 border-slate-200",
@@ -39,6 +41,7 @@ const defaultCanvaCatalogs = [
     title: "Catálogo de Boxes & Fechas Especiales",
     desc: "Cajas aromáticas temáticas con tazas cerámicas, espejos flor, dijes y envoltura con lazo de satén lista para entregar.",
     url: "https://ovejitasorpresas.my.canva.site/boxpersonalizados",
+    imageUrl: "/images/catalogos/catalogo_3.png",
     badge: "Listo para Entregar",
     accentColor: "#B45309",
     accentLight: "bg-amber-50 text-amber-800 border-amber-200",
@@ -51,6 +54,7 @@ const defaultCanvaCatalogs = [
     title: "Catálogo de Amor & Amistad",
     desc: "Detalles románticos con significado perdurable, álbumes de recuerdos fotográficos y tarjetas hechas a mano con amor.",
     url: "https://ovejitasorpresas.my.canva.site/regalos-de-amor-aniversarios",
+    imageUrl: "/images/catalogos/catalogo_4.png",
     badge: "Edición Afecto",
     accentColor: "#E11D48",
     accentLight: "bg-rose-50 text-rose-700 border-rose-100",
@@ -64,6 +68,7 @@ const catalogs = defaultCanvaCatalogs.map((def, idx) => {
   return {
     ...def,
     ...conf,
+    imageUrl: conf.imageUrl || def.imageUrl,
     url: conf.url || def.url,
     title: (conf.title || def.title).replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1F1E0}-\u{1F1FF}]/gu, '').trim(),
     desc: (conf.desc || def.desc),
@@ -105,7 +110,7 @@ const catalogs = defaultCanvaCatalogs.map((def, idx) => {
           <!-- Subtle decorative background accent -->
           <div class="absolute -top-12 -right-12 w-40 h-40 bg-purple-50/70 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-500 pointer-events-none"></div>
 
-          <!-- Card Header -->
+          <!-- Card Header & Content -->
           <div class="relative z-10 space-y-4">
             <!-- Category Tag & Badge with Modern SVG icon -->
             <div class="flex items-center justify-between gap-3">
@@ -142,15 +147,32 @@ const catalogs = defaultCanvaCatalogs.map((def, idx) => {
               </span>
             </div>
 
-            <!-- Title -->
-            <h3 class="text-xl sm:text-2xl font-serif font-bold text-ink leading-snug group-hover:text-[#9A80BD] transition-colors pt-1">
-              {catalog.title}
-            </h3>
+            <!-- Content Row with Text on Left and Illustration on Right -->
+            <div class="flex items-center justify-between gap-4 pt-1">
+              <div class="flex-1 space-y-2">
+                <!-- Title -->
+                <h3 class="text-xl sm:text-2xl font-serif font-bold text-ink leading-snug group-hover:text-[#9A80BD] transition-colors">
+                  {catalog.title}
+                </h3>
 
-            <!-- Description -->
-            <p class="text-xs sm:text-sm text-slate-500 font-light leading-relaxed">
-              {catalog.desc}
-            </p>
+                <!-- Description -->
+                <p class="text-xs sm:text-sm text-slate-500 font-light leading-relaxed">
+                  {catalog.desc}
+                </p>
+              </div>
+
+              <!-- Cutout Illustration -->
+              {catalog.imageUrl && (
+                <div class="shrink-0 w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 flex items-center justify-center relative">
+                  <img
+                    src={catalog.imageUrl}
+                    alt={catalog.title}
+                    class="max-w-full max-h-full object-contain drop-shadow-md group-hover:scale-105 group-hover:-rotate-1 transition-all duration-300"
+                    loading="lazy"
+                  />
+                </div>
+              )}
+            </div>
           </div>
 
           <!-- Action Buttons with clean styling & icons -->
