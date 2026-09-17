@@ -1,17 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Quicksand:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Quicksand', 'Plus Jakarta Sans', sans-serif;
   background-color: #FAF7FC;
   color: #2D2235;
   -webkit-font-smoothing: antialiased;
 }
 
-.brand-title {
+h1, h2, h3, h4, h5, h6, .brand-title {
   font-family: 'Quicksand', sans-serif;
 }
 

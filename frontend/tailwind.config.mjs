@@ -39,10 +39,10 @@ export default {
         },
       },
       fontFamily: {
+        sans: ['"Quicksand"', '"Plus Jakarta Sans"', 'sans-serif'],
         brand: ['"Quicksand"', 'sans-serif'],
-        display: ['"Playfair Display"', 'serif'],
-        serif: ['"Playfair Display"', 'Georgia', 'serif'],
-        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+        display: ['"Quicksand"', 'sans-serif'],
+        serif: ['"Quicksand"', 'sans-serif'],
         script: ['"Alex Brush"', 'cursive'],
       },
       boxShadow: {
