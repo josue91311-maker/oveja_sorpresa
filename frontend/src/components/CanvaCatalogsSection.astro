@@ -155,29 +155,5 @@ const catalogs = defaultCanvaCatalogs.map((def, idx) => {
       ))}
     </div>
 
-    <!-- Quick advice banner -->
-    <div class="mt-12 p-6 rounded-3xl bg-white border border-purple-100 shadow-sm max-w-3xl mx-auto flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
-      <div class="w-12 h-12 rounded-2xl bg-purple-50 text-[#9A80BD] flex items-center justify-center shrink-0 border border-purple-100 shadow-2xs">
-        <svg class="w-6 h-6 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.5a9 9 0 11-9 0 9 9 0 019 0z" />
-        </svg>
-      </div>
-      <div class="flex-1">
-        <h4 class="text-sm font-bold text-ink font-brand">¿Tienes una idea especial o pedido personalizado?</h4>
-        <p class="text-xs text-slate-500 font-light mt-0.5">
-          Escríbenos directamente a WhatsApp y una asesora de nuestro taller te ayudará a personalizar tu libreta o box con dedicatoria gratis.
-        </p>
-      </div>
-      <a
-        href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent("¡Hola Ovejita Sorpresas! 🌸 Deseo hacer una consulta personalizada de sus catálogos.")}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="py-2.5 px-5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-xs shrink-0 font-brand transition-transform active:scale-95 flex items-center gap-2"
-      >
-        <span>Escribir al Taller</span>
-        <span>→</span>
-      </a>
-    </div>
-
   </div>
 </section>
