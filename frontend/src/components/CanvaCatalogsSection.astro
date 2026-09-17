@@ -6,59 +6,55 @@ interface Props {
 const { settings = {} } = Astro.props;
 const whatsappNumber = settings?.whatsappNumber || "986951425";
 
-// Default Canva catalogs specified by the user
+// Modern, icon-based catalogs data (NO emojis, purely SVG vectors and refined typography)
 const defaultCanvaCatalogs = [
   {
     id: "papeleria",
-    tag: "🌸 Papelería Bonita & Promesas",
+    tag: "Colección Exclusiva",
+    categoryLabel: "Papelería Bonita & Devocionales",
     title: "Catálogo de Papelería Bonita",
-    desc: "Cuadernos artesanales, devocionales, stickers y planners listos para regalar con dedicatoria.",
+    desc: "Cuadernos artesanales de pasta dura, planificadores, devocionales y stickers listos para obsequiar con dedicatoria caligrafiada.",
     url: "https://ovejitasorpresas.my.canva.site/ovejitasorpresaspapeleria",
     badge: "Más Solicitado",
-    icon: "book",
-    gradient: "from-pink-500/10 via-purple-500/5 to-transparent",
-    borderAccent: "border-pink-200/80",
-    buttonColor: "bg-pink-500 hover:bg-pink-600",
-    waMessage: "Hola Ovejita Sorpresas 🌸📖🎁, vi su Catálogo de Papelería bonita y deseo información de un producto. ¿Me ayudas a elegir? 🎁"
+    accentColor: "#9A80BD",
+    accentLight: "bg-purple-50 text-purple-700 border-purple-100",
+    waMessage: "Hola Ovejita Sorpresas, vi su Catálogo de Papelería bonita y deseo información de un producto. ¿Me ayudas a elegir?"
   },
   {
     id: "paraellos",
-    tag: "💁🏻‍♂️ Detalles Masculinos & Fe",
+    tag: "Línea Ejecutiva",
+    categoryLabel: "Detalles Masculinos & Fe",
     title: "Catálogo de Regalos para Él",
-    desc: "Libretas sobrias, tomatodos ejecutivos, bolígrafos premium y sets diseñados para bendecir su día.",
+    desc: "Libretas sobrias en tonos neutros, tomatodos térmicos, bolígrafos de firma y sets creados para inspirar su jornada diaria.",
     url: "https://ovejitasorpresas.my.canva.site/paraellos",
     badge: "Edición Especial",
-    icon: "user",
-    gradient: "from-slate-500/10 via-indigo-500/5 to-transparent",
-    borderAccent: "border-slate-300/80",
-    buttonColor: "bg-slate-700 hover:bg-slate-800",
-    waMessage: "¡Hola! 💁🏻‍♂️🎁 Vi su Catálogo de Regalos para Él y me interesó un detalle. ¿Me cuentas más detalles? ✨"
+    accentColor: "#475569",
+    accentLight: "bg-slate-100 text-slate-700 border-slate-200",
+    waMessage: "¡Hola! Vi su Catálogo de Regalos para Él y me interesó un detalle. ¿Me cuentas más detalles?"
   },
   {
     id: "boxes",
-    tag: "🎁🛍️ Fechas Especiales & Sorpresas",
+    tag: "Experiencias de Regalo",
+    categoryLabel: "Boxes & Fechas Especiales",
     title: "Catálogo de Boxes & Fechas Especiales",
-    desc: "Cajas aromáticas temáticas con tazas, espejos flor, dijes y envoltura personalizada lista para entregar.",
+    desc: "Cajas aromáticas temáticas con tazas cerámicas, espejos flor, dijes y envoltura con lazo de satén lista para entregar.",
     url: "https://ovejitasorpresas.my.canva.site/boxpersonalizados",
     badge: "Listo para Entregar",
-    icon: "gift",
-    gradient: "from-amber-500/10 via-pink-500/5 to-transparent",
-    borderAccent: "border-amber-200/80",
-    buttonColor: "bg-[#9A80BD] hover:bg-[#7D60A6]",
-    waMessage: "Hola Ovejita Sorpresas 🎁🛍️, estuve viendo el Catálogo de Boxes & Fechas Especiales y me gustó un box. ¿Me ayudas a elegir el ideal? ✨"
+    accentColor: "#B45309",
+    accentLight: "bg-amber-50 text-amber-800 border-amber-200",
+    waMessage: "Hola Ovejita Sorpresas, estuve viendo el Catálogo de Boxes & Fechas Especiales y me gustó un box. ¿Me ayudas a elegir el ideal?"
   },
   {
     id: "amor-amistad",
-    tag: "🎁💖 Aniversarios & Momentos Únicos",
+    tag: "Momentos Inolvidables",
+    categoryLabel: "Amor & Aniversarios",
     title: "Catálogo de Amor & Amistad",
-    desc: "Detalles llenos de significado, cartas caligrafiadas, álbumes de recuerdos y recuerdos perdurables.",
+    desc: "Detalles románticos con significado perdurable, álbumes de recuerdos fotográficos y tarjetas hechas a mano con amor.",
     url: "https://ovejitasorpresas.my.canva.site/regalos-de-amor-aniversarios",
-    badge: "Romántico & Tierno",
-    icon: "heart",
-    gradient: "from-rose-500/10 via-purple-500/5 to-transparent",
-    borderAccent: "border-rose-200/80",
-    buttonColor: "bg-rose-500 hover:bg-rose-600",
-    waMessage: "¡Hola! 🎁💖 Estuve revisando su Catálogo de Amor & Amistad. ¿Me ayudas con los detalles para pedir uno? ✨"
+    badge: "Edición Afecto",
+    accentColor: "#E11D48",
+    accentLight: "bg-rose-50 text-rose-700 border-rose-100",
+    waMessage: "¡Hola! Estuve revisando su Catálogo de Amor & Amistad. ¿Me ayudas con los detalles para pedir uno?"
   }
 ];
 
@@ -69,72 +65,107 @@ const catalogs = defaultCanvaCatalogs.map((def, idx) => {
     ...def,
     ...conf,
     url: conf.url || def.url,
-    title: conf.title || def.title,
+    title: (conf.title || def.title).replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1F1E0}-\u{1F1FF}]/gu, '').trim(),
+    desc: (conf.desc || def.desc),
+    categoryLabel: (conf.categoryLabel || def.categoryLabel),
     waMessage: conf.waMessage || def.waMessage
   };
 });
 ---
 
-<section class="py-10 sm:py-16 bg-gradient-to-b from-purple-50/40 via-white to-pink-50/30" id="catalogos-digitales">
+<section class="py-12 sm:py-20 bg-gradient-to-b from-[#FAF7FC] via-white to-[#FAF7FC]" id="catalogos-digitales">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     
-    <!-- Title Section -->
-    <div class="text-center max-w-3xl mx-auto mb-12 space-y-3">
+    <!-- Title Section with elegant brand typography -->
+    <div class="text-center max-w-3xl mx-auto mb-14 space-y-3.5">
       <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-purple-200/80 shadow-2xs">
-        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-        <span class="text-xs font-bold uppercase tracking-wider text-[#9A80BD] font-brand">
-          Catálogos Interactivos Disponibles
+        <!-- Sparkle modern SVG icon -->
+        <svg class="w-3.5 h-3.5 text-[#9A80BD] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+        </svg>
+        <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-[#9A80BD] font-brand">
+          Catálogos Oficiales Ovejita
         </span>
       </div>
+
       <h2 class="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-ink tracking-tight">
-        Explora Nuestros Catálogos Virtuales
+        Explora Nuestras Colecciones
       </h2>
-      <p class="text-xs sm:text-base text-slate-600 font-light leading-relaxed">
-        Elige tu categoría favorita para hojear cada producto interactivo, sus fotos y dedicatorias. ¿Encontraste el regalo perfecto? Haz clic en <strong class="font-semibold text-[#9A80BD]">Consultar por WhatsApp</strong> para preparártelo con amor.
+
+      <p class="text-xs sm:text-sm md:text-base text-slate-500 font-light max-w-2xl mx-auto leading-relaxed">
+        Descubre nuestros catálogos digitales interactivos en alta resolución. Hojéalos cómodamente y solicita tu detalle personalizado con empaque de regalo y dedicatoria incluida.
       </p>
     </div>
 
     <!-- Catalogs Grid: 4 items (2x2) -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto">
-      {catalogs.map((catalog) => (
-        <div class={`relative bg-white rounded-3xl p-6 sm:p-7 border ${catalog.borderAccent} shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden group hover:-translate-y-1`}>
+      {catalogs.map((catalog, idx) => (
+        <div class="relative bg-white rounded-3xl p-7 sm:p-8 border border-purple-100/90 hover:border-[#9A80BD]/50 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden group hover:-translate-y-1">
           
-          <!-- Background Gradient -->
-          <div class={`absolute inset-0 bg-gradient-to-br ${catalog.gradient} opacity-80 pointer-events-none`}></div>
-          
+          <!-- Subtle decorative background accent -->
+          <div class="absolute -top-12 -right-12 w-40 h-40 bg-purple-50/70 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-500 pointer-events-none"></div>
+
           <!-- Card Header -->
-          <div class="relative z-10 space-y-3">
-            <div class="flex items-center justify-between gap-2">
-              <span class="text-[11px] font-bold tracking-wider uppercase text-[#9A80BD] font-brand">
-                {catalog.tag}
-              </span>
-              <span class="text-[10px] font-semibold bg-white/90 text-slate-600 px-2.5 py-1 rounded-full border border-slate-200 shadow-2xs font-brand">
+          <div class="relative z-10 space-y-4">
+            <!-- Category Tag & Badge with Modern SVG icon -->
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center text-[#9A80BD] shrink-0 shadow-2xs">
+                  {idx === 0 && (
+                    <svg class="w-4 h-4 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                    </svg>
+                  )}
+                  {idx === 1 && (
+                    <svg class="w-4 h-4 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                    </svg>
+                  )}
+                  {idx === 2 && (
+                    <svg class="w-4 h-4 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H4.5a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 109.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1114.625 7.5H12m0 0V21m-8.625-9.75h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+                    </svg>
+                  )}
+                  {idx === 3 && (
+                    <svg class="w-4 h-4 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                    </svg>
+                  )}
+                </div>
+                <span class="text-[11px] font-bold uppercase tracking-wider text-[#9A80BD] font-brand">
+                  {catalog.categoryLabel}
+                </span>
+              </div>
+
+              <span class={`text-[10.5px] font-semibold px-2.5 py-1 rounded-full border shadow-2xs font-brand ${catalog.accentLight}`}>
                 {catalog.badge}
               </span>
             </div>
 
-            <h3 class="text-xl sm:text-2xl font-serif font-bold text-ink leading-snug group-hover:text-[#9A80BD] transition-colors">
+            <!-- Title -->
+            <h3 class="text-xl sm:text-2xl font-serif font-bold text-ink leading-snug group-hover:text-[#9A80BD] transition-colors pt-1">
               {catalog.title}
             </h3>
 
-            <p class="text-xs sm:text-sm text-slate-600 font-light leading-relaxed">
+            <!-- Description -->
+            <p class="text-xs sm:text-sm text-slate-500 font-light leading-relaxed">
               {catalog.desc}
             </p>
           </div>
 
-          <!-- Preview & Action Buttons -->
-          <div class="relative z-10 pt-6 mt-6 border-t border-slate-100 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-            <!-- View catalog button (Direct clean open to bypass Canva X-Frame-Options) -->
+          <!-- Action Buttons with clean styling & icons -->
+          <div class="relative z-10 pt-6 mt-6 border-t border-purple-50 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            <!-- View catalog button -->
             <a
               href={catalog.url}
               target="_blank"
               rel="noopener noreferrer"
-              class="flex-1 py-3 px-4 bg-white hover:bg-purple-50 text-slate-800 hover:text-[#9A80BD] text-xs font-bold rounded-2xl border border-slate-200 hover:border-purple-300 transition-all flex items-center justify-center gap-2 shadow-2xs font-brand active:scale-98"
+              class="flex-1 py-3.5 px-4 bg-[#FAF7FC] hover:bg-white text-ink hover:text-[#9A80BD] text-xs font-bold rounded-2xl border border-purple-100 hover:border-[#9A80BD]/50 transition-all flex items-center justify-center gap-2 shadow-2xs font-brand active:scale-98 group/btn"
             >
-              <svg class="w-4 h-4 text-[#9A80BD] stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-4 h-4 text-[#9A80BD] stroke-[2] group-hover/btn:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
               </svg>
-              <span>Abrir Catálogo Interactivo</span>
+              <span>Ver Catálogo Virtual</span>
             </a>
 
             <!-- WhatsApp Direct Button -->
@@ -142,12 +173,12 @@ const catalogs = defaultCanvaCatalogs.map((def, idx) => {
               href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(catalog.waMessage)}`}
               target="_blank"
               rel="noopener noreferrer"
-              class={`py-3 px-5 text-white text-xs font-bold rounded-2xl transition-all flex items-center justify-center gap-2 shadow-sm font-brand hover:scale-102 active:scale-98 ${catalog.buttonColor}`}
+              class="py-3.5 px-5 bg-[#9A80BD] hover:bg-[#7D60A6] text-white text-xs font-bold rounded-2xl transition-all flex items-center justify-center gap-2 shadow-sm font-brand hover:scale-102 active:scale-98"
             >
               <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24">
                 <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"></path>
               </svg>
-              <span>Pedir por WhatsApp</span>
+              <span>Consultar en WhatsApp</span>
             </a>
           </div>
 
