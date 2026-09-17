@@ -124,21 +124,18 @@ const catalogs = defaultCanvaCatalogs.map((def, idx) => {
 
           <!-- Preview & Action Buttons -->
           <div class="relative z-10 pt-6 mt-6 border-t border-slate-100 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-            <!-- View inside modal button -->
-            <button
-              type="button"
-              class="open-canva-modal-btn flex-1 py-3 px-4 bg-white hover:bg-slate-50 text-slate-800 text-xs font-bold rounded-2xl border border-slate-200 hover:border-purple-300 transition-all flex items-center justify-center gap-2 shadow-2xs cursor-pointer font-brand active:scale-98"
-              data-title={catalog.title}
-              data-url={catalog.url}
-              data-wamsg={catalog.waMessage}
-              data-wanumber={whatsappNumber}
+            <!-- View catalog button (Direct clean open to bypass Canva X-Frame-Options) -->
+            <a
+              href={catalog.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex-1 py-3 px-4 bg-white hover:bg-purple-50 text-slate-800 hover:text-[#9A80BD] text-xs font-bold rounded-2xl border border-slate-200 hover:border-purple-300 transition-all flex items-center justify-center gap-2 shadow-2xs font-brand active:scale-98"
             >
               <svg class="w-4 h-4 text-[#9A80BD] stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
               </svg>
-              <span>Ver Catálogo Aquí</span>
-            </button>
+              <span>Abrir Catálogo Interactivo</span>
+            </a>
 
             <!-- WhatsApp Direct Button -->
             <a
@@ -184,157 +181,3 @@ const catalogs = defaultCanvaCatalogs.map((def, idx) => {
 
   </div>
 </section>
-
-<!-- Canva Catalog Interactive Modal (Shows iframe right inside the store) -->
-<div
-  id="canvaModalOverlay"
-  class="fixed inset-0 bg-black/70 backdrop-blur-xs z-50 transition-opacity duration-300 opacity-0 pointer-events-none"
-  aria-hidden="true"
-></div>
-
-<div
-  id="canvaModal"
-  class="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 transition-all duration-300 opacity-0 pointer-events-none scale-95"
-  role="dialog"
-  aria-modal="true"
->
-  <div class="bg-white w-full max-w-5xl h-[92vh] rounded-3xl shadow-2xl border border-purple-100 overflow-hidden flex flex-col">
-    
-    <!-- Modal Header -->
-    <div class="p-3.5 sm:p-4 border-b border-slate-200 flex items-center justify-between bg-[#FAF8FB] shrink-0">
-      <div class="flex items-center gap-2.5 min-w-0">
-        <div class="w-8 h-8 rounded-xl bg-purple-100 text-[#9A80BD] flex items-center justify-center shrink-0">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-          </svg>
-        </div>
-        <div class="min-w-0">
-          <h3 id="canvaModalTitle" class="font-serif font-bold text-sm sm:text-base text-ink truncate">
-            Catálogo Ovejita Sorpresas
-          </h3>
-          <span class="text-[10px] text-emerald-600 font-bold uppercase tracking-wider block font-brand">
-            Vista Interactiva en Vivo
-          </span>
-        </div>
-      </div>
-
-      <!-- Actions -->
-      <div class="flex items-center gap-2 shrink-0">
-        <a
-          id="canvaExternalLink"
-          href="#"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="hidden sm:inline-flex items-center gap-1 text-xs text-slate-500 hover:text-ink px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors font-medium font-brand"
-        >
-          <span>Abrir en nueva pestaña</span>
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-          </svg>
-        </a>
-
-        <a
-          id="canvaModalWaBtn"
-          href="#"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="py-1.5 px-3 sm:px-4 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-xs flex items-center gap-1.5 font-brand"
-        >
-          <svg class="w-3.5 h-3.5 fill-current shrink-0" viewBox="0 0 24 24">
-            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"></path>
-          </svg>
-          <span class="hidden xs:inline">Pedir este catálogo</span>
-          <span class="xs:hidden">WhatsApp</span>
-        </a>
-
-        <button
-          id="closeCanvaModalBtn"
-          type="button"
-          class="w-8 h-8 rounded-full bg-white hover:bg-slate-100 text-slate-400 hover:text-ink flex items-center justify-center transition-colors border border-slate-200 cursor-pointer shadow-2xs"
-          aria-label="Cerrar visor"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-    </div>
-
-    <!-- Modal Body: Embed Iframe with Loading Indicator -->
-    <div class="flex-1 relative bg-slate-100 w-full h-full overflow-hidden">
-      <div id="canvaIframeSpinner" class="absolute inset-0 flex flex-col items-center justify-center bg-white z-10 gap-3">
-        <div class="w-8 h-8 border-3 border-[#9A80BD] border-t-transparent rounded-full animate-spin"></div>
-        <p class="text-xs font-semibold text-slate-500 font-brand">Cargando catálogo interactivo...</p>
-      </div>
-      <iframe
-        id="canvaIframe"
-        src=""
-        class="w-full h-full border-0 relative z-20"
-        allowfullscreen
-        loading="lazy"
-        title="Visor de Catálogo Canva"
-      ></iframe>
-    </div>
-
-  </div>
-</div>
-
-<script is:inline>
-  (function () {
-    const overlay = document.getElementById('canvaModalOverlay');
-    const modal = document.getElementById('canvaModal');
-    const closeBtn = document.getElementById('closeCanvaModalBtn');
-    const iframe = document.getElementById('canvaIframe');
-    const spinner = document.getElementById('canvaIframeSpinner');
-    const modalTitle = document.getElementById('canvaModalTitle');
-    const externalLink = document.getElementById('canvaExternalLink');
-    const modalWaBtn = document.getElementById('canvaModalWaBtn');
-
-    function openCanvaModal(title, url, waMsg, waNum) {
-      if (modalTitle) modalTitle.textContent = title;
-      if (externalLink) externalLink.href = url;
-      if (modalWaBtn) {
-        modalWaBtn.href = `https://wa.me/${waNum}?text=${encodeURIComponent(waMsg)}`;
-      }
-
-      if (spinner) spinner.classList.remove('hidden');
-      if (iframe) {
-        iframe.src = url;
-        iframe.onload = () => {
-          if (spinner) spinner.classList.add('hidden');
-        };
-      }
-
-      overlay?.classList.remove('opacity-0', 'pointer-events-none');
-      overlay?.classList.add('opacity-100');
-
-      modal?.classList.remove('opacity-0', 'pointer-events-none', 'scale-95');
-      modal?.classList.add('opacity-100', 'scale-100');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeCanvaModal() {
-      overlay?.classList.add('opacity-0', 'pointer-events-none');
-      overlay?.classList.remove('opacity-100');
-
-      modal?.classList.add('opacity-0', 'pointer-events-none', 'scale-95');
-      modal?.classList.remove('opacity-100', 'scale-100');
-      document.body.style.overflow = '';
-
-      if (iframe) iframe.src = '';
-    }
-
-    closeBtn?.addEventListener('click', closeCanvaModal);
-    overlay?.addEventListener('click', closeCanvaModal);
-
-    document.querySelectorAll('.open-canva-modal-btn').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const title = btn.getAttribute('data-title') || 'Catálogo Ovejita';
-        const url = btn.getAttribute('data-url') || '';
-        const waMsg = btn.getAttribute('data-wamsg') || '';
-        const waNum = btn.getAttribute('data-wanumber') || '986951425';
-        openCanvaModal(title, url, waMsg, waNum);
-      });
-    });
-  })();
-</script>
