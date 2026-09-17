@@ -80,6 +80,11 @@ export const BusinessSettings: React.FC = () => {
           waMessage: '¡Hola! Estuve revisando su Catálogo de Amor & Amistad. ¿Me ayudas con los detalles para pedir uno?',
         },
       ],
+      canvaHeroTag: '✦ Regalos que inspiran ✦',
+      canvaHeroTitle: 'Explora Nuestras Colecciones',
+      canvaHeroSubtitle: 'Descubre nuestros catálogos digitales interactivos en alta resolución. Hojéalos cómodamente y solicita tu detalle personalizado con empaque de regalo.',
+      canvaHeroImageUrl: '/images/catalogos/hero_gift_box.png',
+      hideCanvaHeroOnMobile: true,
       announcementText: 'Ediciones con propósito · Dedicatoria & personalización',
       heroTag: 'Edición Coleccionable • Primavera con Propósito',
       heroTitle: 'Papelería hecha a mano para atesorar momentos y regalar sonrisas.',
@@ -174,6 +179,7 @@ export const BusinessSettings: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [uploadingCatalogImg, setUploadingCatalogImg] = useState<number | null>(null);
+  const [uploadingCanvaHeroImg, setUploadingCanvaHeroImg] = useState(false);
 
   useEffect(() => {
     loadSettings();
@@ -254,6 +260,11 @@ export const BusinessSettings: React.FC = () => {
                 imageUrl: fromDb.imageUrl || def.imageUrl,
               };
             }),
+            canvaHeroTag: d.generalTexts?.canvaHeroTag || '✦ Regalos que inspiran ✦',
+            canvaHeroTitle: d.generalTexts?.canvaHeroTitle || 'Explora Nuestras Colecciones',
+            canvaHeroSubtitle: d.generalTexts?.canvaHeroSubtitle || 'Descubre nuestros catálogos digitales interactivos en alta resolución. Hojéalos cómodamente y solicita tu detalle personalizado con empaque de regalo.',
+            canvaHeroImageUrl: d.generalTexts?.canvaHeroImageUrl || '/images/catalogos/hero_gift_box.png',
+            hideCanvaHeroOnMobile: d.generalTexts?.hideCanvaHeroOnMobile !== false,
             announcementText: d.generalTexts?.announcementText || 'Ediciones con propósito · Dedicatoria & personalización',
             heroTag: d.generalTexts?.heroTag || 'Edición Coleccionable • Primavera con Propósito',
             heroTitle: d.generalTexts?.heroTitle || 'Papelería hecha a mano para atesorar momentos y regalar sonrisas.',
@@ -404,6 +415,31 @@ export const BusinessSettings: React.FC = () => {
     }
   };
 
+  const handleCanvaHeroImageUpload = async (file: File) => {
+    setUploadingCanvaHeroImg(true);
+    const body = new FormData();
+    body.append('image', file);
+    try {
+      const res = await apiFetch('/admin/images/upload', {
+        method: 'POST',
+        body,
+      });
+      if (res.success && res.data?.url) {
+        setFormData((prev) => ({
+          ...prev,
+          generalTexts: {
+            ...prev.generalTexts,
+            canvaHeroImageUrl: res.data.url,
+          },
+        }));
+      }
+    } catch (err: any) {
+      alert(err.message || 'Error al subir la imagen del encabezado');
+    } finally {
+      setUploadingCanvaHeroImg(false);
+    }
+  };
+
   const updateColor = (key: string, value: string) => {
     setFormData((prev) => ({
       ...prev,
@@ -533,6 +569,178 @@ export const BusinessSettings: React.FC = () => {
                   }`}
                 />
               </button>
+            </div>
+          </div>
+
+          {/* Banner Principal del Catálogo (Encabezado configurable) */}
+          <div className="p-4 bg-white/90 rounded-2xl border border-purple-100 shadow-2xs space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#9A80BD] flex items-center gap-1.5 font-['Quicksand',sans-serif]">
+                <Sparkles className="w-4 h-4" />
+                Banner Principal del Catálogo (Encabezado)
+              </span>
+              <span className="text-[11px] text-slate-400">
+                Textos, imagen decorativa y visibilidad móvil
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                    Etiqueta decorativa superior:
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.generalTexts?.canvaHeroTag || ''}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        generalTexts: { ...prev.generalTexts, canvaHeroTag: e.target.value },
+                      }))
+                    }
+                    placeholder="✦ Regalos que inspiran ✦"
+                    className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#9A80BD] focus:bg-white focus:outline-none transition-all"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                    Título principal:
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.generalTexts?.canvaHeroTitle || ''}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        generalTexts: { ...prev.generalTexts, canvaHeroTitle: e.target.value },
+                      }))
+                    }
+                    placeholder="Explora Nuestras Colecciones"
+                    className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#9A80BD] focus:bg-white focus:outline-none transition-all font-semibold"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                    Descripción / Subtítulo:
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={formData.generalTexts?.canvaHeroSubtitle || ''}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        generalTexts: { ...prev.generalTexts, canvaHeroSubtitle: e.target.value },
+                      }))
+                    }
+                    placeholder="Descubre nuestros catálogos digitales interactivos..."
+                    className="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#9A80BD] focus:bg-white focus:outline-none transition-all"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                {/* Hero image picker */}
+                <div className="p-3 bg-purple-50/50 rounded-xl border border-purple-100/70 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[11px] font-bold text-slate-700 flex items-center gap-1.5">
+                      <ImageIcon className="w-3.5 h-3.5 text-[#9A80BD]" />
+                      Imagen del Banner (Caja de Regalo)
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          generalTexts: {
+                            ...prev.generalTexts,
+                            canvaHeroImageUrl: '/images/catalogos/hero_gift_box.png',
+                          },
+                        }))
+                      }
+                      className="text-[10px] text-slate-400 hover:text-[#9A80BD] flex items-center gap-1 transition-colors cursor-pointer"
+                      title="Restablecer imagen original"
+                    >
+                      <RotateCcw className="w-3 h-3" />
+                      <span>Original</span>
+                    </button>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <div className="relative w-16 h-16 rounded-xl bg-white border border-purple-200/80 p-1 flex items-center justify-center shrink-0 shadow-2xs overflow-hidden">
+                      <img
+                        src={formData.generalTexts?.canvaHeroImageUrl || '/images/catalogos/hero_gift_box.png'}
+                        alt="Hero Gift Box"
+                        className="max-w-full max-h-full object-contain"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = '/images/catalogos/hero_gift_box.png';
+                        }}
+                      />
+                      {uploadingCanvaHeroImg && (
+                        <div className="absolute inset-0 bg-black/60 flex items-center justify-center text-white text-[9px] font-bold">
+                          Subiendo...
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex-1 space-y-1.5">
+                      <input
+                        type="text"
+                        value={formData.generalTexts?.canvaHeroImageUrl || ''}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setFormData((prev) => ({
+                            ...prev,
+                            generalTexts: { ...prev.generalTexts, canvaHeroImageUrl: val },
+                          }));
+                        }}
+                        placeholder="/images/catalogos/hero_gift_box.png"
+                        className="w-full text-xs p-2 bg-white border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#9A80BD] focus:outline-none font-mono"
+                      />
+
+                      <label className="inline-flex items-center gap-1.5 px-3 py-1 bg-white hover:bg-purple-100 text-[#9A80BD] text-[11px] font-bold rounded-lg border border-purple-200 cursor-pointer transition-colors shadow-2xs">
+                        <Upload className="w-3 h-3" />
+                        <span>{uploadingCanvaHeroImg ? 'Subiendo...' : 'Subir Nueva Imagen'}</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          disabled={uploadingCanvaHeroImg}
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) handleCanvaHeroImageUpload(file);
+                          }}
+                        />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Mobile visibility toggle */}
+                <div className="p-3 bg-amber-50/60 rounded-xl border border-amber-200/70 flex items-center justify-between gap-3">
+                  <div className="space-y-0.5">
+                    <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                      <span>📱 Ocultar banner en celular (modo móvil)</span>
+                    </span>
+                    <p className="text-[11px] text-slate-500 leading-tight">
+                      En celulares se ocultará este encabezado y los clientes verán directo los catálogos. En computadoras y tablets sí se mostrará.
+                    </p>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={formData.generalTexts?.hideCanvaHeroOnMobile !== false}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        generalTexts: { ...prev.generalTexts, hideCanvaHeroOnMobile: e.target.checked },
+                      }))
+                    }
+                    className="w-4 h-4 text-[#9A80BD] rounded border-slate-300 focus:ring-[#9A80BD] cursor-pointer"
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
