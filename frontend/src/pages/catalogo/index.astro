@@ -32,10 +32,11 @@ const announcementText = "Nuestros Catálogos · Selecciona tu colección favori
   <Header settings={settings} />
 
   <main class="bg-[#FFFDFE] min-h-screen">
-    {isCanvaMode ? (
+    <div id="canvaModeSection" class={isCanvaMode ? "block" : "hidden"}>
       <CanvaCatalogsSection settings={settings} />
-    ) : (
-      <>
+    </div>
+
+    <div id="ecommerceModeSection" class={!isCanvaMode ? "block" : "hidden"}>
     <!-- Header Section -->
     <section class="py-12 sm:py-16 bg-gradient-to-b from-primary-soft/50 via-[#FAF8FB] to-[#FFFDFE] border-b border-border/70 relative overflow-hidden">
       <div class="absolute -top-12 -right-12 w-80 h-80 bg-pink-200/25 rounded-full blur-3xl pointer-events-none"></div>
@@ -169,11 +170,42 @@ const announcementText = "Nuestros Catálogos · Selecciona tu colección favori
     </section>
 
     <QualityPillars settings={settings} />
-    </>
-    )}
+    </div>
   </main>
 
   <Footer settings={settings} />
   <WhatsAppButton whatsappNumber={whatsappNumber} />
   <Toast />
+
+  <script is:inline>
+    (async function checkLiveMode() {
+      try {
+        const apiUrl = (window.PUBLIC_API_URL || '') + '/api/settings';
+        const res = await fetch(apiUrl);
+        if (!res.ok) return;
+        const json = await res.json();
+        const liveSettings = json.data;
+        const isLiveCanva = liveSettings?.generalTexts?.isCanvaCatalogsMode === true ||
+          liveSettings?.generalTexts?.isCanvaCatalogsMode === 'true';
+
+        const canvaSec = document.getElementById('canvaModeSection');
+        const ecomSec = document.getElementById('ecommerceModeSection');
+        const bagBtn = document.getElementById('bagTrigger');
+
+        if (isLiveCanva) {
+          canvaSec?.classList.remove('hidden');
+          canvaSec?.classList.add('block');
+          ecomSec?.classList.remove('block');
+          ecomSec?.classList.add('hidden');
+          if (bagBtn) bagBtn.style.display = 'none';
+        } else {
+          canvaSec?.classList.remove('block');
+          canvaSec?.classList.add('hidden');
+          ecomSec?.classList.remove('hidden');
+          ecomSec?.classList.add('block');
+          if (bagBtn) bagBtn.style.display = '';
+        }
+      } catch (e) {}
+    })();
+  </script>
 </MainLayout>

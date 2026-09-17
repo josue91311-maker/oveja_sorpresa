@@ -45,20 +45,19 @@ const whatsappNumber = settings?.whatsappNumber || "986951425";
   {announcementBanner && <AnnouncementBar text={announcementBanner.title || announcementText} />}
   <Header settings={settings} />
 
-  <main>
-    {isCanvaMode ? (
-      /* MODO CATÁLOGO LINK (CANVA / VIRTUAL INTERACTIVO) */
-      <>
-        {heroBanner && <HeroSection featuredProduct={heroFeaturedProduct} settings={settings} heroBanner={heroBanner} />}
-        <CanvaCatalogsSection settings={settings} />
-        <QualityPillars settings={settings} />
-      </>
-    ) : (
-      /* MODO TIENDA COMPLETA / E-COMMERCE CON PRODUCTOS Y CARRITO */
-      <>
-        {heroBanner && <HeroSection featuredProduct={heroFeaturedProduct} settings={settings} heroBanner={heroBanner} />}
-        <CampaignBanner campaigns={campaigns} />
-        <PromotionalBanner banner={promotionalBanner} />
+  <main id="storeMainContainer">
+    <!-- MODO CATÁLOGO LINK (CANVA / VIRTUAL INTERACTIVO) -->
+    <div id="canvaModeSection" class={isCanvaMode ? "block" : "hidden"}>
+      {heroBanner && <HeroSection featuredProduct={heroFeaturedProduct} settings={settings} heroBanner={heroBanner} />}
+      <CanvaCatalogsSection settings={settings} />
+      <QualityPillars settings={settings} />
+    </div>
+
+    <!-- MODO TIENDA COMPLETA / E-COMMERCE CON PRODUCTOS Y CARRITO -->
+    <div id="ecommerceModeSection" class={!isCanvaMode ? "block" : "hidden"}>
+      {heroBanner && <HeroSection featuredProduct={heroFeaturedProduct} settings={settings} heroBanner={heroBanner} />}
+      <CampaignBanner campaigns={campaigns} />
+      <PromotionalBanner banner={promotionalBanner} />
 
     <!-- 1. DESTACADOS AL FRENTE (Requirement: Any featured product from any catalog appears front and center) -->
     {featuredProducts.length > 0 && (
@@ -185,16 +184,48 @@ const whatsappNumber = settings?.whatsappNumber || "986951425";
 
     <!-- Corporate Events -->
     <CorporateEvents whatsappNumber={whatsappNumber} settings={settings} corporateBanner={corporateBanner} />
-    </>
-    )}
+    </div>
   </main>
 
   <Footer settings={settings} />
   <WhatsAppButton whatsappNumber={whatsappNumber} />
   <Toast />
 
-  <!-- Client-side Interactive Logic -->
+  <!-- Client-side Interactive Logic & Live Mode Toggle -->
   <script is:inline>
+    // Live check of settings so any change in Admin is immediately reflected on refresh
+    (async function checkLiveMode() {
+      try {
+        const apiUrl = (window.PUBLIC_API_URL || '') + '/api/settings';
+        const res = await fetch(apiUrl);
+        if (!res.ok) return;
+        const json = await res.json();
+        const liveSettings = json.data;
+        const isLiveCanva = liveSettings?.generalTexts?.isCanvaCatalogsMode === true ||
+          liveSettings?.generalTexts?.isCanvaCatalogsMode === 'true';
+
+        const canvaSec = document.getElementById('canvaModeSection');
+        const ecomSec = document.getElementById('ecommerceModeSection');
+        const bagBtn = document.getElementById('bagTrigger');
+
+        if (isLiveCanva) {
+          canvaSec?.classList.remove('hidden');
+          canvaSec?.classList.add('block');
+          ecomSec?.classList.remove('block');
+          ecomSec?.classList.add('hidden');
+          if (bagBtn) bagBtn.style.display = 'none';
+        } else {
+          canvaSec?.classList.remove('block');
+          canvaSec?.classList.add('hidden');
+          ecomSec?.classList.remove('hidden');
+          ecomSec?.classList.add('block');
+          if (bagBtn) bagBtn.style.display = '';
+        }
+      } catch (e) {
+        // Fallback to initial build state
+      }
+    })();
+
     // Bag trigger opens quick summary
     document.getElementById('bagTrigger')?.addEventListener('click', () => {
       if (typeof cart !== 'undefined' && cart.length > 0) {
