@@ -69,8 +69,12 @@ const bgColor = themeColors.background || '#FAF7FC';
   </head>
   <body class="paper-texture text-ink min-h-screen flex flex-col antialiased selection:bg-secondary-pastel selection:text-ink">
     <slot />
-    <CartDrawer settings={settings} />
-    <DigitalCheckoutModal settings={settings} />
+    {(!settings?.generalTexts?.isCanvaCatalogsMode) && (
+      <>
+        <CartDrawer settings={settings} />
+        <DigitalCheckoutModal settings={settings} />
+      </>
+    )}
 
     <!-- Global Interactive Carousel Engine for Product Cards -->
     <script is:inline>

@@ -3,6 +3,7 @@ import MainLayout from '../../layouts/MainLayout.astro';
 import AnnouncementBar from '../../components/AnnouncementBar.astro';
 import Header from '../../components/Header.astro';
 import QualityPillars from '../../components/QualityPillars.astro';
+import CanvaCatalogsSection from '../../components/CanvaCatalogsSection.astro';
 import Footer from '../../components/Footer.astro';
 import WhatsAppButton from '../../components/WhatsAppButton.astro';
 import Toast from '../../components/Toast.astro';
@@ -14,6 +15,9 @@ const [categories, products, settings] = await Promise.all([
   getProducts(),
   getSettings(),
 ]);
+
+const isCanvaMode = settings?.generalTexts?.isCanvaCatalogsMode === true ||
+  settings?.generalTexts?.isCanvaCatalogsMode === 'true';
 
 const whatsappNumber = settings?.whatsappNumber || "986951425";
 const announcementText = "Nuestros Catálogos · Selecciona tu colección favorita con dedicatoria gratis";
@@ -28,6 +32,10 @@ const announcementText = "Nuestros Catálogos · Selecciona tu colección favori
   <Header settings={settings} />
 
   <main class="bg-[#FFFDFE] min-h-screen">
+    {isCanvaMode ? (
+      <CanvaCatalogsSection settings={settings} />
+    ) : (
+      <>
     <!-- Header Section -->
     <section class="py-12 sm:py-16 bg-gradient-to-b from-primary-soft/50 via-[#FAF8FB] to-[#FFFDFE] border-b border-border/70 relative overflow-hidden">
       <div class="absolute -top-12 -right-12 w-80 h-80 bg-pink-200/25 rounded-full blur-3xl pointer-events-none"></div>
@@ -161,6 +169,8 @@ const announcementText = "Nuestros Catálogos · Selecciona tu colección favori
     </section>
 
     <QualityPillars settings={settings} />
+    </>
+    )}
   </main>
 
   <Footer settings={settings} />

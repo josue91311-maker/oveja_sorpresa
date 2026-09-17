@@ -14,6 +14,9 @@ import {
   Package,
   PanelBottom,
   Share2,
+  BookOpen,
+  ExternalLink,
+  Link2,
 } from 'lucide-react';
 
 export const BusinessSettings: React.FC = () => {
@@ -30,6 +33,41 @@ export const BusinessSettings: React.FC = () => {
     logoUrl: '/images/LOGO.jpg',
     faviconUrl: '/images/LOGO.jpg',
     generalTexts: {
+      isCanvaCatalogsMode: false,
+      canvaCatalogs: [
+        {
+          id: 'papeleria',
+          tag: '🌸 Papelería Bonita & Promesas',
+          title: 'Catálogo de Papelería Bonita',
+          desc: 'Cuadernos artesanales, devocionales, stickers y planners listos para regalar con dedicatoria.',
+          url: 'https://ovejitasorpresas.my.canva.site/ovejitasorpresaspapeleria',
+          waMessage: 'Hola Ovejita Sorpresas 🌸📖🎁, vi su Catálogo de Papelería bonita y deseo información de un producto. ¿Me ayudas a elegir? 🎁',
+        },
+        {
+          id: 'paraellos',
+          tag: '💁🏻‍♂️ Detalles Masculinos & Fe',
+          title: 'Catálogo de Regalos para Él',
+          desc: 'Libretas sobrias, tomatodos ejecutivos, bolígrafos premium y sets diseñados para bendecir su día.',
+          url: 'https://ovejitasorpresas.my.canva.site/paraellos',
+          waMessage: '¡Hola! 💁🏻‍♂️🎁 Vi su Catálogo de Regalos para Él y me interesó un detalle. ¿Me cuentas más detalles? ✨',
+        },
+        {
+          id: 'boxes',
+          tag: '🎁🛍️ Fechas Especiales & Sorpresas',
+          title: 'Catálogo de Boxes & Fechas Especiales',
+          desc: 'Cajas aromáticas temáticas con tazas, espejos flor, dijes y envoltura personalizada lista para entregar.',
+          url: 'https://ovejitasorpresas.my.canva.site/boxpersonalizados',
+          waMessage: 'Hola Ovejita Sorpresas 🎁🛍️, estuve viendo el Catálogo de Boxes & Fechas Especiales y me gustó un box. ¿Me ayudas a elegir el ideal? ✨',
+        },
+        {
+          id: 'amor-amistad',
+          tag: '🎁💖 Aniversarios & Momentos Únicos',
+          title: 'Catálogo de Amor & Amistad',
+          desc: 'Detalles llenos de significado, cartas caligrafiadas, álbumes de recuerdos y recuerdos perdurables.',
+          url: 'https://ovejitasorpresas.my.canva.site/regalos-de-amor-aniversarios',
+          waMessage: '¡Hola! 🎁💖 Estuve revisando su Catálogo de Amor & Amistad. ¿Me ayudas con los detalles para pedir uno? ✨',
+        },
+      ],
       announcementText: 'Ediciones con propósito · Dedicatoria & personalización',
       heroTag: 'Edición Coleccionable • Primavera con Propósito',
       heroTitle: 'Papelería hecha a mano para atesorar momentos y regalar sonrisas.',
@@ -147,6 +185,41 @@ export const BusinessSettings: React.FC = () => {
           logoUrl: d.logoUrl || '/images/LOGO.jpg',
           faviconUrl: d.faviconUrl || '/images/LOGO.jpg',
           generalTexts: {
+            isCanvaCatalogsMode: d.generalTexts?.isCanvaCatalogsMode === true || d.generalTexts?.isCanvaCatalogsMode === 'true',
+            canvaCatalogs: d.generalTexts?.canvaCatalogs || [
+              {
+                id: 'papeleria',
+                tag: '🌸 Papelería Bonita & Promesas',
+                title: 'Catálogo de Papelería Bonita',
+                desc: 'Cuadernos artesanales, devocionales, stickers y planners listos para regalar con dedicatoria.',
+                url: 'https://ovejitasorpresas.my.canva.site/ovejitasorpresaspapeleria',
+                waMessage: 'Hola Ovejita Sorpresas 🌸📖🎁, vi su Catálogo de Papelería bonita y deseo información de un producto. ¿Me ayudas a elegir? 🎁',
+              },
+              {
+                id: 'paraellos',
+                tag: '💁🏻‍♂️ Detalles Masculinos & Fe',
+                title: 'Catálogo de Regalos para Él',
+                desc: 'Libretas sobrias, tomatodos ejecutivos, bolígrafos premium y sets diseñados para bendecir su día.',
+                url: 'https://ovejitasorpresas.my.canva.site/paraellos',
+                waMessage: '¡Hola! 💁🏻‍♂️🎁 Vi su Catálogo de Regalos para Él y me interesó un detalle. ¿Me cuentas más detalles? ✨',
+              },
+              {
+                id: 'boxes',
+                tag: '🎁🛍️ Fechas Especiales & Sorpresas',
+                title: 'Catálogo de Boxes & Fechas Especiales',
+                desc: 'Cajas aromáticas temáticas con tazas, espejos flor, dijes y envoltura personalizada lista para entregar.',
+                url: 'https://ovejitasorpresas.my.canva.site/boxpersonalizados',
+                waMessage: 'Hola Ovejita Sorpresas 🎁🛍️, estuve viendo el Catálogo de Boxes & Fechas Especiales y me gustó un box. ¿Me ayudas a elegir el ideal? ✨',
+              },
+              {
+                id: 'amor-amistad',
+                tag: '🎁💖 Aniversarios & Momentos Únicos',
+                title: 'Catálogo de Amor & Amistad',
+                desc: 'Detalles llenos de significado, cartas caligrafiadas, álbumes de recuerdos y recuerdos perdurables.',
+                url: 'https://ovejitasorpresas.my.canva.site/regalos-de-amor-aniversarios',
+                waMessage: '¡Hola! 🎁💖 Estuve revisando su Catálogo de Amor & Amistad. ¿Me ayudas con los detalles para pedir uno? ✨',
+              },
+            ],
             announcementText: d.generalTexts?.announcementText || 'Ediciones con propósito · Dedicatoria & personalización',
             heroTag: d.generalTexts?.heroTag || 'Edición Coleccionable • Primavera con Propósito',
             heroTitle: d.generalTexts?.heroTitle || 'Papelería hecha a mano para atesorar momentos y regalar sonrisas.',
@@ -347,6 +420,154 @@ export const BusinessSettings: React.FC = () => {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
+        {/* 0. MODO CATÁLOGO LINK (CANVA / VIRTUAL) TOGGLE & CONFIGURATION */}
+        <div className="bg-gradient-to-br from-purple-50/70 via-white to-pink-50/40 p-6 rounded-3xl border-2 border-purple-200 shadow-sm space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-purple-100">
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-white border border-purple-200 text-[#9A80BD] flex items-center justify-center shrink-0 shadow-2xs">
+                <BookOpen className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-base font-bold text-slate-800 font-['Quicksand',sans-serif]">
+                    Modo Catálogo Link (Canva / Enlaces Virtuales)
+                  </h3>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${
+                    formData.generalTexts?.isCanvaCatalogsMode
+                      ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                      : 'bg-slate-100 text-slate-600 border border-slate-200'
+                  }`}>
+                    {formData.generalTexts?.isCanvaCatalogsMode ? 'Activo' : 'Desactivado'}
+                  </span>
+                </div>
+                <p className="text-xs text-slate-500 font-light mt-0.5 max-w-xl">
+                  Al activar este modo, la tienda mostrará únicamente tus 4 catálogos virtuales (Canva) con visor interactivo y atajo directo para pedir a WhatsApp, ocultando el carrito de compra. Al desactivarlo, vuelve al modo tienda tradicional.
+                </p>
+              </div>
+            </div>
+
+            {/* Toggle Switch */}
+            <div className="shrink-0 flex items-center gap-3">
+              <span className="text-xs font-semibold text-slate-700">
+                {formData.generalTexts?.isCanvaCatalogsMode ? 'Modo Canva ON' : 'Modo Canva OFF'}
+              </span>
+              <button
+                type="button"
+                onClick={() =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    generalTexts: {
+                      ...prev.generalTexts,
+                      isCanvaCatalogsMode: !prev.generalTexts?.isCanvaCatalogsMode,
+                    },
+                  }))
+                }
+                className={`relative inline-flex h-7 w-14 items-center rounded-full transition-colors focus:outline-none cursor-pointer ${
+                  formData.generalTexts?.isCanvaCatalogsMode ? 'bg-[#9A80BD]' : 'bg-slate-300'
+                }`}
+              >
+                <span
+                  className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform ${
+                    formData.generalTexts?.isCanvaCatalogsMode ? 'translate-x-8' : 'translate-x-1'
+                  }`}
+                />
+              </button>
+            </div>
+          </div>
+
+          {/* Catalog Links and WhatsApp message customizer */}
+          <div className="space-y-4 pt-1">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#9A80BD] flex items-center gap-1.5 font-['Quicksand',sans-serif]">
+                <Link2 className="w-4 h-4" />
+                Enlaces & Mensajes de los 4 Catálogos
+              </span>
+              <span className="text-[11px] text-slate-400">
+                Puedes editar los links de Canva y los textos que llegarán a tu WhatsApp
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {(formData.generalTexts?.canvaCatalogs || []).map((cat: any, idx: number) => (
+                <div key={cat.id || idx} className="p-4 rounded-2xl bg-white border border-purple-100 shadow-2xs space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                      <span className="w-5 h-5 rounded-full bg-purple-100 text-[#9A80BD] text-[11px] flex items-center justify-center font-bold">
+                        {idx + 1}
+                      </span>
+                      {cat.title}
+                    </span>
+                    <a
+                      href={cat.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[11px] text-[#9A80BD] hover:underline flex items-center gap-1 font-semibold"
+                    >
+                      <span>Probar link</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                      Enlace de Canva / Web:
+                    </label>
+                    <input
+                      type="url"
+                      value={cat.url || ''}
+                      onChange={(e) => {
+                        const newUrl = e.target.value;
+                        setFormData((prev) => {
+                          const updated = [...(prev.generalTexts?.canvaCatalogs || [])];
+                          updated[idx] = { ...updated[idx], url: newUrl };
+                          return {
+                            ...prev,
+                            generalTexts: { ...prev.generalTexts, canvaCatalogs: updated },
+                          };
+                        });
+                      }}
+                      placeholder="https://ovejitasorpresas.my.canva.site/..."
+                      className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#9A80BD] focus:bg-white focus:outline-none transition-all font-mono"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                      Mensaje enviado al WhatsApp del cliente:
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={cat.waMessage || ''}
+                      onChange={(e) => {
+                        const newMsg = e.target.value;
+                        setFormData((prev) => {
+                          const updated = [...(prev.generalTexts?.canvaCatalogs || [])];
+                          updated[idx] = { ...updated[idx], waMessage: newMsg };
+                          return {
+                            ...prev,
+                            generalTexts: { ...prev.generalTexts, canvaCatalogs: updated },
+                          };
+                        });
+                      }}
+                      className="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#9A80BD] focus:bg-white focus:outline-none transition-all"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex justify-end pt-2">
+            <button
+              type="submit"
+              className="py-2.5 px-6 bg-[#9A80BD] hover:bg-[#7D60A6] text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-xs transition-all flex items-center gap-2 cursor-pointer active:scale-95"
+            >
+              <Save className="w-4 h-4" />
+              <span>Guardar Modo Catálogo</span>
+            </button>
+          </div>
+        </div>
+
         {/* 1. Logo & Brand Image Section */}
         <div className="bg-white p-6 rounded-2xl border border-slate-200/80 space-y-4 shadow-xs">
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#9A80BD]">

@@ -8,6 +8,7 @@ import QualityPillars from '../components/QualityPillars.astro';
 import CorporateEvents from '../components/CorporateEvents.astro';
 import CampaignBanner from '../components/CampaignBanner.astro';
 import PromotionalBanner from '../components/PromotionalBanner.astro';
+import CanvaCatalogsSection from '../components/CanvaCatalogsSection.astro';
 import Footer from '../components/Footer.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
 import Toast from '../components/Toast.astro';
@@ -21,6 +22,9 @@ const [settings, categories, products, campaigns, banners] = await Promise.all([
   getCampaigns(),
   getBanners(),
 ]);
+
+const isCanvaMode = settings?.generalTexts?.isCanvaCatalogsMode === true ||
+  settings?.generalTexts?.isCanvaCatalogsMode === 'true';
 
 // Requirement: Any product from any category can be featured and appears at the front
 const featuredProducts = products.filter((p) => p.featured);
@@ -42,9 +46,19 @@ const whatsappNumber = settings?.whatsappNumber || "986951425";
   <Header settings={settings} />
 
   <main>
-    {heroBanner && <HeroSection featuredProduct={heroFeaturedProduct} settings={settings} heroBanner={heroBanner} />}
-    <CampaignBanner campaigns={campaigns} />
-    <PromotionalBanner banner={promotionalBanner} />
+    {isCanvaMode ? (
+      /* MODO CATÁLOGO LINK (CANVA / VIRTUAL INTERACTIVO) */
+      <>
+        {heroBanner && <HeroSection featuredProduct={heroFeaturedProduct} settings={settings} heroBanner={heroBanner} />}
+        <CanvaCatalogsSection settings={settings} />
+        <QualityPillars settings={settings} />
+      </>
+    ) : (
+      /* MODO TIENDA COMPLETA / E-COMMERCE CON PRODUCTOS Y CARRITO */
+      <>
+        {heroBanner && <HeroSection featuredProduct={heroFeaturedProduct} settings={settings} heroBanner={heroBanner} />}
+        <CampaignBanner campaigns={campaigns} />
+        <PromotionalBanner banner={promotionalBanner} />
 
     <!-- 1. DESTACADOS AL FRENTE (Requirement: Any featured product from any catalog appears front and center) -->
     {featuredProducts.length > 0 && (
@@ -171,6 +185,8 @@ const whatsappNumber = settings?.whatsappNumber || "986951425";
 
     <!-- Corporate Events -->
     <CorporateEvents whatsappNumber={whatsappNumber} settings={settings} corporateBanner={corporateBanner} />
+    </>
+    )}
   </main>
 
   <Footer settings={settings} />
