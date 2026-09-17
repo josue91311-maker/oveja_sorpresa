@@ -48,9 +48,7 @@ const whatsappNumber = settings?.whatsappNumber || "986951425";
   <main id="storeMainContainer">
     <!-- MODO CATÁLOGO LINK (CANVA / VIRTUAL INTERACTIVO) -->
     <div id="canvaModeSection" class={isCanvaMode ? "block" : "hidden"}>
-      {heroBanner && <HeroSection featuredProduct={heroFeaturedProduct} settings={settings} heroBanner={heroBanner} />}
       <CanvaCatalogsSection settings={settings} />
-      <QualityPillars settings={settings} />
     </div>
 
     <!-- MODO TIENDA COMPLETA / E-COMMERCE CON PRODUCTOS Y CARRITO -->
