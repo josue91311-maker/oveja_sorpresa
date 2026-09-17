@@ -9,6 +9,7 @@ import {
   LayoutDashboard,
   Image as ImageIcon,
   ExternalLink,
+  BookOpen,
 } from 'lucide-react';
 import { useAuth } from '../lib/auth';
 
@@ -22,6 +23,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab }) => 
 
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'canva', label: 'Catálogos Canva', icon: BookOpen },
     { id: 'products', label: 'Productos', icon: Package },
     { id: 'categories', label: 'Categorías', icon: Layers },
     { id: 'campaigns', label: 'Campañas', icon: Sparkles },

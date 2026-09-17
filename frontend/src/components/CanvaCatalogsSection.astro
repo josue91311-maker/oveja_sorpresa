@@ -102,22 +102,137 @@ const defaultCanvaCatalogs = [
   }
 ];
 
-const configCatalogs = settings?.generalTexts?.canvaCatalogs || defaultCanvaCatalogs;
-const catalogs = defaultCanvaCatalogs.map((def, idx) => {
-  const conf = configCatalogs[idx] || {};
+const colorPalettes = [
+  {
+    primary: "#D96B91",
+    primaryHover: "#C95A80",
+    primaryLight: "#FCE7EF",
+    background: "#FFF4F7",
+    surface: "#FFFFFF",
+    border: "#F4D5E0",
+    iconBackground: "#F9DDE8",
+    icon: "#D96B91",
+    text: "#2B2130",
+    textSecondary: "#71809A",
+    buttonText: "#FFFFFF"
+  },
+  {
+    primary: "#4C96D7",
+    primaryHover: "#3984C6",
+    primaryLight: "#E5F1FC",
+    background: "#F1F7FD",
+    surface: "#FFFFFF",
+    border: "#D6E7F7",
+    iconBackground: "#DDECF9",
+    icon: "#4C96D7",
+    text: "#202532",
+    textSecondary: "#71809A",
+    buttonText: "#FFFFFF"
+  },
+  {
+    primary: "#E5AA32",
+    primaryHover: "#D29720",
+    primaryLight: "#FFF3D8",
+    background: "#FFF9ED",
+    surface: "#FFFFFF",
+    border: "#F3DFC0",
+    iconBackground: "#FFF0C8",
+    icon: "#E5AA32",
+    text: "#302820",
+    textSecondary: "#71809A",
+    buttonText: "#FFFFFF"
+  },
+  {
+    primary: "#8A5BC4",
+    primaryHover: "#7548AE",
+    primaryLight: "#F0E7FA",
+    background: "#F8F1FC",
+    surface: "#FFFFFF",
+    border: "#E5D5F2",
+    iconBackground: "#EDE0F8",
+    icon: "#8A5BC4",
+    text: "#2B2032",
+    textSecondary: "#71809A",
+    buttonText: "#FFFFFF"
+  },
+  {
+    primary: "#10B981",
+    primaryHover: "#059669",
+    primaryLight: "#D1FAE5",
+    background: "#F0FDF4",
+    surface: "#FFFFFF",
+    border: "#A7F3D0",
+    iconBackground: "#D1FAE5",
+    icon: "#10B981",
+    text: "#064E3B",
+    textSecondary: "#71809A",
+    buttonText: "#FFFFFF"
+  },
+  {
+    primary: "#F59E0B",
+    primaryHover: "#D97706",
+    primaryLight: "#FEF3C7",
+    background: "#FFFBEB",
+    surface: "#FFFFFF",
+    border: "#FDE68A",
+    iconBackground: "#FEF3C7",
+    icon: "#F59E0B",
+    text: "#78350F",
+    textSecondary: "#71809A",
+    buttonText: "#FFFFFF"
+  },
+  {
+    primary: "#EC4899",
+    primaryHover: "#DB2777",
+    primaryLight: "#FCE7F3",
+    background: "#FDF2F8",
+    surface: "#FFFFFF",
+    border: "#FBCFE8",
+    iconBackground: "#FCE7F3",
+    icon: "#EC4899",
+    text: "#831843",
+    textSecondary: "#71809A",
+    buttonText: "#FFFFFF"
+  },
+  {
+    primary: "#6366F1",
+    primaryHover: "#4F46E5",
+    primaryLight: "#EEF2FF",
+    background: "#F5F7FF",
+    surface: "#FFFFFF",
+    border: "#C7D2FE",
+    iconBackground: "#EEF2FF",
+    icon: "#6366F1",
+    text: "#312E81",
+    textSecondary: "#71809A",
+    buttonText: "#FFFFFF"
+  }
+];
+
+const rawCatalogs = (settings?.generalTexts?.canvaCatalogs && Array.isArray(settings.generalTexts.canvaCatalogs) && settings.generalTexts.canvaCatalogs.length > 0)
+  ? settings.generalTexts.canvaCatalogs
+  : defaultCanvaCatalogs;
+
+const catalogs = rawCatalogs.map((item: any, idx: number) => {
+  const pal = colorPalettes[idx % colorPalettes.length];
+  const customColor = item.color || item.colors?.primary;
+
+  const colors = item.colors || (customColor ? {
+    ...pal,
+    primary: customColor,
+    primaryHover: customColor,
+    icon: customColor,
+  } : pal);
+
   return {
-    ...def,
-    ...conf,
-    imageUrl: conf.imageUrl || def.imageUrl,
-    url: conf.url || def.url,
-    title: (conf.title || def.title).replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1F1E0}-\u{1F1FF}]/gu, '').trim(),
-    desc: (conf.desc || def.desc),
-    categoryLabel: (conf.categoryLabel || def.categoryLabel),
-    waMessage: conf.waMessage || def.waMessage,
-    colors: {
-      ...def.colors,
-      ...(conf.colors || {})
-    }
+    ...item,
+    id: item.id || `cat_${idx + 1}`,
+    title: (item.title || `Catálogo ${idx + 1}`).replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1F1E0}-\u{1F1FF}]/gu, '').trim(),
+    desc: item.desc || '',
+    url: item.url || '#',
+    imageUrl: item.imageUrl || `/images/catalogos/catalogo_${(idx % 4) + 1}.png`,
+    waMessage: item.waMessage || `Hola Ovejita Sorpresas, vi su catálogo de ${item.title || ''} y deseo más información.`,
+    colors,
   };
 });
 
@@ -174,8 +289,8 @@ const logoUrl = settings?.logoUrl || "/images/LOGO.jpg";
     <!-- Catalogs Grid: 3 in top row, 1 wide in bottom row -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-7 max-w-7xl mx-auto">
       
-      {catalogs.map((catalog, idx) => {
-        const isWide = idx === 3; // Amor & Aniversarios spans 2 columns on desktop
+      {catalogs.map((catalog: any, idx: number) => {
+        const isWide = catalogs.length === 4 && idx === 3; // When 4 catalogs, keep Amor & Aniversarios wide like original mockup
 
         return (
           <div
@@ -216,28 +331,34 @@ const logoUrl = settings?.logoUrl || "/images/LOGO.jpg";
                 class="w-12 h-12 rounded-full flex items-center justify-center shrink-0 -mt-6 mb-3 shadow-xs border border-white"
                 style={`background-color: ${catalog.colors.iconBackground}; color: ${catalog.colors.icon};`}
               >
-                {idx === 0 && (
+                {idx % 5 === 0 && (
                   <!-- Notebook / Book Icon -->
                   <svg class="w-5 h-5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
                   </svg>
                 )}
-                {idx === 1 && (
+                {idx % 5 === 1 && (
                   <!-- Gift / Present Icon -->
                   <svg class="w-5 h-5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H4.5a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 109.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1114.625 7.5H12m0 0V21m-8.625-9.75h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
                   </svg>
                 )}
-                {idx === 2 && (
+                {idx % 5 === 2 && (
                   <!-- Boxes / Celebration Icon -->
                   <svg class="w-5 h-5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
                   </svg>
                 )}
-                {idx === 3 && (
+                {idx % 5 === 3 && (
                   <!-- Heart / Love Icon -->
                   <svg class="w-5 h-5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                  </svg>
+                )}
+                {idx % 5 === 4 && (
+                  <!-- Sparkles / Star Icon -->
+                  <svg class="w-5 h-5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
                   </svg>
                 )}
               </div>
@@ -251,12 +372,14 @@ const logoUrl = settings?.logoUrl || "/images/LOGO.jpg";
                   >
                     {catalog.title}
                   </h3>
-                  <p
-                    class="text-xs sm:text-sm font-light leading-relaxed line-clamp-2"
-                    style={`color: ${catalog.colors.textSecondary};`}
-                  >
-                    {catalog.desc}
-                  </p>
+                  {catalog.desc && (
+                    <p
+                      class="text-xs sm:text-sm font-light leading-relaxed line-clamp-2"
+                      style={`color: ${catalog.colors.textSecondary};`}
+                    >
+                      {catalog.desc}
+                    </p>
+                  )}
                 </div>
 
                 <!-- Action Button & WhatsApp Direct Shortcut -->
@@ -293,9 +416,9 @@ const logoUrl = settings?.logoUrl || "/images/LOGO.jpg";
         );
       })}
 
-      <!-- Decorative Right Side on Desktop (Logo Oficial Ovejita) -->
-      <div class="hidden lg:flex flex-col items-center justify-center p-6 text-center select-none">
-        <div class="relative group p-6 rounded-3xl bg-white border border-purple-100 shadow-xs flex flex-col items-center justify-center gap-3.5 max-w-[240px] transition-all hover:scale-105 hover:shadow-md">
+      <!-- Decorative Right Side (Logo Oficial Ovejita) -->
+      <div class={`${catalogs.length === 4 ? 'hidden lg:flex' : 'flex'} flex-col items-center justify-center p-6 text-center select-none`}>
+        <div class="relative group p-6 rounded-3xl bg-white border border-purple-100 shadow-xs flex flex-col items-center justify-center gap-3.5 max-w-[240px] transition-all hover:scale-105 hover:shadow-md w-full">
           <div class="w-24 h-24 rounded-2xl overflow-hidden border border-purple-100/90 shadow-2xs p-1 bg-white flex items-center justify-center">
             <img
               src={logoUrl}

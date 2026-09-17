@@ -8,6 +8,7 @@ import { CategoryList } from './pages/categories/CategoryList';
 import { CampaignList } from './pages/campaigns/CampaignList';
 import { PublicationList } from './pages/publications/PublicationList';
 import { BannerList } from './pages/banners/BannerList';
+import { CanvaCatalogManager } from './pages/canva/CanvaCatalogManager';
 import { BusinessSettings } from './pages/settings/BusinessSettings';
 
 const AdminLayout: React.FC = () => {
@@ -34,11 +35,12 @@ const AdminLayout: React.FC = () => {
       <Sidebar currentTab={currentTab} onSelectTab={setCurrentTab} />
       <main className="flex-1 p-8 max-w-7xl overflow-y-auto">
         {currentTab === 'dashboard' && <Dashboard onNavigate={setCurrentTab} />}
+        {currentTab === 'canva' && <CanvaCatalogManager />}
         {currentTab === 'products' && <ProductList />}
         {currentTab === 'categories' && <CategoryList />}
         {currentTab === 'campaigns' && <CampaignList />}
         {currentTab === 'publications' && <PublicationList />}
-        {currentTab === 'banners' && <BannerList />}
+        {currentTab === 'banners' && <BannerList onNavigate={setCurrentTab} />}
         {currentTab === 'settings' && <BusinessSettings />}
       </main>
     </div>

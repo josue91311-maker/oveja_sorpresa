@@ -18,7 +18,12 @@ import {
   Info,
   Package,
   Calendar,
+  BookOpen,
 } from 'lucide-react';
+
+interface BannerListProps {
+  onNavigate?: (tab: string) => void;
+}
 
 interface BannerItem {
   id: string;
@@ -38,7 +43,7 @@ interface BannerItem {
   endDate?: string | null;
 }
 
-export const BannerList: React.FC = () => {
+export const BannerList: React.FC<BannerListProps> = ({ onNavigate }) => {
   const [banners, setBanners] = useState<BannerItem[]>([]);
   const [productList, setProductList] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -228,6 +233,32 @@ export const BannerList: React.FC = () => {
           <Plus className="w-4 h-4" />
           Crear Nuevo Banner
         </button>
+      </div>
+
+      {/* Notice about Canva Mode vs Normal Store Mode */}
+      <div className="p-4 rounded-2xl bg-gradient-to-r from-purple-50 via-pink-50/40 to-white border border-purple-200 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-white text-[#9A80BD] border border-purple-200 flex items-center justify-center shrink-0 shadow-2xs">
+            <BookOpen className="w-5 h-5" />
+          </div>
+          <div>
+            <h4 className="text-xs font-bold text-slate-800">
+              ¿Deseas gestionar los Catálogos Virtuales (Modo Canva)?
+            </h4>
+            <p className="text-[11px] text-slate-500 leading-tight">
+              Los banners de esta sección corresponden a la tienda web tradicional. Para añadir nuevos catálogos Canva, subir fotos o cambiar enlaces, entra a la sección Catálogos Canva.
+            </p>
+          </div>
+        </div>
+        {onNavigate && (
+          <button
+            type="button"
+            onClick={() => onNavigate('canva')}
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#9A80BD] hover:bg-[#856BA8] text-white text-xs font-bold rounded-xl shrink-0 transition-all shadow-2xs cursor-pointer active:scale-95"
+          >
+            <span>Ir a Catálogos Canva →</span>
+          </button>
+        )}
       </div>
 
       {/* Guide Card: What does each banner change? */}

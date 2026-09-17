@@ -17,6 +17,8 @@ import {
   BookOpen,
   ExternalLink,
   Link2,
+  Plus,
+  Trash2,
 } from 'lucide-react';
 
 export const BusinessSettings: React.FC = () => {
@@ -252,14 +254,9 @@ export const BusinessSettings: React.FC = () => {
           faviconUrl: d.faviconUrl || '/images/LOGO.jpg',
           generalTexts: {
             isCanvaCatalogsMode: d.generalTexts?.isCanvaCatalogsMode === true || d.generalTexts?.isCanvaCatalogsMode === 'true',
-            canvaCatalogs: defaultCanvaCatalogs.map((def, idx) => {
-              const fromDb = (d.generalTexts?.canvaCatalogs || [])[idx] || {};
-              return {
-                ...def,
-                ...fromDb,
-                imageUrl: fromDb.imageUrl || def.imageUrl,
-              };
-            }),
+            canvaCatalogs: (d.generalTexts?.canvaCatalogs && Array.isArray(d.generalTexts.canvaCatalogs) && d.generalTexts.canvaCatalogs.length > 0)
+              ? d.generalTexts.canvaCatalogs
+              : defaultCanvaCatalogs,
             canvaHeroTag: d.generalTexts?.canvaHeroTag || '✦ Regalos que inspiran ✦',
             canvaHeroTitle: d.generalTexts?.canvaHeroTitle || 'Explora Nuestras Colecciones',
             canvaHeroSubtitle: d.generalTexts?.canvaHeroSubtitle || 'Descubre nuestros catálogos digitales interactivos en alta resolución. Hojéalos cómodamente y solicita tu detalle personalizado con empaque de regalo.',
@@ -746,14 +743,43 @@ export const BusinessSettings: React.FC = () => {
 
           {/* Catalog Links and WhatsApp message customizer */}
           <div className="space-y-4 pt-1">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-[#9A80BD] flex items-center gap-1.5 font-['Quicksand',sans-serif]">
-                <Link2 className="w-4 h-4" />
-                Enlaces & Mensajes de los 4 Catálogos
-              </span>
-              <span className="text-[11px] text-slate-400">
-                Puedes editar los links de Canva y los textos que llegarán a tu WhatsApp
-              </span>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <span className="text-xs font-bold uppercase tracking-wider text-[#9A80BD] flex items-center gap-1.5 font-['Quicksand',sans-serif]">
+                  <Link2 className="w-4 h-4" />
+                  Catálogos Virtuales (Canva) — {(formData.generalTexts?.canvaCatalogs || []).length}
+                </span>
+                <span className="text-[11px] text-slate-400">
+                  Edita los títulos, fotos, enlaces de Canva y textos de WhatsApp.
+                </span>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  const current = formData.generalTexts?.canvaCatalogs || [];
+                  const newCat = {
+                    id: `cat_${Date.now()}`,
+                    title: `Nuevo Catálogo ${current.length + 1}`,
+                    desc: 'Colección especial y detalles.',
+                    url: 'https://ovejitasorpresas.my.canva.site/',
+                    imageUrl: '/images/catalogos/hero_gift_box.png',
+                    waMessage: '¡Hola Ovejita Sorpresas! Estuve viendo el catálogo y deseo consultar un detalle. ✨',
+                    color: '#D96B91',
+                  };
+                  setFormData((prev) => ({
+                    ...prev,
+                    generalTexts: {
+                      ...prev.generalTexts,
+                      canvaCatalogs: [...(prev.generalTexts?.canvaCatalogs || []), newCat],
+                    },
+                  }));
+                }}
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-purple-100 hover:bg-purple-200 text-[#9A80BD] rounded-xl text-xs font-bold transition-colors cursor-pointer w-fit"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>+ Añadir Catálogo</span>
+              </button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -764,21 +790,54 @@ export const BusinessSettings: React.FC = () => {
                 return (
                   <div key={cat.id || idx} className="p-4 rounded-2xl bg-white border border-purple-100 shadow-2xs space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                        <span className="w-5 h-5 rounded-full bg-purple-100 text-[#9A80BD] text-[11px] flex items-center justify-center font-bold">
+                      <div className="flex items-center gap-1.5 flex-1 pr-2">
+                        <span className="w-5 h-5 rounded-full bg-purple-100 text-[#9A80BD] text-[11px] flex items-center justify-center font-bold shrink-0">
                           {idx + 1}
                         </span>
-                        {cat.title}
-                      </span>
-                      <a
-                        href={cat.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-[11px] text-[#9A80BD] hover:underline flex items-center gap-1 font-semibold"
-                      >
-                        <span>Probar link</span>
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
+                        <input
+                          type="text"
+                          value={cat.title || ''}
+                          onChange={(e) => {
+                            const updated = [...(formData.generalTexts?.canvaCatalogs || [])];
+                            updated[idx] = { ...updated[idx], title: e.target.value };
+                            setFormData((prev) => ({
+                              ...prev,
+                              generalTexts: { ...prev.generalTexts, canvaCatalogs: updated },
+                            }));
+                          }}
+                          placeholder={`Título del Catálogo ${idx + 1}`}
+                          className="text-xs font-bold text-slate-800 bg-transparent border-b border-dashed border-slate-300 focus:border-[#9A80BD] focus:outline-none w-full"
+                        />
+                      </div>
+                      <div className="flex items-center gap-1 shrink-0">
+                        {cat.url && (
+                          <a
+                            href={cat.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[11px] text-[#9A80BD] hover:underline flex items-center gap-1 font-semibold p-1"
+                            title="Probar link"
+                          >
+                            <ExternalLink className="w-3 h-3" />
+                          </a>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (window.confirm(`¿Deseas eliminar el catálogo "${cat.title || idx + 1}"?`)) {
+                              const updated = (formData.generalTexts?.canvaCatalogs || []).filter((_: any, i: number) => i !== idx);
+                              setFormData((prev) => ({
+                                ...prev,
+                                generalTexts: { ...prev.generalTexts, canvaCatalogs: updated },
+                              }));
+                            }
+                          }}
+                          className="p-1 text-slate-400 hover:text-rose-600 transition-colors cursor-pointer"
+                          title="Eliminar catálogo"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                     </div>
 
                     {/* Image selector & preview */}
@@ -786,14 +845,14 @@ export const BusinessSettings: React.FC = () => {
                       <div className="flex items-center justify-between">
                         <label className="text-[11px] font-bold text-slate-700 flex items-center gap-1.5">
                           <ImageIcon className="w-3.5 h-3.5 text-[#9A80BD]" />
-                          Ilustración del Catálogo (PNG sin fondo)
+                          Foto o Ilustración
                         </label>
                         <button
                           type="button"
                           onClick={() => {
                             setFormData((prev) => {
                               const updated = [...(prev.generalTexts?.canvaCatalogs || [])];
-                              updated[idx] = { ...updated[idx], imageUrl: `/images/catalogos/catalogo_${idx + 1}.png` };
+                              updated[idx] = { ...updated[idx], imageUrl: `/images/catalogos/catalogo_${(idx % 4) + 1}.png` };
                               return {
                                 ...prev,
                                 generalTexts: { ...prev.generalTexts, canvaCatalogs: updated },
@@ -801,7 +860,7 @@ export const BusinessSettings: React.FC = () => {
                             });
                           }}
                           className="text-[10px] text-slate-400 hover:text-[#9A80BD] flex items-center gap-1 transition-colors cursor-pointer"
-                          title="Restablecer imagen recortada original"
+                          title="Restablecer imagen original"
                         >
                           <RotateCcw className="w-3 h-3" />
                           <span>Original</span>
@@ -815,7 +874,7 @@ export const BusinessSettings: React.FC = () => {
                             alt={cat.title}
                             className="max-w-full max-h-full object-contain"
                             onError={(e) => {
-                              (e.target as HTMLImageElement).src = `/images/catalogos/catalogo_${idx + 1}.png`;
+                              (e.target as HTMLImageElement).src = `/images/catalogos/hero_gift_box.png`;
                             }}
                           />
                           {isUploadingThis && (
@@ -826,27 +885,9 @@ export const BusinessSettings: React.FC = () => {
                         </div>
 
                         <div className="flex-1 space-y-1.5">
-                          <input
-                            type="text"
-                            value={cat.imageUrl || ''}
-                            onChange={(e) => {
-                              const newImg = e.target.value;
-                              setFormData((prev) => {
-                                const updated = [...(prev.generalTexts?.canvaCatalogs || [])];
-                                updated[idx] = { ...updated[idx], imageUrl: newImg };
-                                return {
-                                  ...prev,
-                                  generalTexts: { ...prev.generalTexts, canvaCatalogs: updated },
-                                };
-                              });
-                            }}
-                            placeholder={`/images/catalogos/catalogo_${idx + 1}.png`}
-                            className="w-full text-xs p-2 bg-white border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#9A80BD] focus:outline-none font-mono"
-                          />
-
                           <label className="inline-flex items-center gap-1.5 px-3 py-1 bg-white hover:bg-purple-100 text-[#9A80BD] text-[11px] font-bold rounded-lg border border-purple-200 cursor-pointer transition-colors shadow-2xs">
                             <Upload className="w-3 h-3" />
-                            <span>{isUploadingThis ? 'Subiendo imagen...' : 'Subir Nueva Imagen'}</span>
+                            <span>{isUploadingThis ? 'Subiendo...' : 'Subir Foto'}</span>
                             <input
                               type="file"
                               accept="image/*"
