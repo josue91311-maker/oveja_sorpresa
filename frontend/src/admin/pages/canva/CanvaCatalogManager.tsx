@@ -20,6 +20,8 @@ import {
   PanelBottom,
   Layers,
   Mail,
+  Eye,
+  EyeOff,
 } from 'lucide-react';
 
 export interface CanvaCatalogItem {
@@ -112,6 +114,14 @@ export const CanvaCatalogManager: React.FC = () => {
   const [uploadingCatalogId, setUploadingCatalogId] = useState<string | null>(null);
 
   // Footer & Brand Words State (from user's screenshot)
+  const [hideFooter, setHideFooter] = useState(false);
+  const [showDescription, setShowDescription] = useState(true);
+  const [showLocationText, setShowLocationText] = useState(true);
+  const [showCollections, setShowCollections] = useState(true);
+  const [showCustomerService, setShowCustomerService] = useState(true);
+  const [showClub, setShowClub] = useState(true);
+  const [showBottomBar, setShowBottomBar] = useState(true);
+
   const [footerDescription, setFooterDescription] = useState(
     'Creamos papelería y regalos con intención y devoción. Cada detalle es empacado con amor para edificar y alegrar el corazón de quien lo recibe.'
   );
@@ -189,6 +199,14 @@ export const CanvaCatalogManager: React.FC = () => {
         }
 
         const ft = gt.footer || {};
+        setHideFooter(ft.hideFooter === true);
+        setShowDescription(ft.showDescription !== false);
+        setShowLocationText(ft.showLocationText !== false);
+        setShowCollections(ft.showCollections !== false);
+        setShowCustomerService(ft.showCustomerService !== false);
+        setShowClub(ft.showClub !== false);
+        setShowBottomBar(ft.showBottomBar !== false);
+
         if (ft.description) setFooterDescription(ft.description);
         if (ft.locationText) setLocationText(ft.locationText);
         if (ft.collectionsTitle) setCollectionsTitle(ft.collectionsTitle);
@@ -229,6 +247,13 @@ export const CanvaCatalogManager: React.FC = () => {
         hideCanvaHeroOnMobile: hideHeroOnMobile,
         footer: {
           ...(rawSettings.generalTexts?.footer || {}),
+          hideFooter,
+          showDescription,
+          showLocationText,
+          showCollections,
+          showCustomerService,
+          showClub,
+          showBottomBar,
           description: footerDescription.trim(),
           locationText: locationText.trim(),
           collectionsTitle: collectionsTitle.trim(),
@@ -307,6 +332,22 @@ export const CanvaCatalogManager: React.FC = () => {
     reordered[idx] = reordered[targetIdx];
     reordered[targetIdx] = temp;
     setCatalogs(reordered);
+  };
+
+  const handleAddCollectionLink = () => {
+    setCollectionsLinks([...collectionsLinks, { label: 'Nuevo Enlace', url: '/catalogo' }]);
+  };
+
+  const handleRemoveCollectionLink = (idx: number) => {
+    setCollectionsLinks(collectionsLinks.filter((_, i) => i !== idx));
+  };
+
+  const handleAddCustomerServiceLink = () => {
+    setCustomerServiceLinks([...customerServiceLinks, { label: 'Nuevo Servicio', url: '/#empaque-calidad' }]);
+  };
+
+  const handleRemoveCustomerServiceLink = (idx: number) => {
+    setCustomerServiceLinks(customerServiceLinks.filter((_, i) => i !== idx));
   };
 
   const handleUpdateCatalog = (id: string, field: keyof CanvaCatalogItem, value: any) => {
@@ -876,193 +917,401 @@ export const CanvaCatalogManager: React.FC = () => {
         </a>
       </div>
 
-      {/* SECTION 5: Footer & Brand Words Customizer (Matches User Screenshot Exactly) */}
-      <div className="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-2xs space-y-5">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100">
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#9A80BD]">
-            <PanelBottom className="w-4 h-4" />
-            <span>Textos del Pie de Página (Footer) & Club Ovejita</span>
+      {/* SECTION 5: Footer & Brand Words Customizer (Editable and Hideable Granularly) */}
+      <div className="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-2xs space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-purple-50 text-[#9A80BD] flex items-center justify-center border border-purple-100">
+              <PanelBottom className="w-4 h-4" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-slate-800">
+                Pie de Página (Footer) & Club Ovejita
+              </h3>
+              <p className="text-[11px] text-slate-500 font-light">
+                Personaliza o desactiva cada columna, lema, sedes, enlaces y el formulario del Club.
+              </p>
+            </div>
           </div>
-          <span className="text-[11px] bg-purple-50 text-[#9A80BD] font-bold px-2.5 py-0.5 rounded-full border border-purple-100 w-fit">
-            100% Personalizable
-          </span>
+
+          {/* Master Footer Visibility Switch */}
+          <button
+            type="button"
+            onClick={() => setHideFooter(!hideFooter)}
+            className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
+              hideFooter
+                ? 'bg-slate-100 text-slate-500 border-slate-300 hover:bg-slate-200'
+                : 'bg-emerald-50 text-emerald-700 border-emerald-300 hover:bg-emerald-100'
+            }`}
+          >
+            {hideFooter ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            <span>{hideFooter ? 'Footer: Oculto en la Web' : 'Footer: Visible en la Web'}</span>
+          </button>
         </div>
 
-        <p className="text-xs text-slate-500 font-light">
-          Edita las palabras que aparecen al pie de tu tienda: descripción, sedes de taller, títulos y enlaces de Colecciones, Servicio al Cliente, Club Ovejita y derechos.
-        </p>
-
-        {/* Bloque 1: Marca y Sedes */}
-        <div className="p-4 bg-slate-50/80 rounded-2xl border border-slate-200/70 space-y-3.5">
-          <span className="text-xs font-bold text-slate-800 uppercase tracking-wider block">
-            1. Marca & Sedes de Taller (Columna Izquierda)
-          </span>
-
-          <div>
-            <label className="block text-[11px] font-semibold text-slate-600 mb-1">
-              Lema o Descripción de Marca:
-            </label>
-            <textarea
-              rows={2}
-              value={footerDescription}
-              onChange={(e) => setFooterDescription(e.target.value)}
-              placeholder="Creamos papelería y regalos con intención y devoción..."
-              className="w-full text-xs p-2.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#9A80BD] focus:outline-none"
-            />
+        {hideFooter && (
+          <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-xs flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0 text-amber-600" />
+            <span>
+              El pie de página completo está actualmente <strong>oculto</strong> en la tienda. Puedes activar columnas individuales o volver a activarlo arriba.
+            </span>
           </div>
+        )}
 
-          <div>
-            <label className="block text-[11px] font-semibold text-slate-600 mb-1">
-              Texto de Sedes / Envíos a todo el Perú:
-            </label>
-            <input
-              type="text"
-              value={locationText}
-              onChange={(e) => setLocationText(e.target.value)}
-              placeholder="✦ Sedes de taller creativo en Lima con despachos con amor a todo el Perú."
-              className="w-full text-xs p-2.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#9A80BD] focus:outline-none font-medium text-primary"
-            />
-          </div>
-        </div>
-
-        {/* Bloque 2: Colecciones y Servicio al Cliente (2 Columnas) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Columna Colecciones */}
-          <div className="p-4 bg-purple-50/30 rounded-2xl border border-purple-100 space-y-3">
+        <div className={`space-y-6 ${hideFooter ? 'opacity-50 pointer-events-none' : ''}`}>
+          {/* Bloque 1: Marca y Sedes (Columna Izquierda) */}
+          <div className="p-4 bg-slate-50/80 rounded-2xl border border-slate-200/70 space-y-4">
             <span className="text-xs font-bold text-slate-800 uppercase tracking-wider block">
-              2. Columna Colecciones
+              1. Marca & Sedes de Taller (Columna Izquierda)
             </span>
 
-            <div>
-              <label className="block text-[11px] font-semibold text-slate-600 mb-1">
-                Título de la Columna:
-              </label>
-              <input
-                type="text"
-                value={collectionsTitle}
-                onChange={(e) => setCollectionsTitle(e.target.value)}
-                className="w-full text-xs p-2 bg-white border border-slate-200 rounded-xl font-bold text-slate-800"
+            {/* Lema o Descripción */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label className="text-[11px] font-semibold text-slate-700">
+                  Lema / Descripción de Marca:
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setShowDescription(!showDescription)}
+                  className={`inline-flex items-center gap-1.5 text-[10.5px] font-bold px-2 py-0.5 rounded-lg border transition-all cursor-pointer ${
+                    showDescription
+                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+                      : 'bg-slate-200 text-slate-600 border-slate-300 hover:bg-slate-300'
+                  }`}
+                >
+                  {showDescription ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3 text-slate-500" />}
+                  <span>{showDescription ? 'Visible' : 'Oculto'}</span>
+                </button>
+              </div>
+              <textarea
+                rows={2}
+                value={footerDescription}
+                onChange={(e) => setFooterDescription(e.target.value)}
+                disabled={!showDescription}
+                placeholder="Creamos papelería y regalos con intención y devoción..."
+                className={`w-full text-xs p-2.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#9A80BD] focus:outline-none ${
+                  !showDescription ? 'opacity-40 bg-slate-100' : ''
+                }`}
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="block text-[11px] font-semibold text-slate-600">
-                Enlaces o Nombres de Colección:
-              </label>
-              {collectionsLinks.map((link, idx) => (
-                <div key={idx} className="flex gap-2">
-                  <input
-                    type="text"
-                    value={link.label || ''}
-                    onChange={(e) => {
-                      const updated = [...collectionsLinks];
-                      updated[idx] = { ...updated[idx], label: e.target.value };
-                      setCollectionsLinks(updated);
-                    }}
-                    placeholder={`Colección ${idx + 1}`}
-                    className="flex-1 text-xs p-2 bg-white border border-slate-200 rounded-xl"
-                  />
+            {/* Sedes / Envíos */}
+            <div className="space-y-1.5 pt-1">
+              <div className="flex items-center justify-between">
+                <label className="text-[11px] font-semibold text-slate-700">
+                  Texto de Sedes / Envíos a todo el Perú:
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setShowLocationText(!showLocationText)}
+                  className={`inline-flex items-center gap-1.5 text-[10.5px] font-bold px-2 py-0.5 rounded-lg border transition-all cursor-pointer ${
+                    showLocationText
+                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+                      : 'bg-slate-200 text-slate-600 border-slate-300 hover:bg-slate-300'
+                  }`}
+                >
+                  {showLocationText ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3 text-slate-500" />}
+                  <span>{showLocationText ? 'Visible' : 'Oculto'}</span>
+                </button>
+              </div>
+              <input
+                type="text"
+                value={locationText}
+                onChange={(e) => setLocationText(e.target.value)}
+                disabled={!showLocationText}
+                placeholder="✦ Sedes de taller creativo en Lima con despachos con amor a todo el Perú."
+                className={`w-full text-xs p-2.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#9A80BD] focus:outline-none font-medium text-primary ${
+                  !showLocationText ? 'opacity-40 bg-slate-100' : ''
+                }`}
+              />
+            </div>
+          </div>
+
+          {/* Bloque 2: Colecciones y Servicio al Cliente (2 Columnas) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {/* Columna Colecciones */}
+            <div className={`p-4 bg-purple-50/30 rounded-2xl border transition-all space-y-3.5 ${
+              showCollections ? 'border-purple-200' : 'border-slate-200 bg-slate-50/50 opacity-60'
+            }`}>
+              <div className="flex items-center justify-between pb-2 border-b border-purple-100/70">
+                <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                  2. Columna Colecciones
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setShowCollections(!showCollections)}
+                  className={`inline-flex items-center gap-1 text-[10.5px] font-bold px-2 py-0.5 rounded-lg border transition-all cursor-pointer ${
+                    showCollections
+                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+                      : 'bg-slate-200 text-slate-600 border-slate-300 hover:bg-slate-300'
+                  }`}
+                >
+                  {showCollections ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3 text-slate-500" />}
+                  <span>{showCollections ? 'Columna Visible' : 'Columna Oculta'}</span>
+                </button>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                  Título de la Columna:
+                </label>
+                <input
+                  type="text"
+                  value={collectionsTitle}
+                  onChange={(e) => setCollectionsTitle(e.target.value)}
+                  disabled={!showCollections}
+                  className="w-full text-xs p-2 bg-white border border-slate-200 rounded-xl font-bold text-slate-800"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-[11px] font-semibold text-slate-600">
+                    Enlaces de la Columna ({collectionsLinks.length}):
+                  </label>
+                  <button
+                    type="button"
+                    onClick={handleAddCollectionLink}
+                    disabled={!showCollections}
+                    className="text-[10.5px] font-bold text-[#9A80BD] hover:underline cursor-pointer flex items-center gap-1"
+                  >
+                    <Plus className="w-3 h-3" />
+                    <span>Añadir Enlace</span>
+                  </button>
                 </div>
-              ))}
+
+                {collectionsLinks.map((link, idx) => (
+                  <div key={idx} className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={link.label || ''}
+                      disabled={!showCollections}
+                      onChange={(e) => {
+                        const updated = [...collectionsLinks];
+                        updated[idx] = { ...updated[idx], label: e.target.value };
+                        setCollectionsLinks(updated);
+                      }}
+                      placeholder={`Texto enlace ${idx + 1}`}
+                      className="flex-1 text-xs p-2 bg-white border border-slate-200 rounded-xl"
+                    />
+                    <input
+                      type="text"
+                      value={link.url || ''}
+                      disabled={!showCollections}
+                      onChange={(e) => {
+                        const updated = [...collectionsLinks];
+                        updated[idx] = { ...updated[idx], url: e.target.value };
+                        setCollectionsLinks(updated);
+                      }}
+                      placeholder="/catalogo"
+                      title="Ruta o enlace web"
+                      className="w-28 sm:w-32 text-xs p-2 bg-white border border-slate-200 rounded-xl font-mono text-[10.5px] text-slate-500"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveCollectionLink(idx)}
+                      disabled={!showCollections}
+                      title="Eliminar este enlace"
+                      className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
 
-          {/* Columna Servicio al Cliente */}
-          <div className="p-4 bg-purple-50/30 rounded-2xl border border-purple-100 space-y-3">
-            <span className="text-xs font-bold text-slate-800 uppercase tracking-wider block">
-              3. Columna Servicio al Cliente
-            </span>
+            {/* Columna Servicio al Cliente */}
+            <div className={`p-4 bg-purple-50/30 rounded-2xl border transition-all space-y-3.5 ${
+              showCustomerService ? 'border-purple-200' : 'border-slate-200 bg-slate-50/50 opacity-60'
+            }`}>
+              <div className="flex items-center justify-between pb-2 border-b border-purple-100/70">
+                <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                  3. Columna Servicio al Cliente
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setShowCustomerService(!showCustomerService)}
+                  className={`inline-flex items-center gap-1 text-[10.5px] font-bold px-2 py-0.5 rounded-lg border transition-all cursor-pointer ${
+                    showCustomerService
+                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+                      : 'bg-slate-200 text-slate-600 border-slate-300 hover:bg-slate-300'
+                  }`}
+                >
+                  {showCustomerService ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3 text-slate-500" />}
+                  <span>{showCustomerService ? 'Columna Visible' : 'Columna Oculta'}</span>
+                </button>
+              </div>
 
-            <div>
-              <label className="block text-[11px] font-semibold text-slate-600 mb-1">
-                Título de la Columna:
-              </label>
-              <input
-                type="text"
-                value={customerServiceTitle}
-                onChange={(e) => setCustomerServiceTitle(e.target.value)}
-                className="w-full text-xs p-2 bg-white border border-slate-200 rounded-xl font-bold text-slate-800"
-              />
-            </div>
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                  Título de la Columna:
+                </label>
+                <input
+                  type="text"
+                  value={customerServiceTitle}
+                  onChange={(e) => setCustomerServiceTitle(e.target.value)}
+                  disabled={!showCustomerService}
+                  className="w-full text-xs p-2 bg-white border border-slate-200 rounded-xl font-bold text-slate-800"
+                />
+              </div>
 
-            <div className="space-y-2">
-              <label className="block text-[11px] font-semibold text-slate-600">
-                Enlaces o Opciones de Servicio:
-              </label>
-              {customerServiceLinks.map((link, idx) => (
-                <div key={idx} className="flex gap-2">
-                  <input
-                    type="text"
-                    value={link.label || ''}
-                    onChange={(e) => {
-                      const updated = [...customerServiceLinks];
-                      updated[idx] = { ...updated[idx], label: e.target.value };
-                      setCustomerServiceLinks(updated);
-                    }}
-                    placeholder={`Servicio ${idx + 1}`}
-                    className="flex-1 text-xs p-2 bg-white border border-slate-200 rounded-xl"
-                  />
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-[11px] font-semibold text-slate-600">
+                    Opciones de Servicio ({customerServiceLinks.length}):
+                  </label>
+                  <button
+                    type="button"
+                    onClick={handleAddCustomerServiceLink}
+                    disabled={!showCustomerService}
+                    className="text-[10.5px] font-bold text-[#9A80BD] hover:underline cursor-pointer flex items-center gap-1"
+                  >
+                    <Plus className="w-3 h-3" />
+                    <span>Añadir Opción</span>
+                  </button>
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
 
-        {/* Bloque 3: Club Ovejita & Derechos */}
-        <div className="p-4 bg-slate-50/80 rounded-2xl border border-slate-200/70 space-y-4">
-          <span className="text-xs font-bold text-slate-800 uppercase tracking-wider block">
-            4. Formulario Club Ovejita & Derechos de Autor
-          </span>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div>
-              <label className="block text-[11px] font-semibold text-slate-600 mb-1">
-                Título del Club:
-              </label>
-              <input
-                type="text"
-                value={clubTitle}
-                onChange={(e) => setClubTitle(e.target.value)}
-                className="w-full text-xs p-2 bg-white border border-slate-200 rounded-xl font-bold"
-              />
-            </div>
-
-            <div>
-              <label className="block text-[11px] font-semibold text-slate-600 mb-1">
-                Subtítulo / Invitación:
-              </label>
-              <input
-                type="text"
-                value={clubSubtitle}
-                onChange={(e) => setClubSubtitle(e.target.value)}
-                className="w-full text-xs p-2 bg-white border border-slate-200 rounded-xl"
-              />
-            </div>
-
-            <div>
-              <label className="block text-[11px] font-semibold text-slate-600 mb-1">
-                Texto del Botón:
-              </label>
-              <input
-                type="text"
-                value={clubButtonText}
-                onChange={(e) => setClubButtonText(e.target.value)}
-                className="w-full text-xs p-2 bg-white border border-slate-200 rounded-xl font-bold text-[#9A80BD]"
-              />
+                {customerServiceLinks.map((link, idx) => (
+                  <div key={idx} className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={link.label || ''}
+                      disabled={!showCustomerService}
+                      onChange={(e) => {
+                        const updated = [...customerServiceLinks];
+                        updated[idx] = { ...updated[idx], label: e.target.value };
+                        setCustomerServiceLinks(updated);
+                      }}
+                      placeholder={`Texto opción ${idx + 1}`}
+                      className="flex-1 text-xs p-2 bg-white border border-slate-200 rounded-xl"
+                    />
+                    <input
+                      type="text"
+                      value={link.url || ''}
+                      disabled={!showCustomerService}
+                      onChange={(e) => {
+                        const updated = [...customerServiceLinks];
+                        updated[idx] = { ...updated[idx], url: e.target.value };
+                        setCustomerServiceLinks(updated);
+                      }}
+                      placeholder="/#empaque-calidad"
+                      title="Ruta o enlace"
+                      className="w-28 sm:w-32 text-xs p-2 bg-white border border-slate-200 rounded-xl font-mono text-[10.5px] text-slate-500"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveCustomerServiceLink(idx)}
+                      disabled={!showCustomerService}
+                      title="Eliminar esta opción"
+                      className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
-          <div>
-            <label className="block text-[11px] font-semibold text-slate-600 mb-1">
-              Texto de Derechos de Autor / Pie de Firma:
-            </label>
-            <input
-              type="text"
-              value={copyrightText}
-              onChange={(e) => setCopyrightText(e.target.value)}
-              placeholder="Hecho con amor y bendición."
-              className="w-full text-xs p-2 bg-white border border-slate-200 rounded-xl font-medium"
-            />
+          {/* Bloque 3: Club Ovejita & Formulario Newsletter */}
+          <div className={`p-4 bg-slate-50/80 rounded-2xl border transition-all space-y-4 ${
+            showClub ? 'border-slate-200/70' : 'border-slate-200 bg-slate-100/60 opacity-60'
+          }`}>
+            <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+              <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                4. Columna Club Ovejita (Newsletter)
+              </span>
+              <button
+                type="button"
+                onClick={() => setShowClub(!showClub)}
+                className={`inline-flex items-center gap-1 text-[10.5px] font-bold px-2 py-0.5 rounded-lg border transition-all cursor-pointer ${
+                  showClub
+                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+                    : 'bg-slate-200 text-slate-600 border-slate-300 hover:bg-slate-300'
+                }`}
+              >
+                {showClub ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3 text-slate-500" />}
+                <span>{showClub ? 'Club Visible' : 'Club Oculto'}</span>
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                  Título del Club:
+                </label>
+                <input
+                  type="text"
+                  value={clubTitle}
+                  onChange={(e) => setClubTitle(e.target.value)}
+                  disabled={!showClub}
+                  className="w-full text-xs p-2 bg-white border border-slate-200 rounded-xl font-bold"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                  Subtítulo / Invitación:
+                </label>
+                <input
+                  type="text"
+                  value={clubSubtitle}
+                  onChange={(e) => setClubSubtitle(e.target.value)}
+                  disabled={!showClub}
+                  className="w-full text-xs p-2 bg-white border border-slate-200 rounded-xl"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                  Texto del Botón:
+                </label>
+                <input
+                  type="text"
+                  value={clubButtonText}
+                  onChange={(e) => setClubButtonText(e.target.value)}
+                  disabled={!showClub}
+                  className="w-full text-xs p-2 bg-white border border-slate-200 rounded-xl font-bold text-[#9A80BD]"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Bloque 4: Barra de Derechos de Autor & Legal */}
+          <div className="p-4 bg-slate-50/80 rounded-2xl border border-slate-200/70 space-y-3">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+              <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                5. Barra Inferior de Derechos de Autor & Enlaces
+              </span>
+              <button
+                type="button"
+                onClick={() => setShowBottomBar(!showBottomBar)}
+                className={`inline-flex items-center gap-1 text-[10.5px] font-bold px-2 py-0.5 rounded-lg border transition-all cursor-pointer ${
+                  showBottomBar
+                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+                    : 'bg-slate-200 text-slate-600 border-slate-300 hover:bg-slate-300'
+                }`}
+              >
+                {showBottomBar ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3 text-slate-500" />}
+                <span>{showBottomBar ? 'Barra Visible' : 'Barra Oculta'}</span>
+              </button>
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                Texto de Derechos / Pie de Firma:
+              </label>
+              <input
+                type="text"
+                value={copyrightText}
+                onChange={(e) => setCopyrightText(e.target.value)}
+                disabled={!showBottomBar}
+                placeholder="Hecho con amor y bendición."
+                className="w-full text-xs p-2 bg-white border border-slate-200 rounded-xl font-medium"
+              />
+            </div>
           </div>
         </div>
       </div>
