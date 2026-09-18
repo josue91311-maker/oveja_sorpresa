@@ -366,7 +366,7 @@ const logoUrl = settings?.logoUrl || "/images/LOGO.jpg";
 
               <!-- Content and Button Row -->
               <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mt-auto">
-                <div class="space-y-1">
+                <div>
                   <h3
                     data-catalog-title={idx}
                     class="text-lg sm:text-xl font-brand font-bold leading-snug"
@@ -374,14 +374,6 @@ const logoUrl = settings?.logoUrl || "/images/LOGO.jpg";
                   >
                     {catalog.title}
                   </h3>
-                  {catalog.desc && (
-                    <p
-                      class="text-xs sm:text-sm font-light leading-relaxed line-clamp-2"
-                      style={`color: ${catalog.colors.textSecondary};`}
-                    >
-                      {catalog.desc}
-                    </p>
-                  )}
                 </div>
 
                 <!-- Action Button & WhatsApp Direct Shortcut -->
