@@ -304,9 +304,10 @@ const logoUrl = settings?.logoUrl || "/images/LOGO.jpg";
             >
               <!-- Centered transparent PNG item -->
               <img
+                data-catalog-img={idx}
                 src={catalog.imageUrl}
                 alt={catalog.title}
-                class={`${isWide ? 'max-h-36 sm:max-h-44' : 'max-h-32 sm:max-h-40'} w-auto object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-300 relative z-10`}
+                class={`${isWide ? 'max-h-36 sm:max-h-44' : 'max-h-32 sm:max-h-40'} w-auto object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-300 relative z-10 rounded-xl`}
                 loading="lazy"
               />
 
@@ -367,6 +368,7 @@ const logoUrl = settings?.logoUrl || "/images/LOGO.jpg";
               <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mt-auto">
                 <div class="space-y-1">
                   <h3
+                    data-catalog-title={idx}
                     class="text-lg sm:text-xl font-brand font-bold leading-snug"
                     style={`color: ${catalog.colors.text};`}
                   >
@@ -386,6 +388,7 @@ const logoUrl = settings?.logoUrl || "/images/LOGO.jpg";
                 <div class="flex items-center gap-2 shrink-0 pt-2 sm:pt-0">
                   <!-- Main Pill Button: Ver catálogo → -->
                   <a
+                    data-catalog-link={idx}
                     href={catalog.url}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -398,6 +401,7 @@ const logoUrl = settings?.logoUrl || "/images/LOGO.jpg";
 
                   <!-- WhatsApp Shortcut Icon -->
                   <a
+                    data-catalog-wa={idx}
                     href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(catalog.waMessage)}`}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -436,4 +440,71 @@ const logoUrl = settings?.logoUrl || "/images/LOGO.jpg";
     </div>
 
   </div>
+
+  <!-- Client-side Live Sync to display uploaded photos immediately in any environment -->
+  <script is:inline>
+    (async function syncCanvaCatalogsLive() {
+      try {
+        let liveSettings = null;
+        // 1. Try public API first
+        try {
+          const res = await fetch((window.PUBLIC_API_URL || '') + '/api/settings');
+          if (res.ok) {
+            const json = await res.json();
+            liveSettings = json.data;
+          }
+        } catch (e) {}
+
+        // 2. Direct Supabase REST fallback if API is not available
+        if (!liveSettings || !liveSettings.generalTexts) {
+          try {
+            const sbUrl = 'https://smxqqetxawatlnrttapw.supabase.co/rest/v1/BusinessSettings?select=*';
+            const anon = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNteHFxZXR4YXdhdGxucnR0YXB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1NzY2OTUsImV4cCI6MjEwNTE1MjY5NX0.ylCqYbxeswEWkuDZLdUGQzZNotxA5GCRaICeleyOxpQ';
+            const sbRes = await fetch(sbUrl, {
+              headers: { 'apikey': anon, 'Authorization': 'Bearer ' + anon }
+            });
+            if (sbRes.ok) {
+              const arr = await sbRes.json();
+              if (arr && arr[0]) {
+                liveSettings = {
+                  ...arr[0],
+                  generalTexts: typeof arr[0].generalTexts === 'string' ? JSON.parse(arr[0].generalTexts) : arr[0].generalTexts
+                };
+              }
+            }
+          } catch (e) {}
+        }
+
+        const cats = liveSettings?.generalTexts?.canvaCatalogs;
+        if (Array.isArray(cats) && cats.length > 0) {
+          cats.forEach((cat, idx) => {
+            if (!cat) return;
+            if (cat.imageUrl) {
+              const imgEl = document.querySelector(`[data-catalog-img="${idx}"]`);
+              if (imgEl && imgEl.getAttribute('src') !== cat.imageUrl) {
+                imgEl.src = cat.imageUrl;
+              }
+            }
+            if (cat.title) {
+              const titleEl = document.querySelector(`[data-catalog-title="${idx}"]`);
+              if (titleEl) {
+                const cleanTitle = cat.title.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1F1E0}-\u{1F1FF}]/gu, '').trim();
+                if (titleEl.textContent.trim() !== cleanTitle) {
+                  titleEl.textContent = cleanTitle;
+                }
+              }
+            }
+            if (cat.url) {
+              const linkEl = document.querySelector(`[data-catalog-link="${idx}"]`);
+              if (linkEl && linkEl.getAttribute('href') !== cat.url) {
+                linkEl.href = cat.url;
+              }
+            }
+          });
+        }
+      } catch (err) {
+        console.warn('[CanvaCatalogs] Live sync failed:', err);
+      }
+    })();
+  </script>
 </section>

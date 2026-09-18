@@ -21,7 +21,7 @@ const FALLBACK_SETTINGS = {
         title: 'Papelería Bonita',
         desc: 'Cuadernos, stickers y planners para tu día a día.',
         url: 'https://ovejitasorpresas.my.canva.site/ovejitasorpresaspapeleria',
-        imageUrl: '/images/catalogos/cat_papeleria.png',
+        imageUrl: 'https://smxqqetxawatlnrttapw.supabase.co/storage/v1/object/public/ovejita-media/images/1789755765654-526371fc746095894bd1b5ce.jpg',
         badge: 'Más Solicitado',
         waMessage: 'Hola Ovejita Sorpresas, vi su Catálogo de Papelería bonita y deseo información de un producto. ¿Me ayudas a elegir?',
       },
@@ -32,7 +32,7 @@ const FALLBACK_SETTINGS = {
         title: 'Regalos para Él',
         desc: 'Detalles prácticos y especiales para cada ocasión.',
         url: 'https://ovejitasorpresas.my.canva.site/paraellos',
-        imageUrl: '/images/catalogos/cat_paraellos.png',
+        imageUrl: 'https://smxqqetxawatlnrttapw.supabase.co/storage/v1/object/public/ovejita-media/images/1789755832147-dd2a8bbd081555722a35fd40.jpg',
         badge: 'Edición Especial',
         waMessage: '¡Hola! Vi su Catálogo de Regalos para Él y me interesó un detalle. ¿Me cuentas más detalles?',
       },
@@ -43,7 +43,7 @@ const FALLBACK_SETTINGS = {
         title: 'Boxes & Fechas Especiales',
         desc: 'Cajas temáticas para celebrar y regalar.',
         url: 'https://ovejitasorpresas.my.canva.site/boxpersonalizados',
-        imageUrl: '/images/catalogos/cat_boxes.png',
+        imageUrl: 'https://smxqqetxawatlnrttapw.supabase.co/storage/v1/object/public/ovejita-media/images/1789755818848-29ab340f55b0e68cc05e2dea.jpg',
         badge: 'Listo para Entregar',
         waMessage: 'Hola Ovejita Sorpresas, estuve viendo el Catálogo de Boxes & Fechas Especiales y me gustó un box. ¿Me ayudas a elegir el ideal?',
       },
@@ -54,7 +54,7 @@ const FALLBACK_SETTINGS = {
         title: 'Amor & Aniversarios',
         desc: 'Detalles llenos de significado para momentos especiales.',
         url: 'https://ovejitasorpresas.my.canva.site/regalos-de-amor-aniversarios',
-        imageUrl: '/images/catalogos/cat_amor.png',
+        imageUrl: '/images/catalogos/catalogo_4.png',
         badge: 'Edición Afecto',
         waMessage: '¡Hola! Estuve revisando su Catálogo de Amor & Amistad. ¿Me ayudas con los detalles para pedir uno?',
       },
@@ -184,5 +184,32 @@ export async function getBanners() {
 }
 
 export async function getSettings() {
-  return fetchApi<any>('/settings', FALLBACK_SETTINGS);
+  const local = await fetchApi<any>('/settings', null);
+  if (local) return local;
+
+  // Fallback direct to Supabase REST for production / static builds
+  try {
+    const supabaseUrl = 'https://smxqqetxawatlnrttapw.supabase.co/rest/v1/BusinessSettings?select=*';
+    const anonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNteHFxZXR4YXdhdGxucnR0YXB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1NzY2OTUsImV4cCI6MjEwNTE1MjY5NX0.ylCqYbxeswEWkuDZLdUGQzZNotxA5GCRaICeleyOxpQ';
+    const res = await fetch(supabaseUrl, {
+      headers: {
+        'apikey': anonKey,
+        'Authorization': `Bearer ${anonKey}`
+      }
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data) && data[0]) {
+        return {
+          ...data[0],
+          generalTexts: typeof data[0].generalTexts === 'string' ? JSON.parse(data[0].generalTexts) : (data[0].generalTexts || {}),
+          schedules: typeof data[0].schedules === 'string' ? JSON.parse(data[0].schedules) : (data[0].schedules || {}),
+        };
+      }
+    }
+  } catch (err) {
+    console.warn('[API] Could not fetch settings from Supabase, using fallback:', err);
+  }
+
+  return FALLBACK_SETTINGS;
 }
