@@ -4,7 +4,11 @@ interface Props {
 }
 
 const { settings = {} } = Astro.props;
-const whatsappNumber = settings?.whatsappNumber || "986951425";
+const rawWa = settings?.whatsappNumber || "992750599";
+let whatsappNumber = String(rawWa).replace(/\D/g, '');
+if (whatsappNumber.length === 9 && whatsappNumber.startsWith('9')) {
+  whatsappNumber = '51' + whatsappNumber;
+}
 ---
 
 <!-- Cart Drawer Backdrop Overlay -->
@@ -127,9 +131,11 @@ const whatsappNumber = settings?.whatsappNumber || "986951425";
     const totalEl = document.getElementById('cartTotal');
     const itemCountEl = document.getElementById('cartItemCount');
     const checkoutBtn = document.getElementById('checkoutWhatsAppBtn');
-    const clearBtn = document.getElementById('clearCartBtn');
-
-    const whatsappNumber = drawer?.getAttribute('data-whatsapp') || '986951425';
+    const rawWa = drawer?.getAttribute('data-whatsapp') || '992750599';
+    let whatsappNumber = String(rawWa).replace(/\D/g, '');
+    if (whatsappNumber.length === 9 && whatsappNumber.startsWith('9')) {
+      whatsappNumber = '51' + whatsappNumber;
+    }
 
     function getCart() {
       try {

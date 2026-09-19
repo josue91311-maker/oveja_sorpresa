@@ -32,7 +32,7 @@ adminSettingsRouter.get('/', async (req: AuthenticatedRequest, res: Response): P
         data: {
           id: 'main',
           businessName: 'Ovejita Sorpresas',
-          whatsappNumber: '986951425',
+          whatsappNumber: '992750599',
         },
       });
     }

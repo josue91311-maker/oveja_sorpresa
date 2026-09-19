@@ -15,7 +15,7 @@ publicSettingsRouter.get('/', async (req: Request, res: Response): Promise<void>
         success: true,
         data: {
           businessName: 'Ovejita Sorpresas',
-          whatsappNumber: '986951425',
+          whatsappNumber: '992750599',
           whatsappMessage: 'Hola Ovejita Sorpresas, quiero hacer un pedido',
           email: 'contacto@ovejitasorpresas.com',
           instagram: 'https://instagram.com/ovejitasorpresas',

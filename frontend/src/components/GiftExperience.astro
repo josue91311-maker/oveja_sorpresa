@@ -3,7 +3,11 @@ interface Props {
   whatsappNumber?: string;
 }
 
-const { whatsappNumber = "986951425" } = Astro.props;
+const { whatsappNumber = "992750599" } = Astro.props;
+let cleanWa = String(whatsappNumber).replace(/\D/g, '');
+if (cleanWa.length === 9 && cleanWa.startsWith('9')) {
+  cleanWa = '51' + cleanWa;
+}
 ---
 
 <section class="py-16 sm:py-20 bg-[#FAF8FB] relative" id="experiencia">

@@ -4,8 +4,8 @@ const API_BASE = import.meta.env.PUBLIC_API_URL || 'http://localhost:3001/api';
 const FALLBACK_SETTINGS = {
   businessName: 'Ovejita Sorpresas',
   description: 'Tienda de Regalos & Papelería con Propósito',
-  whatsappNumber: '986951425',
-  contactNumber: '986951425',
+  whatsappNumber: '992750599',
+  contactNumber: '992750599',
   whatsappMessage: 'Hola Ovejita Sorpresas, quiero hacer un pedido con dedicatoria gratis',
   email: 'contacto@ovejitasorpresas.com',
   instagram: 'https://instagram.com/ovejitasorpresas',

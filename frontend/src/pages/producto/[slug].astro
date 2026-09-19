@@ -26,7 +26,11 @@ if (!product) {
 const primaryImage = product.primaryImage?.url || product.images?.[0]?.url || "/images/LOGO.jpg";
 const formattedPrice = Number(product.finalPrice || product.price).toFixed(2);
 const formattedPrevPrice = product.previousPrice ? Number(product.previousPrice).toFixed(2) : null;
-const whatsappNumber = settings?.whatsappNumber || "986951425";
+const rawWa = settings?.whatsappNumber || "992750599";
+let whatsappNumber = String(rawWa).replace(/\D/g, '');
+if (whatsappNumber.length === 9 && whatsappNumber.startsWith('9')) {
+  whatsappNumber = '51' + whatsappNumber;
+}
 const isDigital = product.productType === 'DIGITAL' || product.category?.slug === 'disenos-digitales';
 
 const waMessage = encodeURIComponent(

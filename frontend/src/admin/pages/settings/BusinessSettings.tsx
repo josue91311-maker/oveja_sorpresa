@@ -25,8 +25,8 @@ export const BusinessSettings: React.FC = () => {
   const [formData, setFormData] = useState({
     businessName: 'Ovejita Sorpresas',
     description: 'Tienda de Regalos & Papelería con Propósito',
-    whatsappNumber: '986951425',
-    contactNumber: '986951425',
+    whatsappNumber: '992750599',
+    contactNumber: '992750599',
     whatsappMessage: 'Hola Ovejita Sorpresas, quiero hacer un pedido con dedicatoria gratis',
     email: 'contacto@ovejitasorpresas.com',
     instagram: 'https://instagram.com/ovejitasorpresas',
@@ -244,8 +244,8 @@ export const BusinessSettings: React.FC = () => {
         setFormData({
           businessName: d.businessName || 'Ovejita Sorpresas',
           description: d.description || '',
-          whatsappNumber: d.whatsappNumber || '986951425',
-          contactNumber: d.contactNumber || '986951425',
+          whatsappNumber: d.whatsappNumber || d.generalTexts?.whatsappNumber || '992750599',
+          contactNumber: d.contactNumber || d.whatsappNumber || '992750599',
           whatsappMessage: d.whatsappMessage || '',
           email: d.email || '',
           instagram: d.instagram || '',
@@ -473,9 +473,19 @@ export const BusinessSettings: React.FC = () => {
     setSaved(false);
     setError(null);
     try {
+      const cleanWa = (formData.whatsappNumber || '').trim();
+      const updatedFormData = {
+        ...formData,
+        whatsappNumber: cleanWa,
+        contactNumber: (formData.contactNumber || cleanWa).trim(),
+        generalTexts: {
+          ...formData.generalTexts,
+          whatsappNumber: cleanWa,
+        },
+      };
       await apiFetch('/admin/settings', {
         method: 'PUT',
-        body: JSON.stringify(formData),
+        body: JSON.stringify(updatedFormData),
       });
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
@@ -1187,7 +1197,7 @@ export const BusinessSettings: React.FC = () => {
                   required
                   value={formData.whatsappNumber}
                   onChange={(e) => setFormData({ ...formData, whatsappNumber: e.target.value })}
-                  placeholder="986951425"
+                  placeholder="992750599"
                   className="w-full text-xs pl-9 p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none font-mono font-bold text-slate-800"
                 />
               </div>

@@ -22,6 +22,7 @@ import {
   Mail,
   Eye,
   EyeOff,
+  Phone,
 } from 'lucide-react';
 
 export interface CanvaCatalogItem {
@@ -155,6 +156,7 @@ export const CanvaCatalogManager: React.FC = () => {
   );
   const [clubButtonText, setClubButtonText] = useState('Unirme al Club');
   const [copyrightText, setCopyrightText] = useState('Hecho con amor y bendición.');
+  const [whatsappNumber, setWhatsappNumber] = useState('992750599');
 
   // Raw full settings to preserve when saving
   const [rawSettings, setRawSettings] = useState<any>({});
@@ -173,6 +175,7 @@ export const CanvaCatalogManager: React.FC = () => {
         setRawSettings(d);
         const gt = d.generalTexts || {};
 
+        setWhatsappNumber(d.whatsappNumber || gt.whatsappNumber || d.contactNumber || '992750599');
         setIsCanvaMode(gt.isCanvaCatalogsMode !== false);
         setShowAnnouncementBar(gt.showAnnouncementBar !== false);
         setShowCanvaHero(gt.showCanvaHero !== false);
@@ -249,6 +252,8 @@ export const CanvaCatalogManager: React.FC = () => {
     setSaved(false);
 
     try {
+      const cleanWa = (whatsappNumber || '').trim();
+
       const updatedGeneralTexts = {
         ...(rawSettings.generalTexts || {}),
         isCanvaCatalogsMode: isCanvaMode,
@@ -256,6 +261,7 @@ export const CanvaCatalogManager: React.FC = () => {
         showCanvaHero,
         showCanvaPromo,
         showWhatsApp,
+        whatsappNumber: cleanWa,
         announcementText: announcementText.trim(),
         canvaHeroTag: heroTag.trim(),
         canvaHeroTitle: heroTitle.trim(),
@@ -296,6 +302,8 @@ export const CanvaCatalogManager: React.FC = () => {
 
       const payload = {
         ...rawSettings,
+        whatsappNumber: cleanWa,
+        contactNumber: cleanWa,
         generalTexts: updatedGeneralTexts,
       };
 
@@ -704,6 +712,57 @@ export const CanvaCatalogManager: React.FC = () => {
             placeholder="Ediciones con propósito · Dedicatoria & personalización gratis"
             className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#9A80BD] focus:outline-none font-medium text-slate-800 disabled:opacity-50"
           />
+        </div>
+      </div>
+
+      {/* SECTION 1.5: WhatsApp Number & Floating Button */}
+      <div className={`p-5 rounded-2xl bg-white border border-emerald-100 shadow-2xs space-y-3 transition-all ${
+        !showWhatsApp ? 'opacity-60' : ''
+      }`}>
+        <div className="flex items-center justify-between pb-2 border-b border-emerald-50">
+          <div className="flex items-center gap-2">
+            <MessageCircle className="w-4 h-4 text-emerald-600" />
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-800">
+              Número de WhatsApp para Pedidos (Botón Flotante y Catálogos)
+            </h3>
+            <span className="text-[10px] text-emerald-600 bg-emerald-50 font-bold px-2 py-0.5 rounded-full border border-emerald-100 hidden sm:inline">
+              Canal de Contacto
+            </span>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setShowWhatsApp(!showWhatsApp)}
+            className={`inline-flex items-center gap-1.5 text-[10.5px] font-bold px-2 py-0.5 rounded-lg border transition-all cursor-pointer ${
+              showWhatsApp
+                ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+                : 'bg-slate-200 text-slate-600 border-slate-300 hover:bg-slate-300'
+            }`}
+          >
+            {showWhatsApp ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3 text-slate-500" />}
+            <span>{showWhatsApp ? 'Botón Flotante Visible' : 'Botón Flotante Oculto'}</span>
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
+          <div>
+            <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+              Número telefónico para WhatsApp:
+            </label>
+            <div className="relative">
+              <Phone className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+              <input
+                type="text"
+                value={whatsappNumber}
+                onChange={(e) => setWhatsappNumber(e.target.value)}
+                placeholder="992750599"
+                className="w-full text-xs pl-9 p-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none font-mono font-bold text-slate-800"
+              />
+            </div>
+          </div>
+          <p className="text-[11px] text-slate-500 pt-3 sm:pt-0">
+            Los clientes que presionen <strong>"Chatear ahora"</strong> o el icono de WhatsApp de cualquier catálogo escribirán directamente a este número.
+          </p>
         </div>
       </div>
 

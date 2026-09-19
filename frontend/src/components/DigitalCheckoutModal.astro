@@ -4,7 +4,11 @@ interface Props {
 }
 
 const { settings = {} } = Astro.props;
-const whatsappNumber = settings?.whatsappNumber || "986951425";
+const rawWa = settings?.whatsappNumber || "992750599";
+let whatsappNumber = String(rawWa).replace(/\D/g, '');
+if (whatsappNumber.length === 9 && whatsappNumber.startsWith('9')) {
+  whatsappNumber = '51' + whatsappNumber;
+}
 ---
 
 <!-- Digital Checkout Backdrop Overlay -->
@@ -484,7 +488,11 @@ const whatsappNumber = settings?.whatsappNumber || "986951425";
           }
 
           // WhatsApp link
-          const waBusiness = modal?.getAttribute('data-whatsapp') || '986951425';
+          const rawWa = modal?.getAttribute('data-whatsapp') || '992750599';
+          let waBusiness = String(rawWa).replace(/\D/g, '');
+          if (waBusiness.length === 9 && waBusiness.startsWith('9')) {
+            waBusiness = '51' + waBusiness;
+          }
           const waText = encodeURIComponent(
             `Hola Ovejita Sorpresas 🌸, he realizado la compra digital de "${currentDigitalProduct?.name}". Mi correo es: ${email}. Orden: ${data.order?.orderNumber || 'OVEJITA-PDF'}`
           );

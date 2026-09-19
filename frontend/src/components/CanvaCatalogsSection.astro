@@ -4,7 +4,11 @@ interface Props {
 }
 
 const { settings = {} } = Astro.props;
-const whatsappNumber = settings?.whatsappNumber || "986951425";
+const whatsappNumber = settings?.whatsappNumber || "992750599";
+let formattedWhatsapp = String(whatsappNumber).replace(/\D/g, '');
+if (formattedWhatsapp.length === 9 && formattedWhatsapp.startsWith('9')) {
+  formattedWhatsapp = '51' + formattedWhatsapp;
+}
 
 // Modern catalog configuration with custom palette per catalog
 const defaultCanvaCatalogs = [
@@ -401,7 +405,7 @@ const logoUrl = settings?.logoUrl || "/images/LOGO.jpg";
                   <!-- WhatsApp Shortcut Icon -->
                   <a
                     data-catalog-wa={idx}
-                    href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(catalog.waMessage)}`}
+                    href={`https://wa.me/${formattedWhatsapp}?text=${encodeURIComponent(catalog.waMessage)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     class="w-9 h-9 rounded-full border border-slate-200 hover:border-[#9A80BD] bg-slate-50 hover:bg-white flex items-center justify-center text-slate-500 hover:text-[#9A80BD] transition-all shrink-0 shadow-2xs"
@@ -528,6 +532,37 @@ const logoUrl = settings?.logoUrl || "/images/LOGO.jpg";
               }
             }
           });
+        }
+
+        // Live WhatsApp Number Sync
+        const rawWa = liveSettings?.whatsappNumber || liveSettings?.generalTexts?.whatsappNumber || liveSettings?.contactNumber;
+        if (rawWa) {
+          let cleanWa = String(rawWa).replace(/\D/g, '');
+          if (cleanWa.length === 9 && cleanWa.startsWith('9')) {
+            cleanWa = '51' + cleanWa;
+          }
+          if (cleanWa) {
+            // Update individual Canva catalog WhatsApp buttons
+            const activeCats = Array.isArray(cats) && cats.length > 0 ? cats : [];
+            document.querySelectorAll('[data-catalog-wa]').forEach((btn) => {
+              const idxStr = btn.getAttribute('data-catalog-wa');
+              const idx = parseInt(idxStr, 10);
+              const catObj = activeCats[idx];
+              const msg = catObj?.waMessage || 'Hola Ovejita Sorpresas, vi su catálogo y deseo más información.';
+              btn.href = `https://wa.me/${cleanWa}?text=${encodeURIComponent(msg)}`;
+            });
+
+            // Update floating WhatsApp button and all wa.me links on page
+            document.querySelectorAll('a[href*="wa.me"]').forEach((link) => {
+              try {
+                const url = new URL(link.href);
+                const currentText = url.searchParams.get('text') || '';
+                link.href = `https://wa.me/${cleanWa}` + (currentText ? `?text=${encodeURIComponent(currentText)}` : '');
+              } catch (e) {
+                link.href = link.href.replace(/wa\.me\/[0-9+]+/, 'wa.me/' + cleanWa);
+              }
+            });
+          }
         }
       } catch (err) {
         console.warn('[CanvaCatalogs] Live sync failed:', err);

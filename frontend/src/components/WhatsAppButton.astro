@@ -5,11 +5,16 @@ interface Props {
 }
 
 const {
-  whatsappNumber = "986951425",
+  whatsappNumber = "992750599",
   defaultMessage = "Hola Ovejita Sorpresas 🌸, deseo asesoría personalizada y realizar un pedido.",
 } = Astro.props;
 
-const waLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(defaultMessage)}`;
+let cleanWa = String(whatsappNumber).replace(/\D/g, '');
+if (cleanWa.length === 9 && cleanWa.startsWith('9')) {
+  cleanWa = '51' + cleanWa;
+}
+
+const waLink = `https://wa.me/${cleanWa}?text=${encodeURIComponent(defaultMessage)}`;
 ---
 
 

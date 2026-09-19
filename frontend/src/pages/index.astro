@@ -38,7 +38,7 @@ const corporateBanner = banners.find((b) => (b.position === 'bottom' || b.type =
 const announcementText = announcementBanner?.title ||
   settings?.generalTexts?.announcementText ||
   "Ediciones con propósito · Dedicatoria & personalización";
-const whatsappNumber = settings?.whatsappNumber || "986951425";
+const whatsappNumber = settings?.whatsappNumber || "992750599";
 
 const showAnnouncementBar = settings?.generalTexts?.showAnnouncementBar !== false;
 const showCanvaPromo = settings?.generalTexts?.showCanvaPromo !== false;
@@ -209,11 +209,37 @@ const showWhatsApp = settings?.generalTexts?.showWhatsApp !== false;
     // Live check of settings so any change in Admin is immediately reflected on refresh
     (async function checkLiveMode() {
       try {
-        const apiUrl = (window.PUBLIC_API_URL || '') + '/api/settings';
-        const res = await fetch(apiUrl);
-        if (!res.ok) return;
-        const json = await res.json();
-        const liveSettings = json.data;
+        let liveSettings = null;
+        try {
+          const apiUrl = (window.PUBLIC_API_URL || '') + '/api/settings';
+          const res = await fetch(apiUrl);
+          if (res.ok) {
+            const json = await res.json();
+            liveSettings = json.data;
+          }
+        } catch (e) {}
+
+        if (!liveSettings) {
+          try {
+            const sbUrl = 'https://smxqqetxawatlnrttapw.supabase.co/rest/v1/BusinessSettings?select=*';
+            const anon = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNteHFxZXR4YXdhdGxucnR0YXB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1NzY2OTUsImV4cCI6MjEwNTE1MjY5NX0.ylCqYbxeswEWkuDZLdUGQzZNotxA5GCRaICeleyOxpQ';
+            const sbRes = await fetch(sbUrl, {
+              headers: { 'apikey': anon, 'Authorization': 'Bearer ' + anon }
+            });
+            if (sbRes.ok) {
+              const arr = await sbRes.json();
+              if (arr && arr[0]) {
+                liveSettings = {
+                  ...arr[0],
+                  generalTexts: typeof arr[0].generalTexts === 'string' ? JSON.parse(arr[0].generalTexts) : arr[0].generalTexts
+                };
+              }
+            }
+          } catch (e) {}
+        }
+
+        if (!liveSettings) return;
+
         const isLiveCanva = liveSettings?.generalTexts?.isCanvaCatalogsMode === true ||
           liveSettings?.generalTexts?.isCanvaCatalogsMode === 'true';
 
@@ -251,6 +277,26 @@ const showWhatsApp = settings?.generalTexts?.showWhatsApp !== false;
           if (waEl) {
             if (gt.showWhatsApp === false) waEl.classList.add('hidden');
             else waEl.classList.remove('hidden');
+          }
+        }
+
+        // Live WhatsApp links update
+        const rawWa = liveSettings?.whatsappNumber || liveSettings?.generalTexts?.whatsappNumber || liveSettings?.contactNumber;
+        if (rawWa) {
+          let cleanWa = String(rawWa).replace(/\D/g, '');
+          if (cleanWa.length === 9 && cleanWa.startsWith('9')) {
+            cleanWa = '51' + cleanWa;
+          }
+          if (cleanWa) {
+            document.querySelectorAll('a[href*="wa.me"]').forEach((link) => {
+              try {
+                const url = new URL(link.href);
+                const currentText = url.searchParams.get('text') || '';
+                link.href = `https://wa.me/${cleanWa}` + (currentText ? `?text=${encodeURIComponent(currentText)}` : '');
+              } catch (e) {
+                link.href = link.href.replace(/wa\.me\/[0-9+]+/, 'wa.me/' + cleanWa);
+              }
+            });
           }
         }
       } catch (e) {

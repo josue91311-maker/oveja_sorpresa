@@ -4,7 +4,11 @@ interface Props {
   whatsappNumber?: string;
 }
 
-const { product, whatsappNumber = "986951425" } = Astro.props;
+const { product, whatsappNumber = "992750599" } = Astro.props;
+let cleanWa = String(whatsappNumber).replace(/\D/g, '');
+if (cleanWa.length === 9 && cleanWa.startsWith('9')) {
+  cleanWa = '51' + cleanWa;
+}
 
 // Gather all available product images in order
 const rawImages = product.images && product.images.length > 0
@@ -25,7 +29,7 @@ const formattedPrevPrice = product.previousPrice ? Number(product.previousPrice)
 const waMessage = encodeURIComponent(
   `Hola Ovejita Sorpresas 🌸, deseo información sobre este producto: "${product.name}" (S/ ${formattedPrice})`
 );
-const waLink = `https://wa.me/${whatsappNumber}?text=${waMessage}`;
+const waLink = `https://wa.me/${cleanWa}?text=${waMessage}`;
 const cardId = `pcard-${product.id || Math.random().toString(36).substring(2, 8)}`;
 const isDigital = product.productType === 'DIGITAL' || product.category?.slug === 'disenos-digitales';
 ---

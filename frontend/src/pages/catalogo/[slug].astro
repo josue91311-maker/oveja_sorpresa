@@ -36,7 +36,11 @@ const categoryProducts = allProducts.filter(
   (p) => p.categoryId === currentCategory.id || p.category?.slug === slug
 );
 
-const whatsappNumber = settings?.whatsappNumber || "986951425";
+const rawWa = settings?.whatsappNumber || "992750599";
+let whatsappNumber = String(rawWa).replace(/\D/g, '');
+if (whatsappNumber.length === 9 && whatsappNumber.startsWith('9')) {
+  whatsappNumber = '51' + whatsappNumber;
+}
 const announcementText = `🌸 Catálogo Exclusivo: ${currentCategory.name} · Envíos con amor a todo el Perú`;
 const shareMessage = `Hola Ovejita Sorpresas 🌸, vi el catálogo de "${currentCategory.name}" y deseo consultar por un pedido:`;
 ---
