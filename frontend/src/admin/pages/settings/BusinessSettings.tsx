@@ -86,6 +86,7 @@ export const BusinessSettings: React.FC = () => {
       canvaHeroTitle: 'Explora Nuestras Colecciones',
       canvaHeroSubtitle: 'Descubre nuestros catálogos digitales interactivos en alta resolución. Hojéalos cómodamente y solicita tu detalle personalizado con empaque de regalo.',
       canvaHeroImageUrl: '/images/catalogos/hero_gift_box.png',
+      showCanvaHero: true,
       hideCanvaHeroOnMobile: true,
       announcementText: 'Ediciones con propósito · Dedicatoria & personalización',
       heroTag: 'Edición Coleccionable • Primavera con Propósito',
@@ -261,6 +262,7 @@ export const BusinessSettings: React.FC = () => {
             canvaHeroTitle: d.generalTexts?.canvaHeroTitle || 'Explora Nuestras Colecciones',
             canvaHeroSubtitle: d.generalTexts?.canvaHeroSubtitle || 'Descubre nuestros catálogos digitales interactivos en alta resolución. Hojéalos cómodamente y solicita tu detalle personalizado con empaque de regalo.',
             canvaHeroImageUrl: d.generalTexts?.canvaHeroImageUrl || '/images/catalogos/hero_gift_box.png',
+            showCanvaHero: d.generalTexts?.showCanvaHero !== false,
             hideCanvaHeroOnMobile: d.generalTexts?.hideCanvaHeroOnMobile !== false,
             announcementText: d.generalTexts?.announcementText || 'Ediciones con propósito · Dedicatoria & personalización',
             heroTag: d.generalTexts?.heroTag || 'Edición Coleccionable • Primavera con Propósito',
@@ -715,14 +717,37 @@ export const BusinessSettings: React.FC = () => {
                   </div>
                 </div>
 
+                {/* Global banner visibility toggle */}
+                <div className="p-3 bg-purple-50/60 rounded-xl border border-purple-200/70 flex items-center justify-between gap-3">
+                  <div className="space-y-0.5">
+                    <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                      <span>👁️ Mostrar Banner de Portada (En computadoras y celulares)</span>
+                    </span>
+                    <p className="text-[11px] text-slate-500 leading-tight">
+                      Si lo desmarcas, este banner desaparecerá por completo en toda la web (tanto en PC como en celular).
+                    </p>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={formData.generalTexts?.showCanvaHero !== false}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        generalTexts: { ...prev.generalTexts, showCanvaHero: e.target.checked },
+                      }))
+                    }
+                    className="w-4 h-4 text-[#9A80BD] rounded border-slate-300 focus:ring-[#9A80BD] cursor-pointer"
+                  />
+                </div>
+
                 {/* Mobile visibility toggle */}
                 <div className="p-3 bg-amber-50/60 rounded-xl border border-amber-200/70 flex items-center justify-between gap-3">
                   <div className="space-y-0.5">
                     <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                      <span>📱 Ocultar banner en celular (modo móvil)</span>
+                      <span>📱 Ocultar banner SOLO en celular (Modo móvil)</span>
                     </span>
                     <p className="text-[11px] text-slate-500 leading-tight">
-                      En celulares se ocultará este encabezado y los clientes verán directo los catálogos. En computadoras y tablets sí se mostrará.
+                      Oculta este encabezado únicamente en teléfonos celulares para que vean los catálogos primero. <strong>(En computadoras y laptops sí seguirá visible a menos que lo desactives arriba)</strong>.
                     </p>
                   </div>
                   <input

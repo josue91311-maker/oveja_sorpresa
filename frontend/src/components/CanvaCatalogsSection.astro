@@ -478,11 +478,18 @@ const logoUrl = settings?.logoUrl || "/images/LOGO.jpg";
         if (gt) {
           const heroEl = document.getElementById('canvaHeroBannerContainer');
           if (heroEl) {
-            if (gt.showCanvaHero === false) {
+            const isHiddenGlobal = gt.showCanvaHero === false;
+            const isHiddenMobile = gt.hideCanvaHeroOnMobile !== false;
+
+            if (isHiddenGlobal) {
               heroEl.classList.add('hidden');
               heroEl.classList.remove('block', 'md:block');
+            } else if (isHiddenMobile) {
+              heroEl.classList.add('hidden', 'md:block');
+              heroEl.classList.remove('block');
             } else {
               heroEl.classList.remove('hidden');
+              heroEl.classList.add('block');
             }
           }
         }
