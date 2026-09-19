@@ -20,11 +20,13 @@ const showCustomerService = footer.showCustomerService !== false;
 const showClub = footer.showClub !== false;
 const showBottomBar = footer.showBottomBar !== false;
 
-const footerDescription = footer.description ||
-  'Creamos papelería y regalos con intención y devoción. Cada detalle es empacado con amor para edificar y alegrar el corazón de quien lo recibe.';
+const footerDescription = typeof footer.description === 'string'
+  ? footer.description
+  : 'Creamos papelería y regalos con intención y devoción. Cada detalle es empacado con amor para edificar y alegrar el corazón de quien lo recibe.';
 
-const locationText = footer.locationText ||
-  '✦ Sedes de taller creativo en Lima con despachos con amor a todo el Perú.';
+const locationText = typeof footer.locationText === 'string'
+  ? footer.locationText
+  : '✦ Sedes de taller creativo en Lima con despachos con amor a todo el Perú.';
 
 const collectionsTitle = footer.collectionsTitle || 'Colecciones';
 const collectionsLinks = footer.collectionsLinks && footer.collectionsLinks.length > 0
@@ -84,14 +86,14 @@ const gridLayoutClass = activeColsCount === 3
 
         <p
           id="footerDescEl"
-          class={`text-xs text-slate-500 max-w-sm leading-relaxed font-light ${!showDescription ? 'hidden' : ''}`}
+          class={`text-xs text-slate-500 max-w-sm leading-relaxed font-light ${(!showDescription || !footerDescription.trim()) ? 'hidden' : ''}`}
         >
           {footerDescription}
         </p>
 
         <p
           id="footerLocationEl"
-          class={`text-xs text-primary font-medium ${!showLocationText ? 'hidden' : ''}`}
+          class={`text-xs text-primary font-medium ${(!showLocationText || !locationText.trim()) ? 'hidden' : ''}`}
         >
           {locationText}
         </p>
@@ -230,22 +232,22 @@ const gridLayoutClass = activeColsCount === 3
         // Description
         const descEl = document.getElementById('footerDescEl');
         if (descEl) {
-          if (ft.showDescription === false) {
+          if (ft.showDescription === false || (typeof ft.description === 'string' && ft.description.trim() === '')) {
             descEl.classList.add('hidden');
-          } else {
+          } else if (typeof ft.description === 'string') {
+            descEl.textContent = ft.description;
             descEl.classList.remove('hidden');
-            if (ft.description) descEl.textContent = ft.description;
           }
         }
 
         // Location
         const locEl = document.getElementById('footerLocationEl');
         if (locEl) {
-          if (ft.showLocationText === false) {
+          if (ft.showLocationText === false || (typeof ft.locationText === 'string' && ft.locationText.trim() === '')) {
             locEl.classList.add('hidden');
-          } else {
+          } else if (typeof ft.locationText === 'string') {
+            locEl.textContent = ft.locationText;
             locEl.classList.remove('hidden');
-            if (ft.locationText) locEl.textContent = ft.locationText;
           }
         }
 

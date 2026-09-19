@@ -240,6 +240,7 @@ const canvaHeroTag = settings?.generalTexts?.canvaHeroTag || "✦ Regalos que in
 const canvaHeroTitle = settings?.generalTexts?.canvaHeroTitle || "Explora Nuestras Colecciones";
 const canvaHeroSubtitle = settings?.generalTexts?.canvaHeroSubtitle || "Descubre nuestros catálogos digitales interactivos en alta resolución. Hojéalos cómodamente y solicita tu detalle personalizado con empaque de regalo.";
 const canvaHeroImageUrl = settings?.generalTexts?.canvaHeroImageUrl || "/images/catalogos/hero_gift_box.png";
+const showCanvaHero = settings?.generalTexts?.showCanvaHero !== false;
 const hideHeroOnMobile = settings?.generalTexts?.hideCanvaHeroOnMobile !== false;
 const logoUrl = settings?.logoUrl || "/images/LOGO.jpg";
 ---
@@ -248,7 +249,12 @@ const logoUrl = settings?.logoUrl || "/images/LOGO.jpg";
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     
     <!-- Hero Header: Configurable in admin, hidden on mobile by default, shown on web/desktop -->
-    <div class={`relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#FAF7FC] via-[#FCFAFD] to-[#F5EEFB] border border-[#E9E0F4] p-6 sm:p-10 lg:p-12 mb-8 sm:mb-10 shadow-2xs ${hideHeroOnMobile ? 'hidden md:block' : 'block'}`}>
+    <div
+      id="canvaHeroBannerContainer"
+      class={`relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#FAF7FC] via-[#FCFAFD] to-[#F5EEFB] border border-[#E9E0F4] p-6 sm:p-10 lg:p-12 mb-8 sm:mb-10 shadow-2xs ${
+        !showCanvaHero ? 'hidden' : hideHeroOnMobile ? 'hidden md:block' : 'block'
+      }`}
+    >
       
       <!-- Subtle organic background curves -->
       <div class="absolute -right-16 -top-16 w-80 h-80 bg-purple-100/40 rounded-full blur-3xl pointer-events-none"></div>
@@ -294,7 +300,8 @@ const logoUrl = settings?.logoUrl || "/images/LOGO.jpg";
 
         return (
           <div
-            class={`relative rounded-3xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 group flex flex-col justify-between border ${isWide ? 'lg:col-span-2' : ''}`}
+            data-catalog-card={idx}
+            class={`relative rounded-3xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 group flex flex-col justify-between border ${isWide ? 'lg:col-span-2' : ''} ${catalog.hidden ? 'hidden' : ''}`}
             style={`border-color: ${catalog.colors.border}; background-color: ${catalog.colors.background};`}
           >
             <!-- Upper Banner with Cutout Illustration & SVG Wave -->
@@ -467,10 +474,31 @@ const logoUrl = settings?.logoUrl || "/images/LOGO.jpg";
           } catch (e) {}
         }
 
+        const gt = liveSettings?.generalTexts;
+        if (gt) {
+          const heroEl = document.getElementById('canvaHeroBannerContainer');
+          if (heroEl) {
+            if (gt.showCanvaHero === false) {
+              heroEl.classList.add('hidden');
+              heroEl.classList.remove('block', 'md:block');
+            } else {
+              heroEl.classList.remove('hidden');
+            }
+          }
+        }
+
         const cats = liveSettings?.generalTexts?.canvaCatalogs;
         if (Array.isArray(cats) && cats.length > 0) {
           cats.forEach((cat, idx) => {
             if (!cat) return;
+            const cardEl = document.querySelector(`[data-catalog-card="${idx}"]`);
+            if (cardEl) {
+              if (cat.hidden) {
+                cardEl.classList.add('hidden');
+              } else {
+                cardEl.classList.remove('hidden');
+              }
+            }
             if (cat.imageUrl) {
               const imgEl = document.querySelector(`[data-catalog-img="${idx}"]`);
               if (imgEl && imgEl.getAttribute('src') !== cat.imageUrl) {

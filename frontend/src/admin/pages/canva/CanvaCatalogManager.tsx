@@ -33,6 +33,7 @@ export interface CanvaCatalogItem {
   waMessage?: string;
   color?: string;
   colors?: any;
+  hidden?: boolean;
 }
 
 const COLOR_PRESETS = [
@@ -94,6 +95,12 @@ export const CanvaCatalogManager: React.FC = () => {
   // General settings state
   const [isCanvaMode, setIsCanvaMode] = useState(true);
   const [catalogs, setCatalogs] = useState<CanvaCatalogItem[]>(DEFAULT_CATALOGS);
+
+  // Module visibility states
+  const [showAnnouncementBar, setShowAnnouncementBar] = useState(true);
+  const [showCanvaHero, setShowCanvaHero] = useState(true);
+  const [showCanvaPromo, setShowCanvaPromo] = useState(true);
+  const [showWhatsApp, setShowWhatsApp] = useState(true);
 
   // Top Announcement bar state
   const [announcementText, setAnnouncementText] = useState(
@@ -167,6 +174,11 @@ export const CanvaCatalogManager: React.FC = () => {
         const gt = d.generalTexts || {};
 
         setIsCanvaMode(gt.isCanvaCatalogsMode !== false);
+        setShowAnnouncementBar(gt.showAnnouncementBar !== false);
+        setShowCanvaHero(gt.showCanvaHero !== false);
+        setShowCanvaPromo(gt.showCanvaPromo !== false);
+        setShowWhatsApp(gt.showWhatsApp !== false);
+
         setAnnouncementText(
           gt.announcementText || 'Ediciones con propósito · Dedicatoria & personalización'
         );
@@ -192,6 +204,7 @@ export const CanvaCatalogManager: React.FC = () => {
                 `Hola Ovejita Sorpresas, vi su catálogo de ${item.title || ''} y deseo más información.`,
               color: item.color || item.colors?.primary || COLOR_PRESETS[idx % COLOR_PRESETS.length].hex,
               colors: item.colors,
+              hidden: item.hidden === true,
             }))
           );
         } else {
@@ -207,20 +220,20 @@ export const CanvaCatalogManager: React.FC = () => {
         setShowClub(ft.showClub !== false);
         setShowBottomBar(ft.showBottomBar !== false);
 
-        if (ft.description) setFooterDescription(ft.description);
-        if (ft.locationText) setLocationText(ft.locationText);
-        if (ft.collectionsTitle) setCollectionsTitle(ft.collectionsTitle);
+        if (ft.description !== undefined) setFooterDescription(ft.description);
+        if (ft.locationText !== undefined) setLocationText(ft.locationText);
+        if (ft.collectionsTitle !== undefined) setCollectionsTitle(ft.collectionsTitle);
         if (Array.isArray(ft.collectionsLinks) && ft.collectionsLinks.length > 0) {
           setCollectionsLinks(ft.collectionsLinks);
         }
-        if (ft.customerServiceTitle) setCustomerServiceTitle(ft.customerServiceTitle);
+        if (ft.customerServiceTitle !== undefined) setCustomerServiceTitle(ft.customerServiceTitle);
         if (Array.isArray(ft.customerServiceLinks) && ft.customerServiceLinks.length > 0) {
           setCustomerServiceLinks(ft.customerServiceLinks);
         }
-        if (ft.clubTitle) setClubTitle(ft.clubTitle);
-        if (ft.clubSubtitle) setClubSubtitle(ft.clubSubtitle);
-        if (ft.clubButtonText) setClubButtonText(ft.clubButtonText);
-        if (ft.copyrightText) setCopyrightText(ft.copyrightText);
+        if (ft.clubTitle !== undefined) setClubTitle(ft.clubTitle);
+        if (ft.clubSubtitle !== undefined) setClubSubtitle(ft.clubSubtitle);
+        if (ft.clubButtonText !== undefined) setClubButtonText(ft.clubButtonText);
+        if (ft.copyrightText !== undefined) setCopyrightText(ft.copyrightText);
       }
     } catch (err: any) {
       console.error('Error cargando ajustes:', err);
@@ -239,6 +252,10 @@ export const CanvaCatalogManager: React.FC = () => {
       const updatedGeneralTexts = {
         ...(rawSettings.generalTexts || {}),
         isCanvaCatalogsMode: isCanvaMode,
+        showAnnouncementBar,
+        showCanvaHero,
+        showCanvaPromo,
+        showWhatsApp,
         announcementText: announcementText.trim(),
         canvaHeroTag: heroTag.trim(),
         canvaHeroTitle: heroTitle.trim(),
@@ -273,6 +290,7 @@ export const CanvaCatalogManager: React.FC = () => {
           imageUrl: cat.imageUrl || '',
           waMessage: cat.waMessage || '',
           color: cat.color || COLOR_PRESETS[idx % COLOR_PRESETS.length].hex,
+          hidden: cat.hidden === true,
         })),
       };
 
@@ -516,16 +534,162 @@ export const CanvaCatalogManager: React.FC = () => {
         </div>
       </div>
 
-      {/* SECTION 1: Top Bar (Aviso Superior) */}
-      <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs space-y-3">
-        <div className="flex items-center gap-2 pb-2 border-b border-slate-100">
-          <Megaphone className="w-4 h-4 text-[#9A80BD]" />
-          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-800">
-            Aviso Superior (Top Bar de la Web)
-          </h3>
-          <span className="text-[10px] text-slate-400">
-            Aparece arriba del todo sobre el logo en Modo Canva y Tienda
+      {/* GLOBAL MODULES VISIBILITY CONTROLLER */}
+      <div className="p-5 rounded-2xl bg-white border border-purple-100 shadow-2xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-purple-50">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-purple-50 text-[#9A80BD] flex items-center justify-center border border-purple-100">
+              <Layers className="w-4 h-4" />
+            </div>
+            <div>
+              <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                Módulos de la Web (Activar / Ocultar Secciones)
+              </h3>
+              <p className="text-[11px] text-slate-500 font-light">
+                Enciende o apaga cualquier módulo de la página con un solo clic.
+              </p>
+            </div>
+          </div>
+          <span className="text-[10px] bg-purple-50 text-[#9A80BD] font-bold px-2.5 py-0.5 rounded-full border border-purple-100 w-fit">
+            Control de Visibilidad
           </span>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 pt-1">
+          {/* 1. Aviso Top */}
+          <button
+            type="button"
+            onClick={() => setShowAnnouncementBar(!showAnnouncementBar)}
+            className={`p-3 rounded-xl border text-left flex flex-col justify-between gap-2 transition-all cursor-pointer ${
+              showAnnouncementBar
+                ? 'bg-purple-50/40 border-purple-200 text-slate-800 hover:border-purple-300'
+                : 'bg-slate-50 border-slate-200 text-slate-400 opacity-60'
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <Megaphone className="w-4 h-4 text-[#9A80BD]" />
+              <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${
+                showAnnouncementBar ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-500'
+              }`}>
+                {showAnnouncementBar ? 'Visible' : 'Oculto'}
+              </span>
+            </div>
+            <span className="text-[11px] font-bold">1. Aviso Top Bar</span>
+          </button>
+
+          {/* 2. Banner Hero */}
+          <button
+            type="button"
+            onClick={() => setShowCanvaHero(!showCanvaHero)}
+            className={`p-3 rounded-xl border text-left flex flex-col justify-between gap-2 transition-all cursor-pointer ${
+              showCanvaHero
+                ? 'bg-purple-50/40 border-purple-200 text-slate-800 hover:border-purple-300'
+                : 'bg-slate-50 border-slate-200 text-slate-400 opacity-60'
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <Sparkles className="w-4 h-4 text-[#9A80BD]" />
+              <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${
+                showCanvaHero ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-500'
+              }`}>
+                {showCanvaHero ? 'Visible' : 'Oculto'}
+              </span>
+            </div>
+            <span className="text-[11px] font-bold">2. Banner Hero</span>
+          </button>
+
+          {/* 3. Banners Promos */}
+          <button
+            type="button"
+            onClick={() => setShowCanvaPromo(!showCanvaPromo)}
+            className={`p-3 rounded-xl border text-left flex flex-col justify-between gap-2 transition-all cursor-pointer ${
+              showCanvaPromo
+                ? 'bg-purple-50/40 border-purple-200 text-slate-800 hover:border-purple-300'
+                : 'bg-slate-50 border-slate-200 text-slate-400 opacity-60'
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <ImageIcon className="w-4 h-4 text-[#9A80BD]" />
+              <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${
+                showCanvaPromo ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-500'
+              }`}>
+                {showCanvaPromo ? 'Visible' : 'Oculto'}
+              </span>
+            </div>
+            <span className="text-[11px] font-bold">3. Banners Promos</span>
+          </button>
+
+          {/* 4. WhatsApp Flotante */}
+          <button
+            type="button"
+            onClick={() => setShowWhatsApp(!showWhatsApp)}
+            className={`p-3 rounded-xl border text-left flex flex-col justify-between gap-2 transition-all cursor-pointer ${
+              showWhatsApp
+                ? 'bg-purple-50/40 border-purple-200 text-slate-800 hover:border-purple-300'
+                : 'bg-slate-50 border-slate-200 text-slate-400 opacity-60'
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <MessageCircle className="w-4 h-4 text-emerald-600" />
+              <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${
+                showWhatsApp ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-500'
+              }`}>
+                {showWhatsApp ? 'Visible' : 'Oculto'}
+              </span>
+            </div>
+            <span className="text-[11px] font-bold">4. WhatsApp Flotante</span>
+          </button>
+
+          {/* 5. Footer Completo */}
+          <button
+            type="button"
+            onClick={() => setHideFooter(!hideFooter)}
+            className={`p-3 rounded-xl border text-left flex flex-col justify-between gap-2 transition-all cursor-pointer ${
+              !hideFooter
+                ? 'bg-purple-50/40 border-purple-200 text-slate-800 hover:border-purple-300'
+                : 'bg-slate-50 border-slate-200 text-slate-400 opacity-60'
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <PanelBottom className="w-4 h-4 text-[#9A80BD]" />
+              <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${
+                !hideFooter ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-500'
+              }`}>
+                {!hideFooter ? 'Visible' : 'Oculto'}
+              </span>
+            </div>
+            <span className="text-[11px] font-bold">5. Pie de Página</span>
+          </button>
+        </div>
+      </div>
+
+      {/* SECTION 1: Top Bar (Aviso Superior) */}
+      <div className={`p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs space-y-3 transition-all ${
+        !showAnnouncementBar ? 'opacity-60' : ''
+      }`}>
+        <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+          <div className="flex items-center gap-2">
+            <Megaphone className="w-4 h-4 text-[#9A80BD]" />
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-800">
+              Aviso Superior (Top Bar de la Web)
+            </h3>
+            <span className="text-[10px] text-slate-400 hidden sm:inline">
+              Aparece arriba del todo sobre el logo
+            </span>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setShowAnnouncementBar(!showAnnouncementBar)}
+            className={`inline-flex items-center gap-1.5 text-[10.5px] font-bold px-2 py-0.5 rounded-lg border transition-all cursor-pointer ${
+              showAnnouncementBar
+                ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+                : 'bg-slate-200 text-slate-600 border-slate-300 hover:bg-slate-300'
+            }`}
+          >
+            {showAnnouncementBar ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3 text-slate-500" />}
+            <span>{showAnnouncementBar ? 'Barra Visible' : 'Barra Oculta'}</span>
+          </button>
         </div>
 
         <div>
@@ -536,30 +700,49 @@ export const CanvaCatalogManager: React.FC = () => {
             type="text"
             value={announcementText}
             onChange={(e) => setAnnouncementText(e.target.value)}
+            disabled={!showAnnouncementBar}
             placeholder="Ediciones con propósito · Dedicatoria & personalización gratis"
-            className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#9A80BD] focus:outline-none font-medium text-slate-800"
+            className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#9A80BD] focus:outline-none font-medium text-slate-800 disabled:opacity-50"
           />
         </div>
       </div>
 
       {/* SECTION 2: Hero Header Customizer Card */}
-      <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+      <div className={`p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs space-y-4 transition-all ${
+        !showCanvaHero ? 'opacity-60' : ''
+      }`}>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100">
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-[#9A80BD]" />
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-800">
               Banner de Portada del Catálogo (Hero Header)
             </h3>
           </div>
-          <label className="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={hideHeroOnMobile}
-              onChange={(e) => setHideHeroOnMobile(e.target.checked)}
-              className="w-3.5 h-3.5 text-[#9A80BD] rounded border-slate-300 focus:ring-[#9A80BD]"
-            />
-            <span>📱 Ocultar en celulares (ir directo a catálogos)</span>
-          </label>
+
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setShowCanvaHero(!showCanvaHero)}
+              className={`inline-flex items-center gap-1.5 text-[10.5px] font-bold px-2 py-0.5 rounded-lg border transition-all cursor-pointer ${
+                showCanvaHero
+                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+                  : 'bg-slate-200 text-slate-600 border-slate-300 hover:bg-slate-300'
+              }`}
+            >
+              {showCanvaHero ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3 text-slate-500" />}
+              <span>{showCanvaHero ? 'Hero Visible' : 'Hero Oculto'}</span>
+            </button>
+
+            <label className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={hideHeroOnMobile}
+                onChange={(e) => setHideHeroOnMobile(e.target.checked)}
+                className="w-3.5 h-3.5 text-[#9A80BD] rounded border-slate-300 focus:ring-[#9A80BD]"
+              />
+              <span>📱 Ocultar en celulares</span>
+            </label>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
@@ -675,7 +858,9 @@ export const CanvaCatalogManager: React.FC = () => {
             return (
               <div
                 key={cat.id || idx}
-                className="rounded-2xl bg-white border border-slate-200/90 shadow-2xs hover:shadow-xs transition-shadow flex flex-col justify-between overflow-hidden"
+                className={`rounded-2xl border transition-all flex flex-col justify-between overflow-hidden shadow-2xs ${
+                  cat.hidden ? 'bg-slate-50/70 border-slate-200 opacity-65' : 'bg-white border-slate-200/90 hover:shadow-xs'
+                }`}
               >
                 {/* Card Top Bar */}
                 <div className="px-4 py-2.5 bg-slate-50/80 border-b border-slate-100 flex items-center justify-between gap-2">
@@ -689,10 +874,29 @@ export const CanvaCatalogManager: React.FC = () => {
                     <span className="text-xs font-bold text-slate-700 truncate max-w-[180px]">
                       {cat.title || `Catálogo ${idx + 1}`}
                     </span>
+                    {cat.hidden && (
+                      <span className="text-[9.5px] font-bold px-2 py-0.5 rounded-full bg-slate-200 text-slate-600">
+                        Oculto
+                      </span>
+                    )}
                   </div>
 
-                  {/* Move Up, Move Down, Test Link, Delete */}
-                  <div className="flex items-center gap-1">
+                  {/* Move Up, Move Down, Test Link, Hide/Show, Delete */}
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => handleUpdateCatalog(cat.id, 'hidden', !cat.hidden)}
+                      title={cat.hidden ? 'Activar catálogo' : 'Pausar catálogo (ocultar de la tienda)'}
+                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-bold border transition-all cursor-pointer ${
+                        cat.hidden
+                          ? 'bg-slate-200 text-slate-600 border-slate-300 hover:bg-slate-300'
+                          : 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+                      }`}
+                    >
+                      {cat.hidden ? <EyeOff className="w-3 h-3 text-slate-500" /> : <Eye className="w-3 h-3 text-emerald-600" />}
+                      <span className="hidden sm:inline">{cat.hidden ? 'Pausado' : 'Activo'}</span>
+                    </button>
+
                     <button
                       type="button"
                       disabled={idx === 0}
@@ -726,7 +930,7 @@ export const CanvaCatalogManager: React.FC = () => {
                       type="button"
                       onClick={() => handleDeleteCatalog(cat.id, cat.title)}
                       title="Eliminar catálogo"
-                      className="p-1 text-slate-400 hover:text-rose-600 transition-colors cursor-pointer ml-1"
+                      className="p-1 text-slate-400 hover:text-rose-600 transition-colors cursor-pointer ml-0.5"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -894,27 +1098,90 @@ export const CanvaCatalogManager: React.FC = () => {
         </button>
       </div>
 
-      {/* SECTION 4: Promotional Banners Info */}
-      <div className="p-5 rounded-2xl bg-gradient-to-r from-purple-50/60 to-pink-50/40 border border-purple-200/80 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {/* SECTION 4: Promotional Banners Info & Visibility */}
+      <div className={`p-5 rounded-2xl bg-gradient-to-r from-purple-50/60 to-pink-50/40 border border-purple-200/80 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all ${
+        !showCanvaPromo ? 'opacity-60' : ''
+      }`}>
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-white text-[#9A80BD] border border-purple-200 flex items-center justify-center shrink-0 shadow-2xs">
             <ImageIcon className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-xs font-bold text-slate-800">
-              Banners Promocionales en Modo Canva
-            </h3>
-            <p className="text-[11px] text-slate-500">
-              Los banners promocionales activos creados en la sección de banners ahora también se muestran elegantemente debajo de tus catálogos.
+            <div className="flex items-center gap-2">
+              <h3 className="text-xs font-bold text-slate-800">
+                Banners Promocionales en Modo Canva
+              </h3>
+              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                showCanvaPromo ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-600'
+              }`}>
+                {showCanvaPromo ? 'Módulo Activo' : 'Módulo Oculto'}
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-500 mt-0.5">
+              Los banners promocionales activos creados en la sección de banners se muestran debajo de tus catálogos.
             </p>
           </div>
         </div>
-        <a
-          href="/banners"
-          className="inline-flex items-center gap-1.5 px-4 py-2 bg-white hover:bg-purple-50 text-[#9A80BD] border border-purple-200 rounded-xl text-xs font-bold transition-all shadow-2xs shrink-0"
+
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            type="button"
+            onClick={() => setShowCanvaPromo(!showCanvaPromo)}
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+              showCanvaPromo
+                ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+                : 'bg-slate-200 text-slate-600 border-slate-300 hover:bg-slate-300'
+            }`}
+          >
+            {showCanvaPromo ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5 text-slate-500" />}
+            <span>{showCanvaPromo ? 'Visible en Tienda' : 'Oculto en Tienda'}</span>
+          </button>
+          <a
+            href="/banners"
+            className="inline-flex items-center gap-1 px-3 py-1.5 bg-white hover:bg-purple-50 text-[#9A80BD] border border-purple-200 rounded-xl text-xs font-bold transition-all shadow-2xs shrink-0"
+          >
+            <span>Ir a Banners →</span>
+          </a>
+        </div>
+      </div>
+
+      {/* SECTION 4.5: WhatsApp Floating Button Visibility */}
+      <div className={`p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all ${
+        !showWhatsApp ? 'opacity-60' : ''
+      }`}>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center shrink-0 shadow-2xs">
+            <MessageCircle className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <h3 className="text-xs font-bold text-slate-800">
+                Botón Flotante de WhatsApp
+              </h3>
+              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                showWhatsApp ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-600'
+              }`}>
+                {showWhatsApp ? 'Visible' : 'Oculto'}
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-500 mt-0.5">
+              Botón verde flotante en la esquina inferior derecha para que los clientes te escriban directamente.
+            </p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setShowWhatsApp(!showWhatsApp)}
+          className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+            showWhatsApp
+              ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+              : 'bg-slate-200 text-slate-600 border-slate-300 hover:bg-slate-300'
+          }`}
         >
-          <span>Gestionar Banners Promocionales →</span>
-        </a>
+          {showWhatsApp ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5 text-slate-500" />}
+          <span>{showWhatsApp ? 'Botón WhatsApp: Visible' : 'Botón WhatsApp: Oculto'}</span>
+        </button>
       </div>
 
       {/* SECTION 5: Footer & Brand Words Customizer (Editable and Hideable Granularly) */}

@@ -39,17 +39,29 @@ const announcementText = announcementBanner?.title ||
   settings?.generalTexts?.announcementText ||
   "Ediciones con propósito · Dedicatoria & personalización";
 const whatsappNumber = settings?.whatsappNumber || "986951425";
+
+const showAnnouncementBar = settings?.generalTexts?.showAnnouncementBar !== false;
+const showCanvaPromo = settings?.generalTexts?.showCanvaPromo !== false;
+const showWhatsApp = settings?.generalTexts?.showWhatsApp !== false;
 ---
 
 <MainLayout settings={settings}>
-  {announcementText && <AnnouncementBar text={announcementBanner?.title || announcementText} />}
+  {showAnnouncementBar && announcementText && (
+    <div id="announcementBarContainer">
+      <AnnouncementBar text={announcementBanner?.title || announcementText} />
+    </div>
+  )}
   <Header settings={settings} />
 
   <main id="storeMainContainer">
     <!-- MODO CATÁLOGO LINK (CANVA / VIRTUAL INTERACTIVO) -->
     <div id="canvaModeSection" class={isCanvaMode ? "block" : "hidden"}>
       <CanvaCatalogsSection settings={settings} />
-      {promotionalBanner && <PromotionalBanner banner={promotionalBanner} />}
+      {showCanvaPromo && promotionalBanner && (
+        <div id="canvaPromoContainer">
+          <PromotionalBanner banner={promotionalBanner} />
+        </div>
+      )}
     </div>
 
     <!-- MODO TIENDA COMPLETA / E-COMMERCE CON PRODUCTOS Y CARRITO -->
@@ -187,7 +199,9 @@ const whatsappNumber = settings?.whatsappNumber || "986951425";
   </main>
 
   <Footer settings={settings} />
-  <WhatsAppButton whatsappNumber={whatsappNumber} />
+  <div id="whatsAppBtnContainer" class={!showWhatsApp ? 'hidden' : ''}>
+    <WhatsAppButton whatsappNumber={whatsappNumber} />
+  </div>
   <Toast />
 
   <!-- Client-side Interactive Logic & Live Mode Toggle -->
@@ -219,6 +233,25 @@ const whatsappNumber = settings?.whatsappNumber || "986951425";
           ecomSec?.classList.remove('hidden');
           ecomSec?.classList.add('block');
           if (bagBtn) bagBtn.style.display = '';
+        }
+
+        const gt = liveSettings?.generalTexts;
+        if (gt) {
+          const annEl = document.getElementById('announcementBarContainer');
+          if (annEl) {
+            if (gt.showAnnouncementBar === false) annEl.classList.add('hidden');
+            else annEl.classList.remove('hidden');
+          }
+          const promoEl = document.getElementById('canvaPromoContainer');
+          if (promoEl) {
+            if (gt.showCanvaPromo === false) promoEl.classList.add('hidden');
+            else promoEl.classList.remove('hidden');
+          }
+          const waEl = document.getElementById('whatsAppBtnContainer');
+          if (waEl) {
+            if (gt.showWhatsApp === false) waEl.classList.add('hidden');
+            else waEl.classList.remove('hidden');
+          }
         }
       } catch (e) {
         // Fallback to initial build state
